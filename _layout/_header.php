@@ -6,7 +6,8 @@ if (navigation::is_in_page('login.php')) {
         navigation::go_to_url('index.php');
     }
 } else {
-    if (!isset($_SESSION["isLogin"])) {;
+    if (!isset($_SESSION["isLogin"])) {
+        ;
         navigation::go_to_url('login.php');
     }
 }
@@ -36,3 +37,10 @@ if (navigation::is_in_page('login.php')) {
     <script src="js/main.js"></script>
 </head>
 <body>
+<header>
+    <?php
+    if (!navigation::is_in_page('login.php')) {
+        include "_navbar.php";
+    }
+    ?>
+</header>

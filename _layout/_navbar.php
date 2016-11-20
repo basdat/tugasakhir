@@ -7,9 +7,11 @@
         <ul class="nav navbar-nav float-xs-right">
             <li class="nav-item nav-link">
                 Hello,
-                <?php
-                echo $_SESSION['username'];
-                ?>
+                <strong>
+                    <?php
+                    echo $_SESSION['username'];
+                    ?>
+                </strong>
             </li>
             <li class="nav-item">
                 <form method="post" action="auth.php">
