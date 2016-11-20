@@ -42,10 +42,14 @@ class auth
                     echo $userRow['nama'];
 
                     if ($stmt->rowCount() > 0) {
-                        $_SESSION["isLogin"] = true;
                         $_SESSION['username'] = $username;
+                        $_SESSION['userdata'] = array();
+                        foreach ($userRow as $item => $value) {
+                            $_SESSION['userdata'][$item] = $value;
+                        }
+                        print_r($_SESSION['userdata']);
                         require_once 'navigation.php';
-                        navigation::go_to_url('index.php');
+//                        navigation::go_to_url('index.php');
                     } else {
                         $error = "Either username or password are wrong.";
                         $_SESSION['errorMsg'] = $error;

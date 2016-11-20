@@ -2,11 +2,11 @@
 session_start();
 require_once 'navigation.php';
 if (navigation::is_in_page('login.php')) {
-    if (isset($_SESSION["isLogin"])) {
+    if (isset($_SESSION["username"])) {
         navigation::go_to_url('index.php');
     }
 } else {
-    if (!isset($_SESSION["isLogin"])) {
+    if (!isset($_SESSION["username"])) {
         ;
         navigation::go_to_url('login.php');
     }
