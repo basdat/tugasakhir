@@ -1,0 +1,28 @@
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+nav ul li {
+    padding-left: .5em;
+    padding-right: .5em;
+}
+
+footer .credit{
+    color: white;
+}
+
+.header {
+    background: url("../img/header.jpg") center center;
+    background-size: cover;
+    min-height: 20em;
+    height: 50vh;
+    padding-top: 5em;
+    color: white;
+    margin-bottom: 5em;
+}
+
+.header hr{
+    border-color: whitesmoke;
+}
