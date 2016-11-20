@@ -1,6 +1,6 @@
 <section class="login-form">
 
-    <div class="header">
+    <section id="hero" class="header">
         <div class="container">
             <div class="row">
                 <div class="row text-xs-center">
@@ -11,7 +11,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
     <div class="container">
         <div class="row">

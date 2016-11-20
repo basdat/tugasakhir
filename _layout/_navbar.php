@@ -14,6 +14,9 @@
                 </strong>
             </li>
             <li class="nav-item">
+                <a href="jadwal_sidang.php" class="nav-link">Jadwal Sidang</a>
+            </li>
+            <li class="nav-item">
                 <form method="post" action="auth.php">
                     <div class="row text-xs-right">
                         <input type="submit" name="submit" class="btn btn-outline-danger btn-login" value="Logout">

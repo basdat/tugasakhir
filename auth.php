@@ -1,36 +1,26 @@
 <?php
 session_start();
+require_once "database.php";
 
 class auth
 {
-    function __construct()
-    {
 
+    private $conn;
+
+    public function __construct()
+    {
+        $db = new database();
+        $this->conn = $db->connectDB();
     }
 
-    function connectDB()
+    public function __toString()
     {
-        $servername = "basdat.southeastasia.cloudapp.azure.com";
-        $port = "1999";
-        $username = "affan";
-        $password = "affan1234";
-        $dbname = "postgres";
-
-        // Create connection
-        $conn = new PDO('pgsql:host=' . $servername . ';port=' . $port . ';dbname=' . $dbname, $username, $password);
-        $conn = new PDO('pgsql:host=' . $servername . ';port=' . $port . ';dbname=' . $dbname, $username, $password);
-        // Check connection
-        if (!$conn) {
-            die("Connection failed: " + mysqli_connect_error());
-        }
-
-        $conn->query("set search_path to sisidang");
-        return $conn;
+        echo "Using the toString method: ";
+        return "";
     }
 
-    function login()
+    public function login()
     {
-        $conn = $this->connectDB();
         $error = "";
         if (isset($_POST['submit'])) {
             if (empty($_POST['username']) || empty($_POST['password'])) {
@@ -45,7 +35,7 @@ class auth
 
                     $query = "SELECT * FROM sisidang.mahasiswa WHERE username=:username OR password=:password LIMIT 1";
 
-                    $stmt = $conn->prepare($query);
+                    $stmt = $this->conn->prepare($query);
                     $stmt->execute(array(':username' => $username, ':password' => $password));
                     $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -59,7 +49,8 @@ class auth
                     } else {
                         $error = "Either username or password are wrong.";
                         $_SESSION['errorMsg'] = $error;
-                        require_once 'navigation.php'; navigation::go_to_url('login.php');
+                        require_once 'navigation.php';
+                        navigation::go_to_url('login.php');
                     }
                 } catch (PDOException $e) {
                     echo $e->getMessage();
@@ -68,12 +59,28 @@ class auth
         }
     }
 
-    function logout()
+    public function logout()
     {
         session_unset();
         session_destroy();
         require_once 'navigation.php';
         navigation::go_to_url('index.php');
+    }
+
+    /**
+     * @return PDO
+     */
+    public function getConn()
+    {
+        return $this->conn;
+    }
+
+    /**
+     * @param PDO $conn
+     */
+    public function setConn($conn)
+    {
+        $this->conn = $conn;
     }
 }
 
