@@ -9,10 +9,10 @@ class auth
 
     function connectDB()
     {
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "lab8solution";
+        $servername = "basdat.southeastasia.cloudapp.azure.com:1999";
+        $username = "affan";
+        $password = "affan1234";
+        $dbname = "postgres";
 
         // Create connection
 
@@ -29,7 +29,7 @@ class auth
 
     function login()
     {
-        $conn = connectDB();
+        $conn = $this->connectDB();
         $error = "";
         if (isset($_POST['submit'])) {
             if (empty($_POST['username']) || empty($_POST['password'])) {
@@ -39,16 +39,16 @@ class auth
             } else {
                 $username = stripslashes($_POST['username']);
                 $password = stripslashes($_POST['password']);
-                $query = "SELECT * FROM user WHERE username ='$username' AND password = '$password' AND role = 'admin'";
+                $query = "SELECT * FROM mahasiswa WHERE username ='$username' AND password = '$password'";
                 $result = $conn->query($query);
                 if ($result->num_rows == 1) {
                     $_SESSION["isLogin"] = true;
                     $_SESSION['username'] = $username;
-                    /*header("Location: admin.php");*/
+                    header("Location: index.php");
                 } else {
                     $error = "Either username or password are wrong.";
                     $_SESSION['errorMsg'] = $error;
-                    header("Location: index.php");
+                    header("Location: login.php");
                 }
             }
         }

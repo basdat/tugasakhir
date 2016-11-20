@@ -35,7 +35,7 @@ if (!isset($_SESSION["isLogin"])) {
         <div class="container">
             <div class="row">
                 <div class="row text-xs-center">
-                    <span class="display-3">Login</span>
+                    <span class="display-3">Hello</span>
                 </div>
                 <div class="col-xs-2 offset-xs-5">
                     <hr/>
