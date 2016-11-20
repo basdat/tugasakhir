@@ -36,7 +36,8 @@ class auth
             if (empty($_POST['username']) || empty($_POST['password'])) {
                 $error = "Enter your username and password, please.";
                 $_SESSION['errorMsg'] = $error;
-                header("Location: index.php");
+                require_once 'navigation.php';
+                navigation::go_to_url('index.php');
             } else {
                 try {
                     $username = stripslashes($_POST['username']);
@@ -47,17 +48,18 @@ class auth
                     $stmt = $conn->prepare($query);
                     $stmt->execute(array(':username' => $username, ':password' => $password));
                     $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
-                    
+
                     echo $userRow['nama'];
 
                     if ($stmt->rowCount() > 0) {
                         $_SESSION["isLogin"] = true;
                         $_SESSION['username'] = $username;
-                    header("Location: index.php");
+                        require_once 'navigation.php';
+                        navigation::go_to_url('index.php');
                     } else {
                         $error = "Either username or password are wrong.";
                         $_SESSION['errorMsg'] = $error;
-                        header("Location: login.php");
+                        require_once 'navigation.php'; navigation::go_to_url('login.php');
                     }
                 } catch (PDOException $e) {
                     echo $e->getMessage();
@@ -70,7 +72,8 @@ class auth
     {
         session_unset();
         session_destroy();
-        header("Location: index.php");
+        require_once 'navigation.php';
+        navigation::go_to_url('index.php');
     }
 }
 
