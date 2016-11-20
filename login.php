@@ -11,7 +11,8 @@ if (isset($_SESSION["isLogin"])) {
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Sistem Informasi Sidang</title>
-    <meta name="description" content="A informatic system for final presentation of paper which is created by college student."/>
+    <meta name="description"
+          content="A informatic system for final presentation of paper which is created by college student."/>
     <meta name="keywords" content=""/>
     <meta name="rating" content="general"/>
     <meta name="copyright" content="Copyright ©2016"/>
@@ -48,9 +49,9 @@ if (isset($_SESSION["isLogin"])) {
             <div class="col-md-8 offset-md-2">
                 <form method="post" action="auth.php">
                     <?php
-                    if(isset($_SESSION["errorMsg"])){
+                    if (isset($_SESSION["errorMsg"])) {
                         echo "<div class=\"alert alert-danger\">";
-                        echo "<div class='alert alert-danger'>" . $_SESSION["errorMsg"] ."</div>";
+                        echo "<div class='alert alert-danger'>" . $_SESSION["errorMsg"] . "</div>";
                         echo "</div>";
                         unset($_SESSION["errorMsg"]);
                     }
