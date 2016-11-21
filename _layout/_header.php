@@ -33,8 +33,6 @@ if (navigation::is_in_page('login.php')) {
     <link rel="stylesheet" href="css/tether.css">
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/main.css">
-    <script src="js/vendor/jquery-3.1.1.js"></script>
-    <script src="js/main.js"></script>
 </head>
 <body>
 <header>

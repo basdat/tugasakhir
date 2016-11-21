@@ -44,6 +44,13 @@
                     <div class="row text-xs-right">
                         <input type="submit" name="submit" class="btn btn-primary btn-login" value="Login">
                     </div>
+<!--                    Debug Login-->
+                    <div class="row text-xs-right">
+                        <label for="buttonDebugLogin">Debug Login</label>
+                        <input id="buttonDebugLogin" type="submit"
+                               onclick="$('#inputUsername').val('Nurhayati31');$('#inputPassword').val('p1506757964')"
+                               name="submit" class="btn btn-secondary btn-login" value="Login">
+                    </div>
                 </form>
             </div>
         </div>
