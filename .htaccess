@@ -1,0 +1,18 @@
+Options +FollowSymLinks
+RewriteEngine Off
+
+RewriteCond %{THE_REQUEST} ^(.+)\index.php([#?][^\ ]*)?\ HTTP/
+RewriteRule ^(.+)\.php$ /basdat [R=301,L]
+
+## Unless directory, remove trailing slash
+RewriteCond %{REQUEST_METHOD} !POST [NC]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/$ [R=301,L]
+
+## Redirect external .php requests to extensionless url
+RewriteCond %{REQUEST_METHOD} !POST [NC]
+RewriteCond %{THE_REQUEST} ^(.+)\.php([#?][^\ ]*)?\ HTTP/
+RewriteRule ^(.+)\.php$ /basdat/$1 [R=301,L]
+
+# Resolve .php file for extensionless php urls
+RewriteRule ^([^/.]+)$ $1.php [L]
