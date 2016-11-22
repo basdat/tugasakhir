@@ -1,7 +1,7 @@
 <?php
-require_once "database.php";
-$db = new database();
-$conn = $db->connectDB();
+    require_once "database.php";
+    $db = new database();
+    $conn = $db->connectDB();
 $stmt = $conn->prepare(" SELECT * FROM mahasiswa m NATURAL JOIN mata_kuliah_spesial mks NATURAL JOIN jadwal_sidang jd NATURAL JOIN ruangan r, jenis_mks j WHERE j.id=mks.idjenismks AND m.npm=:npm");
 $stmt->execute(array(':npm' => $_SESSION['userdata']['npm']));
 $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -2,7 +2,7 @@
 require_once "database.php";
 $db = new database();
 $conn = $db->connectDB();
-$stmt = $conn->prepare("SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks WHERE mata_kuliah_spesial.NPM = mahasiswa.NPM AND idjenismks = id");
+$stmt = $conn->prepare("SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks WHERE mata_kuliah_spesial.NPM = mahasiswa.NPM AND idjenismks = id ORDER BY mahasiswa.nama,namamks");
 $stmt->execute(array());
 $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
