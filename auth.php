@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "database.php";
+require_once 'navigation.php';
 
 class auth
 {
@@ -26,7 +27,6 @@ class auth
             if (empty($_POST['username']) || empty($_POST['password'])) {
                 $error = "Enter your username and password, please.";
                 $_SESSION['errorMsg'] = $error;
-                require_once 'navigation.php';
                 navigation::go_to_url('index.php');
             } else {
                 try {
@@ -35,21 +35,39 @@ class auth
 
                     $query = "SELECT * FROM sisidang.mahasiswa WHERE username=:username OR password=:password LIMIT 1";
 
-                    $stmt = $this->conn->prepare($query);
-                    $stmt->execute(array(':username' => $username, ':password' => $password));
-                    $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $statementMhs = $this->conn->prepare($query);
+                    $statementMhs->execute(array(':username' => $username, ':password' => $password));
+                    $mhsRow = $statementMhs->fetch(PDO::FETCH_ASSOC);
+                    $query = "SELECT * FROM sisidang.dosen WHERE username=:username OR password=:password LIMIT 1";
+                    $statementDsn = $this->conn->prepare($query);
+                    $statementDsn->execute(array(':username' => $username, ':password' => $password));
+                    $dsnRow = $statementDsn->fetch(PDO::FETCH_ASSOC);
 
-                    echo $userRow['nama'];
+                    echo $mhsRow['nama'];
 
-                    if ($stmt->rowCount() > 0) {
+                    if ($username == 'admin') {
+                        $_SESSION['username'] = $username;
+                        $_SESSION['userdata'] = array('nama' => 'admin', 'role' => 'admin');
+                        navigation::go_to_url('index.php');
+                    } else if ($statementMhs->rowCount() > 0) {
                         $_SESSION['username'] = $username;
                         $_SESSION['userdata'] = array();
                         $userdata = &$_SESSION['userdata'];
-                        foreach ($userRow as $item => $value) {
+                        foreach ($mhsRow as $item => $value) {
                             $userdata[$item] = $value;
                         }
+                        $userdata['role'] = 'mahasiswa';
 //                        print_r($userdata);
-                        require_once 'navigation.php';
+                        navigation::go_to_url('index.php');
+                    } else if ($statementDsn->rowCount() > 0) {
+                        $_SESSION['username'] = $username;
+                        $_SESSION['userdata'] = array();
+                        $userdata = &$_SESSION['userdata'];
+                        foreach ($dsnRow as $item => $value) {
+                            $userdata[$item] = $value;
+                        }
+                        $userdata['role'] = 'dosen';
+//                        print_r($userdata);
                         navigation::go_to_url('index.php');
                     } else {
                         $error = "Either username or password are wrong.";

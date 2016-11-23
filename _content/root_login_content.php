@@ -46,9 +46,21 @@
                     </div>
 <!--                    Debug Login-->
                     <div class="row text-xs-right">
-                        <label for="buttonDebugLogin">Debug Login</label>
+                        <label for="buttonDebugLogin">Mahasiswa Login</label>
                         <input id="buttonDebugLogin" type="submit"
                                onclick="$('#inputUsername').val('Nurhayati31');$('#inputPassword').val('p1506757964')"
+                               name="submit" class="btn btn-secondary btn-login" value="Login">
+                    </div>
+                    <div class="row text-xs-right">
+                        <label for="buttonDebugLogin">Dosen Login</label>
+                        <input id="buttonDebugLogin" type="submit"
+                               onclick="$('#inputUsername').val('novita51');$('#inputPassword').val('novita98')"
+                               name="submit" class="btn btn-secondary btn-login" value="Login">
+                    </div>
+                    <div class="row text-xs-right">
+                        <label for="buttonDebugLogin">Admin Login</label>
+                        <input id="buttonDebugLogin" type="submit"
+                               onclick="$('#inputUsername').val('admin');$('#inputPassword').val('admin')"
                                name="submit" class="btn btn-secondary btn-login" value="Login">
                     </div>
                 </form>

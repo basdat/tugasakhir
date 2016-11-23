@@ -39,7 +39,7 @@ class peserta
         $query = "INSERT INTO dosen_penguji VALUES((SELECT max(idmks) from mata_kuliah_spesial),?)";
         $stmt = $this->conn->prepare($query);
         $stmt->execute(array($nippenguji));
-        
+
         header("Location: mata_kuliah_spesial.php");
 
 

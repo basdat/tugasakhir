@@ -54,7 +54,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
             <div>
             <form method="post" action="peserta.php">
                 <?php
-                    echo "<div class='form-group'>
+                     echo "<div class='form-group'>
                                 <label for='term'>Term</label>
                                 <select id='term' class='form-control' name='term' required>
                                     <option value=''>Pilih Term</option>";
