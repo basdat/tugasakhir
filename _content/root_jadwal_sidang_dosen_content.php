@@ -1,9 +1,6 @@
 <?php
 require_once "database.php";
 
-
-echo generateTable(1,100,10);
-
 function generateTable($page,$totalData,$datasperPage){
 
     $bottom = ($page-1)*$datasperPage+ 1;
@@ -59,3 +56,44 @@ ORDER BY js.tanggal DESC,js.jammulai;");
 }
 
 ?>
+
+<section id="hero" class="header">
+    <div class="container">
+        <div class="row">
+            <div class="row text-xs-center">
+                <span class="display-3">Mata Kuliah Spesial</span>
+            </div>
+            <div class="col-xs-2 offset-xs-5">
+                <hr/>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="row">
+            <div>
+                 <?php
+                 /*     echo generateTable(1,100,10);*/
+                 ?>
+                <!--Mockup-->
+                <table>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                         <td></td>
+                    </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+</section>
