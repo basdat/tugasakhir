@@ -22,7 +22,7 @@
                     Mata Kuliah Spesial
                 </a>
                 <div class="dropdown-menu" aria-labelledby="Preview">
-                    <a class="dropdown-item" href="#">Tambah Peserta</a>
+                    <a class="dropdown-item" href="tambah_peserta.php">Tambah Peserta</a>
                     <a class="dropdown-item" href="#">Buat Jadwal Sidang</a>
                     <a class="dropdown-item" href="mata_kuliah_spesial.php">Lihat Daftar</a>
                 </div>
