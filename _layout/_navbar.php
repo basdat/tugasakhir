@@ -22,12 +22,12 @@
                     <a class="dropdown-item" href="jadwal_sidang.php">Lihat Jadwal Sidang</a>
                     <?php
                     if ($_SESSION['userdata']['role'] == 'admin') {
-                        echo "<a class=\"dropdown-item\" href=\"#\">Buat Jadwal Sidang</a>";
+                        echo "<a class=\"dropdown-item\" href=\"membuat_jadwal_MKS.php\">Buat Jadwal Sidang</a>";
                     }
                     ?>
                     <?php
                     if ($_SESSION['userdata']['role'] != 'mahasiswa') {
-                        echo "<a class=\"dropdown-item\" href=\"#\">Buat Jadwal Non-Sidang</a>";
+                        echo "<a class=\"dropdown-item\" href=\"jadwal_non_sidang_dosen.php\">Buat Jadwal Non-Sidang</a>";
                     }
                     ?>
 
@@ -39,7 +39,7 @@
                     Mata Kuliah Spesial
                 </a>
                 <div class="dropdown-menu" aria-labelledby="Preview">
-                    <a class="dropdown-item" href="membuat_jadwal_MKS.php">Tambah Peserta MKS</a>
+                    <a class="dropdown-item" href="tambah_peserta.php">Tambah Peserta MKS</a>
                     <?php
                     if ($_SESSION['userdata']['role'] != 'mahasiswa') {
                         echo "<a class=\"dropdown-item\" href=\"mata_kuliah_spesial.php\">Lihat Daftar MKS</a>";

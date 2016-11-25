@@ -23,6 +23,11 @@ footer .credit{
     margin-bottom: 5em;
 }
 
-.header hr{
+.header hr {
     border-color: whitesmoke;
+}
+
+section {
+    padding-top: 5em;
+    padding-bottom: 5em;
 }

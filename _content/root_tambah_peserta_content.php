@@ -35,12 +35,11 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
     return $select;
 }
 ?>
-
 <section id="hero" class="header">
     <div class="container">
         <div class="row">
             <div class="row text-xs-center">
-                <span class="display-3">Mata Kuliah Spesial</span>
+                <span class="display-3">Buat Mata Kuliah Spesial</span>
             </div>
             <div class="col-xs-2 offset-xs-5">
                 <hr/>
