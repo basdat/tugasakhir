@@ -1,17 +1,18 @@
-<section class="login-form">
-
-    <section id="hero" class="header">
-        <div class="container">
-            <div class="row">
-                <div class="row text-xs-center">
-                    <span class="display-3">Sign In</span>
-                </div>
-                <div class="col-xs-2 offset-xs-5">
-                    <hr/>
-                </div>
+<section id="hero" class="header">
+    <div class="container">
+        <div class="row">
+            <div class="row text-xs-center">
+                <span class="display-3">Sign In</span>
+            </div>
+            <div class="col-xs-2 offset-xs-5">
+                <hr/>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+<section class="login-form">
+
+
 
     <div class="container">
         <div class="row">

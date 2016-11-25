@@ -32,31 +32,39 @@
                         </select>
                     </div>
                 </div>
-                <div class="row text-xs-center">
+                <div class="row text-xs-right">
                     <input type="submit" name="submit" class="btn btn-primary btn-login" value="Pilih">
                 </div>
             </div>
             <div class="row">
                 <table class="table">
-                    <thead class="thead-default">
+                    <thead>
                     <tr>
-                        <th>#</th>
-                        <th>NPM</th>
-                        <th>Nama Lengkap</th>
+                        <th>Mahasiswa</th>
+                        <th>Jenis Sidang</th>
+                        <th>Juduk</th>
+                        <th>Waktu & Lokasi</th>
+                        <th>Dosen Pembimbing</th>
+                        <th>Dosen Penguji</th>
+                        <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php
-                    for ($i = 1; $i <= 10; $i++) {
-                        printf("<tr>
-                <th scope=\"row\">%d
-                </th>
-                <td>15066892" . (($i < 10) ? "2" : "") . "%d</td>
-                <td>Joe Koe</td>
-            </tr>", $i, $i);
-                    }
+                        for ($i = 0; $i < 10; $i++) {
+                            echo "<tr>
+                        <td>Andi</td>
+                        <td>Skripsi<br>Sebagai:<br>Pembimbing</td>
+                        <td>Green ICT</td>
+                        <td>17 November 2016<br>09.00-10.30<br>2.2301</td>
+                        <td>Alni</td>
+                        <td>Anto<br>Alif</td>
+                        <td><a class=\"btn btn-primary\" href=\"#\">Edit</a></td>
+                    </tr>";
+                        }
                     ?>
                     </tbody>
+
                 </table>
             </div>
             <div class="row text-xs-center">
