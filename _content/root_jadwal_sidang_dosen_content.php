@@ -77,7 +77,7 @@ ORDER BY js.tanggal DESC,js.jammulai;");
                  /*     echo generateTable(1,100,10);*/
                  ?>
                 <!--Mockup-->
-                <table>
+                <table class="table">
                     <thead>
                     <tr>
                         <th>Mahasiswa</th>
