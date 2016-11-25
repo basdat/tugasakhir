@@ -52,7 +52,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
     <div class="container">
         <div class="row">
             <div>
-            <form method="post" action="peserta.php">
+            <form method="post" action="peserta.php" style="width: 30%;margin: auto;">
                 <?php
                      echo "<div class='form-group'>
                                 <label for='term'>Term</label>
@@ -76,7 +76,8 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
                     echo getDropDown($dosenRows,"nip","nama", "Nama Dosen Penguji 1", "Penguji 1","Penguji1")."<br/>";
 
                 ?>
-                <input class="btn btn-primary" type="submit" name="submit" value="tambahpeserta"/>
+                <input class="btn btn-primary" type="submit" name="submit" value="Tambah Peserta"/>
+                <a class="btn btn-danger" href="mata_kuliah_spesial.php">Cancel</a>
             </form>
         </div>
     </div>
