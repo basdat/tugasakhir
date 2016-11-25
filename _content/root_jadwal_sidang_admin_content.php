@@ -57,18 +57,6 @@ ORDER BY js.tanggal DESC,js.jammulai;");
 
 ?>
 
-<section id="hero" class="header">
-    <div class="container">
-        <div class="row">
-            <div class="row text-xs-center">
-                <span class="display-3">Mata Kuliah Spesial</span>
-            </div>
-            <div class="col-xs-2 offset-xs-5">
-                <hr/>
-            </div>
-        </div>
-    </div>
-</section>
 <section>
     <div class="container">
         <div class="row">
@@ -97,7 +85,7 @@ ORDER BY js.tanggal DESC,js.jammulai;");
                         <td>17 November 2016<br>09.00-10.30<br>2.2301</td>
                         <td>Alni</td>
                         <td>Anto<br>Alif</td>
-                        <td><link class="btn btn-primary" href="#">Edit</td>
+                        <td><a class="btn btn-primary" href="#">Edit</a></td>
                     </tr>
                     </tbody>
 
