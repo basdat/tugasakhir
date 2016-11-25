@@ -10,7 +10,31 @@
                         <a class="nav-link" href="#">Mahasiswa</a>
                     </li>
                 </ul>
-
+                <div class="form-group row">
+                    <label for="inputTerm" class="col-sm-2 form-control-label">Term</label>
+                    <div class="col-sm-10">
+                        <select class="custom-select" id="inputTerm">
+                            <option selected>Genap 2015/2016</option>
+                            <option value="1">Ganjil 2015/2016</option>
+                            <option value="2">Genap 2016/2017</option>
+                            <option value="3">Ganjil 2016/2017</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputJenis" class="col-sm-2 form-control-label">Jenis Sidang</label>
+                    <div class="col-sm-10">
+                        <select class="custom-select">
+                            <option></option>
+                            <option value="1">Skripsi</option>
+                            <option value="2">Disertasi</option>
+                            <option value="3">Thesis</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row text-xs-center">
+                    <input type="submit" name="submit" class="btn btn-primary btn-login" value="Pilih">
+                </div>
             </div>
             <div class="row">
                 <table class="table">

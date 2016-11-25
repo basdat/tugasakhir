@@ -13,8 +13,25 @@
                     ?>
                 </strong>
             </li>
-            <li class="nav-item">
-                <a href="jadwal_sidang.php" class="nav-link">Jadwal Sidang</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                   aria-expanded="false">
+                    Jadwal Sidang
+                </a>
+                <div class="dropdown-menu" aria-labelledby="Preview">
+                    <a class="dropdown-item" href="tambah_peserta.php">Lihat Jadwal Sidang</a>
+                    <?php
+                    if ($_SESSION['userdata']['role'] == 'admin') {
+                        echo "<a class=\"dropdown-item\" href=\"tambah_peserta.php\">Buat Jadwal Sidang</a>";
+                    }
+                    ?>
+                    <?php
+                    if ($_SESSION['userdata']['role'] != 'mahasiswa') {
+                        echo "<a class=\"dropdown-item\" href=\"#\">Buat Jadwal Non-Sidang</a>";
+                    }
+                    ?>
+
+                </div>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
@@ -22,9 +39,12 @@
                     Mata Kuliah Spesial
                 </a>
                 <div class="dropdown-menu" aria-labelledby="Preview">
-                    <a class="dropdown-item" href="tambah_peserta.php">Tambah Peserta</a>
-                    <a class="dropdown-item" href="#">Buat Jadwal Sidang</a>
-                    <a class="dropdown-item" href="mata_kuliah_spesial.php">Lihat Daftar</a>
+                    <a class="dropdown-item" href="tambah_peserta.php">Tambah Peserta MKS</a>
+                    <?php
+                    if ($_SESSION['userdata']['role'] != 'mahasiswa') {
+                        echo "<a class=\"dropdown-item\" href=\"mata_kuliah_spesial.php\">Lihat Daftar MKS</a>";
+                    }
+                    ?>
                 </div>
             </li>
             <li class="nav-item">
