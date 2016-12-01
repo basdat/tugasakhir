@@ -5,7 +5,8 @@ $conn = $db->connectDB();
 $userRows = null;
 $query = "SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks 
           WHERE mata_kuliah_spesial.NPM = mahasiswa.NPM AND idjenismks = id 
-          ORDER BY mahasiswa.nama, namamks";
+          ORDER BY mahasiswa.nama, namamks
+          LIMIT 10";
 if($_SESSION['userdata']['role'] == 'dosen') {
     echo "MANCAY";
     $query = "SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks 
@@ -16,7 +17,8 @@ if($_SESSION['userdata']['role'] == 'dosen') {
               UNION ALL
               Select dpen.idmks from dosen_penguji dpen, dosen d where nipdosenpenguji = nip
               AND d.username = ?)
-              ORDER BY mahasiswa.nama,namamks";
+              ORDER BY mahasiswa.nama,namamks
+              LIMIT 10";
     $stmt = $conn->prepare($query);
     $stmt->execute(array($_SESSION['userdata']['username'], $_SESSION['userdata']['username']));
 }
