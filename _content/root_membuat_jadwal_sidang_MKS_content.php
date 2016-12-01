@@ -62,7 +62,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
     <div class="container">
         <div class="row">
             <div>
-                <form method="post" action="jadwalSidang.php">
+                <form method="post" action="tambahJadwalSidang.php">
                     <?php
                     echo getDropDown($mahasiswaRows,"npm","nama","Nama Mahasiswa","Mahasiswa","Mahasiswa")."<br/>";
                     ?>
@@ -112,7 +112,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
 
                 $("#Mahasiswa").change(function(){
                     console.log("Change!!");
-                    $.post("/tugasakhir/AjaxJadwalSidang.php",{npmmks: ($("#Mahasiswa").val())},function(data){
+                    $.post("AjaxJadwalSidang.php",{npmmks: ($("#Mahasiswa").val())},function(data){
                         var mksJSON = data;
                         console.log(data);
                         var res = '<div class="form-group">';
