@@ -15,7 +15,7 @@ $stmt = $conn->prepare($query);
 $stmt->execute(array());
 $ruanganRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$query = "SELECT nama,npm from mahasiswa";
+$query = "SELECT nama,npm from mahasiswa ORDER BY nama";
 $stmt = $conn->prepare($query);
 $stmt->execute(array());
 $mahasiswaRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -30,6 +30,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
     foreach ($arr as $key => $value) {
         $select .= '<option value="' . $value[$val] . '">' . $value[$name] . '</option>';
     }
+
     $select .= "</select></div>";
     return $select;
 }
@@ -112,21 +113,18 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
                 $("#Mahasiswa").change(function(){
                     console.log("Change!!");
                     $.post("/tugasakhir/AjaxJadwalSidang.php",{npmmks: ($("#Mahasiswa").val())},function(data){
-                        console.log(data);
                         var mksJSON = data;
+                        console.log(data);
                         var res = '<div class="form-group">';
                         res += '<label for="mks">Pilih MKS</label>';
                         res+=  '<select id="mks" class="form-control" name="mks" required>';
                         res+='<option value="">Pilih MKS</option>';
 
-                        for(var j=0;j<mksJSON.length;j++)
-                        {
-                            res += '<option value="'+mksJSON[j].idmks+'">'+mksJSON[j].judul+'</option>';
-                        }
+                        $.each(JSON.parse(mksJSON),function (key,value) {
+                            res += '<option value="'+value.idmks+'">'+value.judul+'</option>';
+                        });
 
                         $("#selectMKS").html(res);
-
-
                     })
 
                 });

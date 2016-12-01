@@ -13,5 +13,5 @@ if(isset($_POST['npmmks'])){
     $mksrows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     unset($_POST['npmmks']);
-    echo 
+    echo json_encode($mksrows,JSON_FORCE_OBJECT);
 }

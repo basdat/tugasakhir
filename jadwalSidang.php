@@ -1,7 +1,13 @@
 <?php
+require_once "database.php";
 if (! $_POST) {echo "400 Bad Request"; die();}
 
 
 
 
-$query = "INSERT INTO jadwal_sidang (idmks, tanggal, jammulai, jamselesai, idruangan) VALUES (, '2016-01-20', '09:46:00', '11:46:36', 8);"
+$db = new database();
+$conn = $db->connectDB();
+
+$query = "INSERT INTO jadwal_sidang (tanggal, jammulai, jamselesai, idruangan) VALUES ( :tangga;, :jammulai, :jamselesai, :idruangan);";
+$stmt = $conn->prepare($query);
+$stmt->execute(array(':tanggal'));
