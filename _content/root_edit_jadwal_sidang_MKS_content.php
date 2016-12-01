@@ -3,7 +3,7 @@ require_once "database.php";
 //TODO check logged in == admin
 
 
-$idjs = $_SESSION["idjs"];
+$defaultEdit = $_SESSION["edit"];
 
 $db = new database();
 $conn = $db->connectDB();
@@ -38,7 +38,20 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
     return $select;
 }
 
+function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname)
+{
+    $select = "<div class='form-group'>
+                <label id='label_.$label' for='" . $label . "'>$label</label>
+                <select id='" . $label . "' class='form-control' name='" . $postname . "' required>
+                <option value='$defaultVal'>$default</option>";
 
+    foreach ($arr as $key => $value) {
+        $select .= '<option value="' . $value[$val] . '">' . $value[$name] . '</option>';
+    }
+
+    $select .= "</select></div>";
+    return $select;
+}
 
 ?>
 
