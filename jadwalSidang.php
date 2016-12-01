@@ -7,7 +7,49 @@ if (! $_POST) {echo "400 Bad Request"; die();}
 
 $db = new database();
 $conn = $db->connectDB();
+$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
-$query = "INSERT INTO jadwal_sidang (tanggal, jammulai, jamselesai, idruangan) VALUES ( :tangga;, :jammulai, :jamselesai, :idruangan);";
+$query = "INSERT INTO jadwal_sidang (tanggal, jammulai, jamselesai, idruangan,idmks) VALUES ( :tanggal, :jammulai, :jamselesai, :idruangan,:idmks);";
 $stmt = $conn->prepare($query);
-$stmt->execute(array(':tanggal'));
+if(!$stmt){
+    print_r($conn->errorInfo());
+}
+
+
+$stmt->execute(array(':tanggal' => $_POST["tanggal"],':jammulai'=>$_POST["jam_mulai"],':jamselesai'=>$_POST["jam_selesai"],':idruangan'=>$_POST["idruangan"],':idmks'=> $_POST["mks"]));
+$hc=false;
+
+if($hc=="hardcopy"){
+    $hc = True;
+}else{
+    $hc = false;
+}
+
+
+$query = "UPDATE mata_kuliah_spesial SET pengumpulanhardcopy = :hc WHERE idmks =:idmks;";
+$stmt = $conn->prepare($query);
+if(!$stmt){
+    print_r($conn->errorInfo());
+}
+$stmt->bindParam(':hc',$hc,PDO::PARAM_BOOL);
+$stmt->bindParam('idmks',$_POST["mks"]);
+$stmt->execute();
+
+
+$penguji = $_POST['Penguji'];
+
+foreach ($penguji as $key => $data){
+    echo $data."<br>";
+    echo "id mks :".$_POST["mks"]."<br>";
+    $q = "INSERT INTO dosen_penguji (nipdosenpenguji,idmks) VALUES ( :nip,:id)";
+
+    $stmt = $conn->prepare($q);
+    if(!$stmt){
+        print_r( $conn->errorInfo());
+    }
+    $stmt->execute(array(':nip'=>$data,':id'=>$_POST["mks"]));
+};
+
+
+

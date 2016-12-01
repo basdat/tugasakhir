@@ -74,13 +74,13 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
                     <label for="jam_selesai">Jam Selesai</label><br>
                     <input class="form-control  id="jam_selesai" type="time" name="jam_selesai"><br>
                     <?php
-                       echo getDropDown($ruanganRows,"namaruangan","idruangan","Ruangan","Ruangan","Ruangan")."<br/>";
+                       echo getDropDown($ruanganRows,"idruangan","namaruangan","Ruangan","Ruangan","idruangan")."<br/>";
                     ?>
                     <div id="penguji">
                         <button id="tambahPenguji" class="btn btn-primary"> Tambah Penguji</button>
                     </div>
                     <label class="radio-inline">
-                        <input type="radio" name="hardcopy" value="hardcopy">Sudah Mengumpulkan Hardcopy
+                        <input type="radio" name="hc" value="hardcopy">Sudah Mengumpulkan Hardcopy
                     </label><br>
 
                     <input class="btn btn-primary" type="submit" name="submit" value="Buat Jadwal MKS"/>
