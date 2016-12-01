@@ -22,7 +22,7 @@
                     <a class="dropdown-item" href="jadwal_sidang.php">Lihat Jadwal Sidang</a>
                     <?php
                     if ($_SESSION['userdata']['role'] == 'admin') {
-                        echo "<a class=\"dropdown-item\" href=\"membuat_jadwal_MKS.php\">Buat Jadwal Sidang</a>";
+                        echo "<a class=\"dropdown-item\" href=\"membuat_jadwal_sidang_MKS.php\">Buat Jadwal Sidang</a>";
                     }
                     ?>
                     <?php
