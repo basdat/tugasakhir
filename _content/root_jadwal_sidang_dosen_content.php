@@ -1,23 +1,23 @@
 <?php
 require_once "database.php";
 
-function generateTable($page,$totalData,$datasperPage){
+function generateTable($order){
 
-    $bottom = ($page-1)*$datasperPage+ 1;
-    $top = $page*$datasperPage;
+    /*$bottom = ($page-1)*$datasperPage+ 1;
+    $top = $page*$datasperPage;*/
 
     $db = new database();
     $conn = $db->connectDB();
-    $stmt = $conn->prepare("SELECT mh.nama,jm.namamks,mks.judul,js.tanggal,js.jammulai,js.jamselesai,dp.nipdosenpenguji,dpem.nipdosenpembimbing
-FROM jadwal_sidang js NATURAL JOIN mata_kuliah_spesial mks NATURAL JOIN mahasiswa mh JOIN jenis_mks jm ON mks.idjenismks = jm.id  NATURAL LEFT OUTER JOIN dosen_pembimbing dpem NATURAL LEFT OUTER JOIN dosen_penguji dp
-WHERE dp.nipdosenpenguji=:nip OR dpem.nipdosenpembimbing =:nip AND RowNum >=:st AND RowNum <=:ed
-ORDER BY js.tanggal DESC,js.jammulai;");
-    $stmt->execute(array(':nip' =>$_SESSION['userdata']['nip'],':st' =>$bottom, ':ed'=>$top));
+    $stmt = $conn->prepare("SELECT mks.ijinmajusidang,mks.pengumpulanhardcopy,mh.nama,jm.namamks,mks.judul,js.tanggal,js.jammulai,js.jamselesai,dp.nipdosenpenguji,dpem.nipdosenpembimbing,mks.idmks,r.namaruangan
+FROM jadwal_sidang js NATURAL JOIN mata_kuliah_spesial mks NATURAL JOIN mahasiswa mh JOIN jenis_mks jm ON mks.idjenismks = jm.id  NATURAL LEFT OUTER JOIN dosen_pembimbing dpem NATURAL LEFT OUTER JOIN dosen_penguji dp NATURAL JOIN ruangan r
+WHERE dp.nipdosenpenguji=:nip OR dpem.nipdosenpembimbing =:nip 
+ORDER BY :order;");
+    $stmt->execute(array(':nip' =>$_SESSION['userdata']['nip'],':order'=>$order));
     $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $html = "<table><thead><tr>";
+    $html = "<table class='table'><thead><tr>";
 
-    $columnName = array('aa','aaa','aaaa');
+    $columnName = array('Mahasiswa','Jenis Sidang','Judul','Waktu dan Lokasi','Pembimbing','Penguji','Status');
     foreach ($columnName as $th){
         $html = $html."<th>".$th." </th>";
     }
@@ -26,28 +26,76 @@ ORDER BY js.tanggal DESC,js.jammulai;");
     foreach ($datas as $key => $dataRow){
         $html = $html."<tr>";
 
-        echo "1";
-
-        $html = $html."<td>".$dataRow["mahasiswa"]."</td>".
-            "<td>".$dataRow['namamks']."</td>".
-            "<td>".$dataRow['judul']."</td>"
+        $html = $html."<td>".$dataRow['nama']."</td>".
+            "<td>".$dataRow['judul']."</td>".
+            "<td>".$dataRow['namamks']
         ;
 
+        $sebagai = "\nSebagai :";
+
+        $stmt = $conn->prepare("SELECT COUNT(*) As Jumlah FROM dosen_pembimbing dpem WHERE dpem.nipdosenpembimbing=:nip AND dpem.idmks=:idmks");
+        $stmt->execute(array(':nip' =>$_SESSION['userdata']['nip'],':idmks'=>$dataRow['idmks']));
+        $dospem = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if($dospem[0]['jumlah'] > 0){
+            $sebagai = $sebagai."\n Dosen Pembimbing";
+        }
+
+
+        $stmt = $conn->prepare("SELECT COUNT(*) As Jumlah FROM dosen_penguji dpem WHERE dpem.nipdosenpenguji=:nip AND dpem.idmks=:idmks");
+        $stmt->execute(array(':nip' =>$_SESSION['userdata']['nip'],':idmks'=>$dataRow['idmks']));
+        $dospeng = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if($dospeng[0]['jumlah'] > 0){
+            $sebagai = $sebagai."\n Dosen Penguji";
+        }
+
+        $sebagai = $sebagai."</td>";
+
+        $html=$html.$sebagai;
+
+        $waktudanlokasi = "<td>";
+
         //TODO add waktu dan lokasi
+        $waktudanlokasi = $waktudanlokasi.$dataRow['tanggal']."\n".$dataRow['jammulai']."-".$dataRow['jamselesai']."\n".$dataRow['namaruangan']."</td>";
+        $html=$html.$waktudanlokasi;
 
         //TODO add Dospem lain
+        $dospenglainhtml="<td>";
 
+        $stmt = $conn->prepare("SELECT d.nama FROM dosen_penguji dpem JOIN dosen d ON d.nip = dpem.nipdosenpenguji WHERE dpem.idmks=:idmks");
+        $stmt->execute(array(':idmks'=>$dataRow['idmks']));
+        $dospenglain = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($dospenglain as $key => $dataR){
+            $dospenglainhtml=$dospenglainhtml.$dataR['nama']."\n";
+        }
+
+        $dospenglainhtml = $dospenglainhtml."</td>";
+
+        $html=$html.$dospenglainhtml;
+
+        $dospemlainhtml ="<td>";
+        $stmt = $conn->prepare("SELECT d.nama FROM dosen_pembimbing dpem JOIN dosen d ON d.nip = dpem.nipdosenpembimbing WHERE dpem.idmks=:idmks");
+        $stmt->execute(array(':idmks'=>$dataRow['idmks']));
+        $dospemlain = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($dospemlain as $key => $dataR2){
+            $dospemlainhtml=$dospemlainhtml.$dataR2['nama']."\n";
+        }
+        $dospemlainhtml=$dospemlainhtml."</td>";
+
+        $html=$html.$dospemlainhtml;
 
         $res ="";
-        if($dataRow['izinmasuksidang'] == true){
+        if($dataRow['ijinmajusidang'] == true){
             $res=$res."Izin Masuk Sidang";
         }
-        if($dataRow['kumpulhardcopy'] == true){
+        if($dataRow['pengumpulanhardcopy'] == true){
             $res=$res."Kumpul Hard Copy";
         }
 
         $html = $html."<td>".$res."</td>";
-
 
         $html = $html."</tr>";
     }
@@ -62,10 +110,10 @@ ORDER BY js.tanggal DESC,js.jammulai;");
         <div class="row">
             <div>
                  <?php
-                 /*     echo generateTable(1,100,10);*/
+                 echo generateTable('mh.nama');
                  ?>
                 <!--Mockup-->
-                <table class="table">
+                <!--<table class="table">
                     <thead>
                     <tr>
                         <th>Mahasiswa</th>
@@ -78,7 +126,7 @@ ORDER BY js.tanggal DESC,js.jammulai;");
                     </thead>
                     <tbody>
                     <?php
-                    for ($i = 0; $i < 10; $i++) {
+/*                    for ($i = 0; $i < 10; $i++) {
                         echo "<tr>
                         <td>Andi</td>
                         <td>Skripsi<br>Sebagai:<br>Pembimbing</td>
@@ -88,35 +136,11 @@ ORDER BY js.tanggal DESC,js.jammulai;");
                         <td>Izin Masuk Sidang</td>
                     </tr>";
                     }
-                    ?>
+                    */?>
                     </tbody>
 
-                </table>
+                </table>-->
 
-            </div>
-            <div class="row">
-                <div class="row text-xs-center">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">«</span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">»</span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-
-                </div>
             </div>
         </div>
 </section>
