@@ -15,7 +15,7 @@ $stmt = $conn->prepare($query);
 $stmt->execute(array());
 $ruanganRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$query = "SELECT nama from mahasiswa";
+$query = "SELECT nama,npm from mahasiswa";
 $stmt = $conn->prepare($query);
 $stmt->execute(array());
 $mahasiswaRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -26,12 +26,14 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
                 <label id='label_.$label' for='" . $label . "'>$label</label>
                 <select id='" . $label . "' class='form-control' name='" . $postname . "' required>
                 <option value=''>Pilih " . $default . "</option>";
+
     foreach ($arr as $key => $value) {
         $select .= '<option value="' . $value[$val] . '">' . $value[$name] . '</option>';
     }
     $select .= "</select></div>";
     return $select;
 }
+
 
 
 ?>
@@ -61,8 +63,9 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
             <div>
                 <form method="post" action="jadwalSidang.php">
                     <?php
-                    echo getDropDown($mahasiswaRows,"nama","nama","Nama Mahasiswa","Mahasiswa","Mahasiswa")."<br/>";
+                    echo getDropDown($mahasiswaRows,"npm","nama","Nama Mahasiswa","Mahasiswa","Mahasiswa")."<br/>";
                     ?>
+                    <div id="selectMKS"></div>
                     <label for="tanggal">Tanggal</label><br>
                     <input class="form-control id="tanggal" type="date" name="tanggal"><br>
                     <label for="jam_mulai">Jam Mulai</label><br>
@@ -70,7 +73,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
                     <label for="jam_selesai">Jam Selesai</label><br>
                     <input class="form-control  id="jam_selesai" type="time" name="jam_selesai"><br>
                     <?php
-                       echo getDropDown($ruanganRows,"namaruangan","namaruangan","Ruangan","Ruangan","Ruangan")."<br/>";
+                       echo getDropDown($ruanganRows,"namaruangan","idruangan","Ruangan","Ruangan","Ruangan")."<br/>";
                     ?>
                     <div id="penguji">
                         <button id="tambahPenguji" class="btn btn-primary"> Tambah Penguji</button>
@@ -85,23 +88,51 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
             </div>
         </div>
         <script>
-            console.log("Script on!")
-            var counter = 0;
-        $("#tambahPenguji").click(function(e){
-            e.preventDefault();
-            counter++;
-            var dosenJSON = <?php  echo json_encode($dosenRows)?>;
-            var result = '<div class="form-group">';
-            result += '<label for="Penguji'+counter+'">Penguji '+ counter+'</label>';
-            result+=  '<select id="Penguji'+counter+'" class="form-control" name="Penguji[]" required>';
-            result+='<option value="">Pilih Dosen</option>';
 
-            for(var i=0;i<dosenJSON.length;i++)
-            {
-                result += '<option value="'+dosenJSON[i].nip+'">'+dosenJSON[i].nama+'</option>';
-            }
-            $("#penguji").append(result);
-        });
+            $(document).ready(function(){
+                console.log("Script on!")
+                var counter = 0;
+
+                $("#tambahPenguji").click(function(e){
+                    e.preventDefault();
+                    counter++;
+                    var dosenJSON = <?php  echo json_encode($dosenRows)?>;
+                    var result = '<div class="form-group">';
+                    result += '<label for="Penguji'+counter+'">Penguji '+ counter+'</label>';
+                    result+=  '<select id="Penguji'+counter+'" class="form-control" name="Penguji[]" required>';
+                    result+='<option value="">Pilih Dosen</option>';
+
+                    for(var i=0;i<dosenJSON.length;i++)
+                    {
+                        result += '<option value="'+dosenJSON[i].nip+'">'+dosenJSON[i].nama+'</option>';
+                    }
+                    $("#penguji").append(result);
+                });
+
+                $("#Mahasiswa").change(function(){
+                    console.log("Change!!");
+                    $.post("/tugasakhir/AjaxJadwalSidang.php",{npmmks: ($("#Mahasiswa").val())},function(data){
+                        console.log(data);
+                        var mksJSON = data;
+                        var res = '<div class="form-group">';
+                        res += '<label for="mks">Pilih MKS</label>';
+                        res+=  '<select id="mks" class="form-control" name="mks" required>';
+                        res+='<option value="">Pilih MKS</option>';
+
+                        for(var j=0;j<mksJSON.length;j++)
+                        {
+                            res += '<option value="'+mksJSON[j].idmks+'">'+mksJSON[j].judul+'</option>';
+                        }
+
+                        $("#selectMKS").html(res);
+
+
+                    })
+
+                });
+            });
+
+
         </script>
 </section>
 
