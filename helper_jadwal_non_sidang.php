@@ -32,9 +32,36 @@ class jadwal_non_sidang
 
         header("Location: jadwal_non_sidang_dosen.php");
     } 
+    public function update_jadwal(){ 
+        $db = new database(); 
+        $conn = $db->connectDB(); 
+        
+        $nipDosen = $_POST['nipDosen'];
+        $tglMulai = $_POST['tanggalMulai'];
+        $tglSelesai = $_POST['tanggalSelesai'];
+        $repetisi = $_POST['repetisi'];
+        $keterangan = $_POST['keterangan'];
+        $idJadwal = $_POST['idJadwal'];
+
+        $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
+
+         $sql = "UPDATE jadwal_non_sidang SET tanggalMulai = '$tglMulai', tanggalselesai = '$tglSelesai', alasan = '$keterangan', repetisi = '$repetisi' WHERE idJadwal = '$idJadwal';";
+
+        $stmt_update_jadwal_non_sidang = $conn->prepare($sql);
+        $stmt_update_jadwal_non_sidang->execute();
+
+        echo $sql;
+
+        //header("Location: jadwal_non_sidang_dosen.php");
+    } 
 } 
 
 $jns = new jadwal_non_sidang(); 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
+        if($_POST['simpan'] == 'Simpan'){
+            //echo "Simpan/add new jadwal";
             $jns->tambah_jadwal();
+        } else {
+            $jns->update_jadwal();
+        }
     }

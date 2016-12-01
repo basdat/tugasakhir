@@ -35,7 +35,7 @@ $allJadwal = $stmt_get_all_jadwal->fetchAll(PDO::FETCH_ASSOC);
 		<br>
 		<div class="row">
 			<table>
-				<table class="table table-striped">
+				<table id="jadwaltable" class="table table-striped">
 					<thead class="thead-inverse">
 						<tr>
 							<th>No.</th>
@@ -65,7 +65,7 @@ $allJadwal = $stmt_get_all_jadwal->fetchAll(PDO::FETCH_ASSOC);
 								echo "<td>" . $jadwal['tanggalmulai'] . " - " . $jadwal['tanggalselesai'] . "</td>";
 								echo "<td>" . ucwords($jadwal['repetisi']) . "</td>";
 								echo "<td>" . ucwords($jadwal['alasan']) . "</td>";
-								echo "<td><button type='button' class='btn btn-warning' id='" . $jadwal['idjadwal'] . "' onclick='updateData('$id','$nama','$tglMulai','$tglSelesai','$repetisi','$alasan','$nip')'>Edit</button></td>";
+								echo '<td><button type="button" data-toggle="modal" data-target="#modalEdit" class="btn btn-warning" id="' . $jadwal['idjadwal'] . '" onclick="updateData(\''.$id.'\',\''.$nama.'\',\''.$tglMulai.'\',\''.$tglSelesai.'\',\''.$repetisi.'\',\''.$alasan.'\',\''.$nip.'\');">Edit</button></td>';
 								echo "</tr>";
 								$counter++;
 							}
@@ -133,13 +133,13 @@ $allJadwal = $stmt_get_all_jadwal->fetchAll(PDO::FETCH_ASSOC);
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title" id="editTitle">Edit Jadwal Non Sidang &nbsp &nbsp &nbsp ID Jadwal: <span></span></h4>
+						<h4 class="modal-title" id="editTitle">Edit Jadwal Non Sidang &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp ID Jadwal: <span></span></h4>
 					</div>
 					<div class="modal-body">
 						<form action="helper_jadwal_non_sidang.php" method="post">
 							<div class="form-group">
 								<label for="namaDosen">Nama Dosen: </label> <br>
-								<select class="form-control" id="editNama" name="nipDosen">
+								<select class="form-control" id="editNama" name="nipDosen" disabled>
 								</select>
 							</div>
 							<div class="form-group col-xs-6">
@@ -165,7 +165,8 @@ $allJadwal = $stmt_get_all_jadwal->fetchAll(PDO::FETCH_ASSOC);
 						
 					</div>
 					<div class="modal-footer">
-						<input type="submit" class="btn btn-success" name="simpan" value="Simpan">
+						<input type="hidden" name="idJadwal" id="idJadwal">
+						<input type="submit" class="btn btn-success" name="simpan" value="Update">
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
 					</div>
 					</form>
@@ -180,12 +181,29 @@ $allJadwal = $stmt_get_all_jadwal->fetchAll(PDO::FETCH_ASSOC);
 	src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
 	}
 	</style>
-	<script src="js/vendor/jquery-3.1.1.js"></script>
-	<script src="js/vendor/tether.js"></script>
 	<script>
-		 function updateData(id, nama, tglMulai, tglSelesai, repetisi, alasan, nip) {
-            alert("assad");      
-         }
+		$(document).ready(function() {
+	    	$('#jadwaltable').DataTable( {
+	        "paging":   true,
+	        "ordering": false,
+	        "info":     false
+    		} );
+		} );
+
+		function updateData(id, nama, tglMulai, tglSelesai, repetisi, alasan, nip){
+			$("#idJadwal").val(id);
+			$("#editTitle span").html(id);
+			$("#editNama").append('<option value=' + nip + '>'+ nama +'</option>');
+			$("#editTanggalMulai").val(tglMulai);
+			$("#editTanggalSelesai").val(tglSelesai);
+			$("#editKeterangan").val(alasan);
+
+		}
+
+		function test(){
+			alert("asdad");
+		}
 	</script>
-</body>
-</html>
+</div>
+</div>
+</section>
