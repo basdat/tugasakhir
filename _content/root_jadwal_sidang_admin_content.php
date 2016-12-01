@@ -72,8 +72,9 @@ ORDER BY js.tanggal DESC,js.jammulai;");
                         <th>Jenis Sidang</th>
                         <th>Juduk</th>
                         <th>Waktu & Lokasi</th>
-                        <th>Pembimbing lain</th>
-                        <th>Status</th>
+                        <th>Dosen Pembimbing</th>
+                        <th>Dosen Penguji</th>
+                        <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -82,8 +83,9 @@ ORDER BY js.tanggal DESC,js.jammulai;");
                         <td>Skripsi<br>Sebagai:<br>Pembimbing</td>
                         <td>Green ICT</td>
                         <td>17 November 2016<br>09.00-10.30<br>2.2301</td>
-                        <td>Alief</td>
-                        <td>Izin Masuk Sidang</td>
+                        <td>Alni</td>
+                        <td>Anto<br>Alif</td>
+                        <td><a class="btn btn-primary" href="#">Edit</a></td>
                     </tr>
                     </tbody>
 

@@ -1,5 +1,5 @@
 <nav id="navbar" class="navbar navbar-light navbar-fixed-top bg-faded">
-    <a href="" class="navbar-brand"><span class="text-highlight">Sistem Informasi Sidang</span></a>
+    <a href="/basdat" class="navbar-brand"><span class="text-highlight">Sistem Informasi Sidang</span></a>
     <button class="navbar-toggler hidden-md-up float-xs-right" type="button" data-toggle="collapse"
             data-target="#navbar-collapse">
     </button>
@@ -13,8 +13,25 @@
                     ?>
                 </strong>
             </li>
-            <li class="nav-item">
-                <a href="jadwal_sidang.php" class="nav-link">Jadwal Sidang</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                   aria-expanded="false">
+                    Jadwal Sidang
+                </a>
+                <div class="dropdown-menu" aria-labelledby="Preview">
+                    <a class="dropdown-item" href="jadwal_sidang.php">Lihat Jadwal Sidang</a>
+                    <?php
+                    if ($_SESSION['userdata']['role'] == 'admin') {
+                        echo "<a class=\"dropdown-item\" href=\"membuat_jadwal_MKS.php\">Buat Jadwal Sidang</a>";
+                    }
+                    ?>
+                    <?php
+                    if ($_SESSION['userdata']['role'] != 'mahasiswa') {
+                        echo "<a class=\"dropdown-item\" href=\"jadwal_non_sidang_dosen.php\">Buat Jadwal Non-Sidang</a>";
+                    }
+                    ?>
+
+                </div>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
@@ -22,9 +39,12 @@
                     Mata Kuliah Spesial
                 </a>
                 <div class="dropdown-menu" aria-labelledby="Preview">
-                    <a class="dropdown-item" href="#">Tambah Peserta</a>
-                    <a class="dropdown-item" href="#">Buat Jadwal Sidang</a>
-                    <a class="dropdown-item" href="mata_kuliah_spesial.php">Lihat Daftar</a>
+                    <a class="dropdown-item" href="tambah_peserta.php">Tambah Peserta MKS</a>
+                    <?php
+                    if ($_SESSION['userdata']['role'] != 'mahasiswa') {
+                        echo "<a class=\"dropdown-item\" href=\"mata_kuliah_spesial.php\">Lihat Daftar MKS</a>";
+                    }
+                    ?>
                 </div>
             </li>
             <li class="nav-item">

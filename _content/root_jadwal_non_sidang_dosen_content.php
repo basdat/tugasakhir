@@ -16,16 +16,16 @@ $allJadwal = $stmt_get_all_jadwal->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <section id="hero" class="header">
-	<div class="container">
-		<div class="row">
-			<div class="row text-xs-center">
-				<span class="display-3">Jadwal Non Sidang</span>
-			</div>
-			<div class="col-xs-2 offset-xs-5">
-				<hr/>
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <div class="row">
+            <div class="row text-xs-center">
+                <span class="display-3">Jadwal Non-Sidang</span>
+            </div>
+            <div class="col-xs-2 offset-xs-5">
+                <hr/>
+            </div>
+        </div>
+    </div>
 </section>
 <section>
 	<div class="container">
