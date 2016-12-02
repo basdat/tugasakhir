@@ -54,13 +54,6 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
 
 ?>
 
-
-
-<script
-    src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-    crossorigin="anonymous"></script>
-
 <section id="hero" class="header">
     <div class="container">
         <div class="row">
@@ -179,9 +172,22 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                     $("#penguji").append(result);
                 });
 
+                $.post("AjaxJadwalSidang.php",{npmmks: ($("#Mahasiswa").val())},function(data){
+                    var mksJSON = data;
+                    console.log(data);
+                    var res = '<div class="form-group">';
+                    tres += '<label for="mks">Pilih MKS</label>';
+                    tres+=  '<select id="mks" class="form-control" name="mks" required>';
+                    tres+='<option value="">Pilih MKS</option>';
+
+                    $.each(JSON.parse(mksJSON),function (key,value) {
+                        tres += '<option value="'+value.idmks+'">'+value.judul+'</option>';
+                    });
+
+                    $("#selectMKS").html(res);
+                });
 
                 $("#Mahasiswa").change(function(){
-                    console.log("Change!!");
                     $.post("AjaxJadwalSidang.php",{npmmks: ($("#Mahasiswa").val())},function(data){
                         var mksJSON = data;
                         console.log(data);
