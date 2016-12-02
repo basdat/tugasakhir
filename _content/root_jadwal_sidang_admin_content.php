@@ -21,7 +21,7 @@ ORDER BY :order;");
 
     $stmt->execute(array(':order'=>$order));
     $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $html = "<table class='table'><thead><tr>";
+    $html = "<table class='table dataTable'><thead><tr>";
 
     $columnName = array('Mahasiswa','Jenis Sidang','Judul','Waktu dan Lokasi','Penguji','Pembimbing','Action');
     foreach ($columnName as $th){
@@ -78,28 +78,38 @@ ORDER BY :order;");
 
 ?>
 
-<form action>
-
-</form>
-
 <section>
     <div class="container">
         <div class="row">
             <div>
+                <button class="btn btn-primary" id="btntambah" style="float: right">Tambah Jadwal Sidang</button>
                 <?php
                 echo generateTable('js.tanggal ASC, js.jammulai ASC');
                 ?>
                 <script>
                     $(document).ready(function(){
-                        $(".edit").click(function(){
+                        $(".edit").click(function() {
                             console.log("Edit");
-                            $.post("jadwal_sidang.php",{edit: ($(this).attr("id"))},function(){
-                            window.location.href="edit_jadwal_sidang_MKS.php";
-                        });
+                            $.post("jadwal_sidang.php", {edit: ($(this).attr("id"))}, function () {
+                                window.location.href = "edit_jadwal_sidang_MKS.php";
+                            });
 
                         });
+                        $("#btntambah").click(function() {
+                            console.log("Tambah");
+                            window.location.href="membuat_jadwal_sidang_MKS.php"
+                        });
+
+                        $('.table').DataTable( {
+                            "paging":   true,
+                            "ordering": false,
+                            "info":     false,
+                            "order": [[ 2, "desc" ]]
+                        } );
                     });
                 </script>
+
+
             </div>
         </div>
 </section>

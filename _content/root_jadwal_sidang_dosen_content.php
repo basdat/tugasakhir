@@ -16,7 +16,7 @@ ORDER BY :order;");
     $stmt->execute(array(':nip' =>$_SESSION['userdata']['nip'],':order'=>$order));
     $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $html = "<table class='table'><thead><tr>";
+    $html = "<table class='table dataTable'><thead><tr>";
 
     $columnName = array('Mahasiswa','Jenis Sidang','Judul','Waktu dan Lokasi','Penguji','Pembimbing','Status');
     foreach ($columnName as $th){
@@ -113,4 +113,14 @@ ORDER BY :order;");
                  ?>
             </div>
         </div>
+        <script>
+            $(document).ready(function() {
+                $('.table').DataTable( {
+                    "paging":   true,
+                    "ordering": false,
+                    "info":     false,
+                    "order": [[ 2, "desc" ]]
+                } );
+            } );
+        </script>
 </section>
