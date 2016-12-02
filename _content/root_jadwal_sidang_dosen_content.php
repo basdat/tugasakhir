@@ -18,7 +18,7 @@ ORDER BY :order;");
 
     $html = "<table class='table'><thead><tr>";
 
-    $columnName = array('Mahasiswa','Jenis Sidang','Judul','Waktu dan Lokasi','Pembimbing','Penguji','Status');
+    $columnName = array('Mahasiswa','Jenis Sidang','Judul','Waktu dan Lokasi','Penguji','Pembimbing','Status');
     foreach ($columnName as $th){
         $html = $html."<th>".$th." </th>";
     }
@@ -109,7 +109,7 @@ ORDER BY :order;");
         <div class="row">
             <div>
                  <?php
-                 echo generateTable('js.tanggal DESC, js.jammulai DESC');
+                 echo generateTable('js.tanggal ASC, js.jammulai ASC');
                  ?>
             </div>
         </div>

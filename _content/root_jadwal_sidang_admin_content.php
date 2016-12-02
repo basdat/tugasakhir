@@ -23,7 +23,7 @@ ORDER BY :order;");
     $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $html = "<table class='table'><thead><tr>";
 
-    $columnName = array('Mahasiswa','Jenis Sidang','Judul','Waktu dan Lokasi','Pembimbing','Penguji','Action');
+    $columnName = array('Mahasiswa','Jenis Sidang','Judul','Waktu dan Lokasi','Penguji','Pembimbing','Action');
     foreach ($columnName as $th){
         $html = $html."<th>".$th." </th>";
     }
@@ -87,7 +87,7 @@ ORDER BY :order;");
         <div class="row">
             <div>
                 <?php
-                echo generateTable('js.tanggal DESC, js.jammulai DESC');
+                echo generateTable('js.tanggal ASC, js.jammulai ASC');
                 ?>
                 <script>
                     $(document).ready(function(){
