@@ -78,7 +78,7 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                     ?>
                     <div id="selectMKS"></div>
                     <label for="tanggal">Tanggal</label><br>
-                    <input class="form-control id="tanggal" type="date" name="tanggal" <?php if(isset($_SESSION["tambah_prev_data"])) echo "value='".$_SESSION["tambah_prev_data"]["tanggal"]."'" ?>><br>
+                    <input class="form-control id="tanggal" type="date" name="tanggal" <?php if(isset($_SESSION["tambah_prev_data"])) echo "value='".["tambah_prev_data"]["tanggal"]."'" ?>><br>
                     <label for="jam_mulai">Jam Mulai</label><br>
                     <input class="form-control id="jam_mulai" type="time" name="jam_mulai" <?php if(isset($_SESSION["tambah_prev_data"])) echo "value='".$_SESSION["tambah_prev_data"]["jammulai"]."'" ?> ><br>
                     <label for="jam_selesai">Jam Selesai</label><br>
@@ -106,17 +106,19 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                             $count = 0;
 
                             try {
-                                foreach ($_SESSION["tambah_prev_data"]["penguji"] as $key => $data) {
+                                if(isset($_SESSION["tambah_prev_data"]["penguji"])) {
+                                    foreach ($_SESSION["tambah_prev_data"]["penguji"] as $key => $data) {
 
-                                    $count = $count + 1;
+                                        $count = $count + 1;
 
-                                    $db = new database();
-                                    $conn = $db->connectDB();
-                                    $stmt = $conn->prepare("SELECT d.nama FROM dosen d WHERE d.nip = :nip");
-                                    $stmt->execute(array(':nip' => $data));
-                                    $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                        $db = new database();
+                                        $conn = $db->connectDB();
+                                        $stmt = $conn->prepare("SELECT d.nama FROM dosen d WHERE d.nip = :nip");
+                                        $stmt->execute(array(':nip' => $data));
+                                        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                    echo getDropDownDV($dosenRows, "nip", "nama", $row['0']['nama'], $data, "Penguji " . $count, "Penguji[]") . "<br/>";
+                                        echo getDropDownDV($dosenRows, "nip", "nama", $row['0']['nama'], $data, "Penguji " . $count, "Penguji[]") . "<br/>";
+                                    }
                                 }
                             }catch (Exception $exception){
 
@@ -184,7 +186,7 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                         tres += '<option value="'+value.idmks+'">'+value.judul+'</option>';
                     });
 
-                    $("#selectMKS").html(res);
+                    $("#selectMKS").html(tres);
                 });
 
                 $("#Mahasiswa").change(function(){

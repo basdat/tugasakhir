@@ -9,8 +9,6 @@ $_SESSION["edit_js_error"] = array();
 
 if(isset($_POST["Penguji"] )) {
     foreach ($_POST["Penguji"] as $key => $datas) {
-        /*echo "nip" . $datas . "<br>";
-        echo "validated: " . $validated . "<br>";*/
 
         $db = new database();
         $conn = $db->connectDB();
@@ -59,22 +57,23 @@ foreach($time as $key=> $data){
     }
 }
 
-if(!isset($_POST["tanggal"]) || $_POST["tanggal"]="" ){
+
+if(!isset($_POST["tanggal"]) || $_POST["tanggal"]="" || strtotime($_POST['tanggal'])=='00-00-0000' || empty($_POST["tanggal"]) ){
     $validated=false;
     $_SESSION["edit_js_error"][] = "Tanggal harus diisi";
 }
 
-if(!isset($_POST["jam_mulai"]) || $_POST["jam_mulai"]="" ){
+if(!isset($_POST["jam_mulai"]) || $_POST["jam_mulai"]="" || empty($_POST["jam_mulai"])  ){
     $validated=false;
     $_SESSION["edit_js_error"][] = "Jam mulai harus diisi";
 }
 
-if(!isset($_POST["jam_selesai"]) || $_POST["jam_selesai"]="" ){
+if(!isset($_POST["jam_selesai"]) || $_POST["jam_selesai"]="" || empty($_POST["jam_selesai"])){
     $validated=false;
     $_SESSION["edit_js_error"][] = "Jam selesai harus diisi";
 }
 
-if ($validated = true){
+if ($validated == true){
     if(strtotime($_POST["jam_mulai"])>strtotime($_POST["jam_selesai"])){
         $validated=false;
         $_SESSION["edit_js_error"][] = "Jam mulai harus sebelum jam selesai";
@@ -138,7 +137,7 @@ $conn = $db->connectDB();
         header('Location: index.php');
 
     }catch (Exception $e){
-        $_SESSION["edit_prev_data"]= array("hc"=> $hc,"penguji"=>$_POST["Penguji"],'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
+
         $_SESSION["edit_js_error"][] = $e->getMessage();
         header('Location: edit_jadwal_sidang_MKS.php');
         /*echo $e->getMessage();*/

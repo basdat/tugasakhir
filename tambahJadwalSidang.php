@@ -59,31 +59,32 @@ foreach($time as $key=> $data){
     }
 }
 
-if(!isset($_POST["tanggal"]) || $_POST["tanggal"]="" ){
+
+if(!isset($_POST["tanggal"]) || $_POST["tanggal"]="" || strtotime($_POST['tanggal'])=='00-00-0000' || empty($_POST["tanggal"]) ){
     $validated=false;
     $_SESSION["tambah_js_error"][] = "Tanggal harus diisi";
 }
 
-if(!isset($_POST["jam_mulai"]) || $_POST["jam_mulai"]="" ){
+if(!isset($_POST["jam_mulai"]) || $_POST["jam_mulai"]="" || empty($_POST["jam_mulai"])  ){
     $validated=false;
     $_SESSION["tambah_js_error"][] = "Jam mulai harus diisi";
 }
 
-if(!isset($_POST["jam_selesai"]) || $_POST["jam_selesai"]="" ){
+if(!isset($_POST["jam_selesai"]) || $_POST["jam_selesai"]="" || empty($_POST["jam_selesai"])){
     $validated=false;
     $_SESSION["tambah_js_error"][] = "Jam selesai harus diisi";
 }
 
-if ($validated = true){
+if ($validated == true){
     if(strtotime($_POST["jam_mulai"])>strtotime($_POST["jam_selesai"])){
         $validated=false;
         $_SESSION["tambah_js_error"][] = "Jam mulai harus sebelum jam selesai";
     }
 }
 
-
 if($validated){
 try {
+
     $db = new database();
     $conn = $db->connectDB();
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -126,9 +127,7 @@ try {
         $q = "INSERT INTO dosen_penguji (nipdosenpenguji,idmks) VALUES ( :nip,:id)";
 
         $stmt = $conn->prepare($q);
-        /*if (!$stmt) {
-            print_r($conn->errorInfo());
-        }*/
+
         $stmt->execute(array(':nip' => $data, ':id' => $_POST["mks"]));
     };
 
@@ -136,10 +135,10 @@ try {
     header('Location: index.php');
 
 }catch (Exception $e){
-    $_SESSION["tambah_prev_data"]= array("hc"=> $hc,"penguji"=>$_POST["Penguji"],'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
     $_SESSION["tambah_js_error"][] = $e->getMessage();
     header('Location: membuat_jadwal_sidang_MKS.php');
 }
+
 
 }else{
     $db = new database();

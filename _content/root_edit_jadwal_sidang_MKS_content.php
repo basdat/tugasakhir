@@ -112,17 +112,19 @@ return $static;
                             $count = 0;
 
                             try {
-                                foreach ($_SESSION["edit_prev_data"]["penguji"] as $key => $data) {
+                                if(isset($_SESSION["edit_prev_data"]["penguji"])) {
+                                    foreach ($_SESSION["edit_prev_data"]["penguji"] as $key => $data) {
 
-                                    $count = $count + 1;
+                                        $count = $count + 1;
 
-                                    $db = new database();
-                                    $conn = $db->connectDB();
-                                    $stmt = $conn->prepare("SELECT d.nama FROM dosen d WHERE d.nip = :nip");
-                                    $stmt->execute(array(':nip' => $data));
-                                    $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                        $db = new database();
+                                        $conn = $db->connectDB();
+                                        $stmt = $conn->prepare("SELECT d.nama FROM dosen d WHERE d.nip = :nip");
+                                        $stmt->execute(array(':nip' => $data));
+                                        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                    echo getDropDownDV($dosenRows, "nip", "nama", $row['0']['nama'], $data, "Penguji " . $count, "Penguji[]") . "<br/>";
+                                        echo getDropDownDV($dosenRows, "nip", "nama", $row['0']['nama'], $data, "Penguji " . $count, "Penguji[]") . "<br/>";
+                                    }
                                 }
                             }catch (Exception $exception){
 
@@ -135,6 +137,7 @@ return $static;
                     </label><br>
 
                     <input class="btn btn-primary" type="submit" name="submit" value="Buat Jadwal MKS"/>
+                    <input class="btn btn-primary" type="submit" name="" value="Batal"/>
                 </form>
 
                 <?php if(isset($_SESSION["edit_js_error"])){
@@ -227,7 +230,7 @@ return $static;
 
         </script>
 
-        <?php unset($_SESSION["tambah_prev_data"])?>
+        <?php unset($_SESSION["edit_prev_data"])?>
 </section>
 
-
+sssss
