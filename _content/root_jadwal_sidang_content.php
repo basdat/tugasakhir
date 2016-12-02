@@ -11,6 +11,4 @@
     </div>
 </section>
 <?php
-if ($_SESSION['userdata']['role'] == 'mahasiswa') {
-    include "jadwal_sidang/mahasiswa.php";
-}
+include "root_jadwal_sidang_". $_SESSION['userdata']['role'] ."_content.php";
