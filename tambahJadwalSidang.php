@@ -157,7 +157,7 @@ try {
 
         $_SESSION["tambah_prev_data"]= array("namamks"=>$jmks ,"hc"=> $hc,"penguji"=>$_POST["Penguji"],'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
     }catch(Exception $e){
-        
+
     }
     header('Location: membuat_jadwal_sidang_MKS.php');
 }

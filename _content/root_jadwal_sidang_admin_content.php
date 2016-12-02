@@ -87,7 +87,7 @@ ORDER BY :order;");
         <div class="row">
             <div>
                 <?php
-                echo generateTable('mh.nama');
+                echo generateTable('js.tanggal DESC, js.jammulai DESC');
                 ?>
                 <script>
                     $(document).ready(function(){
