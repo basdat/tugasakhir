@@ -26,11 +26,6 @@ ORDER BY :order;");
     foreach ($datas as $key => $dataRow){
         $html = $html."<tr>";
 
-        $html = $html."<td>".$dataRow['nama']."</td>".
-            "<td>".$dataRow['judul']."</td>".
-            "<td>".$dataRow['namamks']
-        ;
-
         $sebagai = "\nSebagai :";
 
         $stmt = $conn->prepare("SELECT COUNT(*) As Jumlah FROM dosen_pembimbing dpem WHERE dpem.nipdosenpembimbing=:nip AND dpem.idmks=:idmks");
@@ -50,24 +45,39 @@ ORDER BY :order;");
             $sebagai = $sebagai."\n Dosen Penguji";
         }
 
-        $sebagai = $sebagai."</td>";
+        $html = $html."<td>".$dataRow['nama']."</td>".
+            "<td>".$dataRow['namamks'].$sebagai."</td>".
+            "<td>".$dataRow['judul']."</td>"
+        ;
 
-        $html=$html.$sebagai;
+
+
 
         $waktudanlokasi = "<td>";
 
-        //TODO add waktu dan lokasi
+
         $waktudanlokasi = $waktudanlokasi.$dataRow['tanggal']."\n".$dataRow['jammulai']."-".$dataRow['jamselesai']."\n".$dataRow['namaruangan']."</td>";
         $html=$html.$waktudanlokasi;
 
-        //TODO add Dospem lain
+        $dospemlainhtml ="<td>";
+        $stmt = $conn->prepare("SELECT d.nama FROM dosen_pembimbing dpem JOIN dosen d ON d.nip = dpem.nipdosenpembimbing WHERE dpem.idmks=:idmks");
+        $stmt->execute(array(':idmks'=>$dataRow['idmks']));
+        $dospemlain = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($dospemlain as $key0 => $dataR2){
+            $dospemlainhtml=$dospemlainhtml.$dataR2['nama']."\n";
+        }
+        $dospemlainhtml=$dospemlainhtml."</td>";
+
+        $html=$html.$dospemlainhtml;
+
         $dospenglainhtml="<td>";
 
         $stmt = $conn->prepare("SELECT d.nama FROM dosen_penguji dpem JOIN dosen d ON d.nip = dpem.nipdosenpenguji WHERE dpem.idmks=:idmks");
         $stmt->execute(array(':idmks'=>$dataRow['idmks']));
         $dospenglain = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($dospenglain as $key => $dataR){
+        foreach ($dospenglain as $key0 => $dataR){
             $dospenglainhtml=$dospenglainhtml.$dataR['nama']."\n";
         }
 
@@ -75,17 +85,6 @@ ORDER BY :order;");
 
         $html=$html.$dospenglainhtml;
 
-        $dospemlainhtml ="<td>";
-        $stmt = $conn->prepare("SELECT d.nama FROM dosen_pembimbing dpem JOIN dosen d ON d.nip = dpem.nipdosenpembimbing WHERE dpem.idmks=:idmks");
-        $stmt->execute(array(':idmks'=>$dataRow['idmks']));
-        $dospemlain = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($dospemlain as $key => $dataR2){
-            $dospemlainhtml=$dospemlainhtml.$dataR2['nama']."\n";
-        }
-        $dospemlainhtml=$dospemlainhtml."</td>";
-
-        $html=$html.$dospemlainhtml;
 
         $res ="";
         if($dataRow['ijinmajusidang'] == true){
