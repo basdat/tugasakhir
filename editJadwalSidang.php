@@ -25,7 +25,7 @@ if(isset($_POST["Penguji"] )) {
 
         $db = new database();
         $conn = $db->connectDB();
-        $query = "SELECT js.jammulai,js.jamselesai,d.nama FROM mata_kuliah_spesial mks NATURAL JOIN jadwal_sidang js JOIN dosen_penguji dp ON mks.idmks = dp.idmks  JOIN dosen d ON d.nip= dp.nipdosenpenguji WHERE dp.nipdosenpenguji = :nip;";
+        $query = "SELECT js.jammulai,js.jamselesai,d.nama,js.tanggal FROM mata_kuliah_spesial mks NATURAL JOIN jadwal_sidang js JOIN dosen_penguji dp ON mks.idmks = dp.idmks  JOIN dosen d ON d.nip= dp.nipdosenpenguji WHERE dp.nipdosenpenguji = :nip;";
         $stmt = $conn->prepare($query);
         $stmt->execute(array(':nip' => $datas));
         $time2 = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -33,11 +33,12 @@ if(isset($_POST["Penguji"] )) {
         foreach ($time2 as $key => $data) {
             /*print_r($data);*/
            /* echo checkTimeOverlap($_POST["jam_mulai"], $_POST["jam_selesai"], $data["jammulai"], $data['jamselesai']);*/
-
-            if (checkTimeOverlap($_POST["jam_mulai"], $_POST["jam_selesai"], $data["jammulai"], $data['jamselesai'])) {
-                $validated = false;
-                $_SESSION["edit_js_error"][] = "Waktu Overlap pada penguji " . $data["nama"] . " terhadap waktu " . $data["jammulai"] . "-" . $data["jamselesai"];
-                /*print_r($_SESSION["edit_js_error"]);*/
+            if(strtotime($data['tanggal']) == strtotime($_POST["tanggal"])) {
+                if (checkTimeOverlap($_POST["jam_mulai"], $_POST["jam_selesai"], $data["jammulai"], $data['jamselesai'])) {
+                    $validated = false;
+                    $_SESSION["edit_js_error"][] = "Waktu Overlap pada penguji " . $data["nama"] . " terhadap waktu " . $data["jammulai"] . "-" . $data["jamselesai"];
+                    /*print_r($_SESSION["edit_js_error"]);*/
+                }
             }
         }
     }
@@ -45,15 +46,17 @@ if(isset($_POST["Penguji"] )) {
 
 $db = new database();
 $conn = $db->connectDB();
-$query = "SELECT js.jammulai,js.jamselesai,r.namaruangan FROM jadwal_sidang js NATURAL JOIN ruangan r WHERE idruangan =:idruangan;";
+$query = "SELECT js.jammulai,js.jamselesai,r.namaruangan,js.tanggal FROM jadwal_sidang js NATURAL JOIN ruangan r WHERE idruangan =:idruangan;";
 $stmt = $conn->prepare($query);
 $stmt->execute(array(':idruangan'=>$_POST["idruangan"]));
 $time= $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 foreach($time as $key=> $data){
-    if(checkTimeOverlap($_POST["jam_mulai"],$_POST["jam_selesai"],$data["jammulai"],$data['jamselesai'])){
-        $validated = false;
-        $_SESSION["edit_js_error"][] = "Waktu Overlap pada ruangan ".$data['namaruangan']." terhadap waktu ".$data["jammulai"]."-".$data["jamselesai"];
+    if(strtotime($data['tanggal']) == strtotime($_POST["tanggal"])) {
+        if (checkTimeOverlap($_POST["jam_mulai"], $_POST["jam_selesai"], $data["jammulai"], $data['jamselesai'])) {
+            $validated = false;
+            $_SESSION["edit_js_error"][] = "Waktu Overlap pada ruangan " . $data['namaruangan'] . " terhadap waktu " . $data["jammulai"] . "-" . $data["jamselesai"];
+        }
     }
 }
 

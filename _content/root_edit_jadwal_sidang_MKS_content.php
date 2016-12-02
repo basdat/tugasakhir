@@ -67,7 +67,7 @@ function getStaticForm($default,$defaultVal,$label, $postname)
 $static = "<div class='form-group'>
     <label id='label_.$label' for='" . $label . "'>$label</label><br>
     <p class='form-control-static'>$default</p>
-    <input id='" . $label . "' type='hidden' name='" . $postname ."' value='".$defaultVal."' placeholder='".$default."' required>";
+    <input id='" . $label . "' type='hidden' name='" . $postname ."' value='".$defaultVal."' placeholder='".$default."' required></div>";
 return $static;
 }
 
@@ -97,11 +97,11 @@ return $static;
                         <?php echo getStaticForm($mks["judul"],$mks["idmks"],"Mata Kuliah Spesial","mks") ?>
                     </div>
                     <label for="tanggal">Tanggal</label><br>
-                    <input class="form-control id="tanggal" type="date" name="tanggal" value='<?php if(isset($_SESSION["edit_prev_data"])) {echo "value='".$_SESSION["edit_prev_data"]["tanggal"]."'";} else echo $mks["tanggal"];?>'><br>
+                    <input class="form-control id="tanggal" type="date" name="tanggal" value='<?php if(isset($_SESSION["edit_prev_data"])) {echo $_SESSION["edit_prev_data"]["tanggal"];} else echo $mks["tanggal"];?>'><br>
                     <label for="jam_mulai">Jam Mulai</label><br>
-                    <input class="form-control id="jam_mulai" type="time" name="jam_mulai" value='<?php if(isset($_SESSION["edit_prev_data"])) {echo "value='".$_SESSION["edit_prev_data"]["jammulai"]."'"; } else echo $mks["jammulai"];?>'><br>
+                    <input class="form-control id="jam_mulai" type="time" name="jam_mulai" value='<?php if(isset($_SESSION["edit_prev_data"])) {echo $_SESSION["edit_prev_data"]["jammulai"]; } else echo $mks["jammulai"];?>'><br>
                     <label for="jam_selesai">Jam Selesai</label><br>
-                    <input class="form-control  id="jam_selesai" type="time" name="jam_selesai" value='<?php if(isset($_SESSION["edit_prev_data"])) {echo "value='".$_SESSION["edit_prev_data"]["jamselesai"]."'";} else echo $mks["jamselesai"]?>'><br>
+                    <input class="form-control  id="jam_selesai" type="time" name="jam_selesai" value='<?php if(isset($_SESSION["edit_prev_data"])) {echo $_SESSION["edit_prev_data"]["jamselesai"];} else echo $mks["jamselesai"]?>'><br>
                     <?php
                     echo getDropDownDV($ruanganRows,"idruangan","namaruangan",$mks["namaruangan"],$mks["idruangan"],"Ruangan","idruangan")."<br/>";
                     ?>
