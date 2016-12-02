@@ -47,11 +47,27 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
     return $select;
 }
 
+function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname)
+{
+    $select = "<div class='form-group'>
+                <label id='label_.$label' for='" . $label . "'>$label</label>
+                <select id='" . $label . "' class='form-control' name='" . $postname . "' required>
+                <option value='".$defaultVal."'>$default</option>";
+
+    foreach ($arr as $key => $value) {
+        $select .= '<option value="' . $value[$val] . '">' . $value[$name] . '</option>';
+    }
+
+    $select .= "</select></div>";
+    return $select;
+}
+
 function getStaticForm($default,$defaultVal,$label, $postname)
 {
 $static = "<div class='form-group'>
-    <label id='label_.$label' for='" . $label . "'>$label</label>
-    <input id='" . $label . "' class='form-control-static' name='" . $postname ."' value='".$defaultVal."' placeholder='".$default."' required>";
+    <label id='label_.$label' for='" . $label . "'>$label</label><br>
+    <p class='form-control-static'>$default</p>
+    <input id='" . $label . "' type='hidden' name='" . $postname ."' value='".$defaultVal."' placeholder='".$default."' required>";
 return $static;
 }
 
@@ -83,7 +99,7 @@ return $static;
                     echo getStaticForm($mks["nama"],$mks["npm"],"Mahasiswa","Mahasiswa")."<br/>";
                     ?>
                     <div id="selectMKS">
-                        <?php getStaticForm($mks["idmks"],$mks["judul"],"Mata Kuliah Spesial","mks") ?>
+                        <?php echo getStaticForm($mks["judul"],$mks["idmks"],"Mata Kuliah Spesial","mks") ?>
                     </div>
                     <label for="tanggal">Tanggal</label><br>
                     <input class="form-control id="tanggal" type="date" name="tanggal" value='<?php echo $mks["tanggal"]?>'><br>
