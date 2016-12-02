@@ -86,6 +86,11 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
                     <input class="btn btn-primary" type="submit" name="submit" value="Buat Jadwal MKS"/>
                 </form>
 
+                <?php if(isset($_SESSION["tambah_js_error"])){
+                    foreach ($_SESSION["tambah_js_error"] as $key=>$data){
+                        echo "<div class='alert alert-danger' role='alert'>".$data."</div>";
+                    }
+                }?>
             </div>
         </div>
         <script>

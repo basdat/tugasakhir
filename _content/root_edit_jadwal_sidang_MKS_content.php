@@ -120,6 +120,12 @@ return $static;
                     <input class="btn btn-primary" type="submit" name="submit" value="Buat Jadwal MKS"/>
                 </form>
 
+                <?php if(isset($_SESSION["edit_js_error"])){
+                    foreach ($_SESSION["edit_js_error"] as $key=>$data){
+                        echo "<div class='alert alert-danger' role='alert'>".$data."</div>";
+                    }
+                }?>
+
             </div>
         </div>
         <script>

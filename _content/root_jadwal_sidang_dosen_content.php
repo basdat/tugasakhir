@@ -56,11 +56,9 @@ ORDER BY :order;");
 
         $waktudanlokasi = "<td>";
 
-        //TODO add waktu dan lokasi
         $waktudanlokasi = $waktudanlokasi.$dataRow['tanggal']."\n".$dataRow['jammulai']."-".$dataRow['jamselesai']."\n".$dataRow['namaruangan']."</td>";
         $html=$html.$waktudanlokasi;
 
-        //TODO add Dospem lain
         $dospenglainhtml="<td>";
 
         $stmt = $conn->prepare("SELECT d.nama FROM dosen_penguji dpem JOIN dosen d ON d.nip = dpem.nipdosenpenguji WHERE dpem.idmks=:idmks");
