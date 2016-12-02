@@ -19,7 +19,7 @@ if(isset($_POST["Penguji"] )) {
         foreach ($time as $key => $data) {
             if (check_in_range($data['tanggalmulai'], $data['tanggalselesai'], $_POST['tanggal'])) {
                 $validated = false;
-                $_SESSION["edit_js_error"][] = "Tanggal Overlap pada penguji " . $data["nama"] . "terhadap jadwal non sidang " . $data["tanggalmulai"] . "-" . $data["tanggalselesai"];
+                $_SESSION["edit_js_error"][] = "Tanggal overlap pada penguji " . $data["nama"] . "terhadap jadwal non sidang " . $data["tanggalmulai"] . "-" . $data["tanggalselesai"];
             };
         }
 
@@ -61,17 +61,17 @@ foreach($time as $key=> $data){
 }
 
 
-if(!isset($_POST["tanggal"]) || $_POST["tanggal"]="" || strtotime($_POST['tanggal'])=='00-00-0000' || empty($_POST["tanggal"]) ){
+if(!isset($_POST["tanggal"]) || $_POST["tanggal"]=="" || strtotime($_POST['tanggal'])=='00-00-0000' || empty($_POST["tanggal"]) ){
     $validated=false;
     $_SESSION["edit_js_error"][] = "Tanggal harus diisi";
 }
 
-if(!isset($_POST["jam_mulai"]) || $_POST["jam_mulai"]="" || empty($_POST["jam_mulai"])  ){
+if(!isset($_POST["jam_mulai"]) || $_POST["jam_mulai"]=="" || empty($_POST["jam_mulai"])  ){
     $validated=false;
     $_SESSION["edit_js_error"][] = "Jam mulai harus diisi";
 }
 
-if(!isset($_POST["jam_selesai"]) || $_POST["jam_selesai"]="" || empty($_POST["jam_selesai"])){
+if(!isset($_POST["jam_selesai"]) || $_POST["jam_selesai"]=="" || empty($_POST["jam_selesai"])){
     $validated=false;
     $_SESSION["edit_js_error"][] = "Jam selesai harus diisi";
 }
@@ -111,34 +111,32 @@ $conn = $db->connectDB();
 
         $stmt->execute();
 
-
-
-        $penguji = $_POST['Penguji'];
-
+        if(isset($_POST['Penguji'])) {
         $q = "DELETE FROM dosen_penguji WHERE idmks =:idmks";
 
         $stmt = $conn->prepare($q);
-        /*if(!$stmt){
-            print_r( $conn->errorInfo());
-        }*/
+
         $stmt->execute(array('idmks'=>$_POST["mks"]));
 
-        foreach ($penguji as $key => $data){
-            /*echo $data."<br>";
-            echo "id mks :".$_POST["mks"]."<br>";*/
-            $q = "INSERT INTO dosen_penguji (nipdosenpenguji,idmks) VALUES (:nip,:id)";
+        $penguji = $_POST['Penguji'];
 
-            $stmt = $conn->prepare($q);
-            /*if(!$stmt){
-                print_r( $conn->errorInfo());
-            }*/
-            $stmt->execute(array(':nip'=>$data,':id'=>$_POST["mks"]));
-        };
 
-        unset($_SESSION["edit_idjs"]);
-        unset($_SESSION["edit_js_error"]);
-        header('Location: index.php');
+            foreach ($penguji as $key => $data) {
+                /*echo $data."<br>";
+                echo "id mks :".$_POST["mks"]."<br>";*/
+                $q = "INSERT INTO dosen_penguji (nipdosenpenguji,idmks) VALUES (:nip,:id)";
 
+                $stmt = $conn->prepare($q);
+                /*if(!$stmt){
+                    print_r( $conn->errorInfo());
+                }*/
+                $stmt->execute(array(':nip' => $data, ':id' => $_POST["mks"]));
+            };
+
+            unset($_SESSION["edit_idjs"]);
+            unset($_SESSION["edit_js_error"]);
+            header('Location: index.php');
+        }
     }catch (Exception $e){
 
         $_SESSION["edit_js_error"][] = $e->getMessage();

@@ -21,7 +21,7 @@ if(isset($_POST["Penguji"] )) {
         foreach ($time as $key => $data) {
             if (check_in_range($data['tanggalmulai'], $data['tanggalselesai'], $_POST['tanggal'])) {
                 $validated = false;
-                $_SESSION["tambah_js_error"][] = "Tanggal Overlap pada penguji " . $data["nama"] . "terhadap jadwal non sidang " . $data["tanggalmulai"] . "-" . $data["tanggalselesai"];
+                $_SESSION["tambah_js_error"][] = "Tanggal overlap pada penguji " . $data["nama"] . "terhadap jadwal non sidang " . $data["tanggalmulai"] . "-" . $data["tanggalselesai"];
             };
         }
 
@@ -63,17 +63,17 @@ foreach($time as $key=> $data){
 }
 
 
-if(!isset($_POST["tanggal"]) || $_POST["tanggal"]="" || strtotime($_POST['tanggal'])=='00-00-0000' || empty($_POST["tanggal"]) ){
+if(!isset($_POST["tanggal"]) || $_POST["tanggal"]=="" || strtotime($_POST['tanggal'])=='00-00-0000' || empty($_POST["tanggal"]) ){
     $validated=false;
     $_SESSION["tambah_js_error"][] = "Tanggal harus diisi";
 }
 
-if(!isset($_POST["jam_mulai"]) || $_POST["jam_mulai"]="" || empty($_POST["jam_mulai"])  ){
+if(!isset($_POST["jam_mulai"]) || $_POST["jam_mulai"]=="" || empty($_POST["jam_mulai"])  ){
     $validated=false;
     $_SESSION["tambah_js_error"][] = "Jam mulai harus diisi";
 }
 
-if(!isset($_POST["jam_selesai"]) || $_POST["jam_selesai"]="" || empty($_POST["jam_selesai"])){
+if(!isset($_POST["jam_selesai"]) || $_POST["jam_selesai"]=="" || empty($_POST["jam_selesai"])){
     $validated=false;
     $_SESSION["tambah_js_error"][] = "Jam selesai harus diisi";
 }
@@ -101,7 +101,6 @@ try {
 
     $arr = array(':tanggal' => $_POST["tanggal"], ':jammulai' => $_POST["jam_mulai"], ':jamselesai' => $_POST["jam_selesai"], ':idruangan' => $_POST["idruangan"], ':idmks' => $_POST["mks"]);
 
-
     $stmt->execute($arr);
 
 
@@ -123,17 +122,17 @@ try {
     $stmt->bindParam('idmks', $_POST["mks"]);
     $stmt->execute();
 
+    if(isset($_POST['Penguji'])) {
+        $penguji = $_POST['Penguji'];
 
-    $penguji = $_POST['Penguji'];
+        foreach ($penguji as $key => $data) {
+            $q = "INSERT INTO dosen_penguji (nipdosenpenguji,idmks) VALUES ( :nip,:id)";
 
-    foreach ($penguji as $key => $data) {
-        $q = "INSERT INTO dosen_penguji (nipdosenpenguji,idmks) VALUES ( :nip,:id)";
+            $stmt = $conn->prepare($q);
 
-        $stmt = $conn->prepare($q);
-
-        $stmt->execute(array(':nip' => $data, ':id' => $_POST["mks"]));
-    };
-
+            $stmt->execute(array(':nip' => $data, ':id' => $_POST["mks"]));
+        };
+    }
     unset($_SESSION["tambah_js_error"]);
     header('Location: index.php');
 
@@ -152,15 +151,15 @@ try {
     $name= $stmt->fetchAll(PDO::FETCH_ASSOC);
     $name=$name['0']["nama"];
 
-    $_SESSION["tambah_prev_data"]= array("hc"=> $hc,'nama'=>$name,'npm'=>$_POST["Mahasiswa"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
+    $db = new database();
+    $conn = $db->connectDB();
+    $query = "SELECT judul FROM mata_kuliah_spesial WHERE idmks = :id ;";
+    $stmt = $conn->prepare($query);
+    $stmt->execute(array(':id'=>$_POST["mks"]));
+    $jmks= $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $jmks=$jmks['0']["judul"];
 
-    if(isset($_POST["Penguji"])){
-        $_SESSION["tambah_prev_data"]["penguji"] = $_POST["Penguji"];
-    }
-
-    $_SESSION["tambah_prev_data"]['jammulai' ] = $_POST["jam_mulai"];
-    $_SESSION["tambah_prev_data"]['jamselesai'] = $_POST["jam_selesai"];
-    $_SESSION["tambah_prev_data"]['tanggal'] = $_POST["tanggal"];
+    $_SESSION["tambah_prev_data"]= array("namamks"=>$jmks ,"hc"=> $hc,"penguji"=>$_POST["Penguji"],'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
 
     header('Location: membuat_jadwal_sidang_MKS.php');
 }

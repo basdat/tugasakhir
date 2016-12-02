@@ -78,7 +78,7 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                     ?>
                     <div id="selectMKS"></div>
                     <label for="tanggal">Tanggal</label><br>
-                    <input class="form-control id="tanggal" type="date" name="tanggal" <?php if(isset($_SESSION["tambah_prev_data"])) echo "value='".["tambah_prev_data"]["tanggal"]."'" ?>><br>
+                    <input class="form-control id="tanggal" type="date" name="tanggal" <?php if(isset($_SESSION["tambah_prev_data"])) echo "value='".$_SESSION["tambah_prev_data"]["tanggal"]."'" ?>><br>
                     <label for="jam_mulai">Jam Mulai</label><br>
                     <input class="form-control id="jam_mulai" type="time" name="jam_mulai" <?php if(isset($_SESSION["tambah_prev_data"])) echo "value='".$_SESSION["tambah_prev_data"]["jammulai"]."'" ?> ><br>
                     <label for="jam_selesai">Jam Selesai</label><br>
@@ -153,6 +153,15 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
         }
         ?>
 
+        <?php if(isset($_SESSION["tambah_prev_data"])){
+            echo "<script>var def=".$_SESSION["tambah_prev_data"]["idmks"].";
+            var judul ='".$_SESSION["tambah_prev_data"]["namamks"]."';
+            </script>";
+        }else{
+            echo "<script> var def=''; var judul='Pilih MKS'</script>";
+        }
+        ?>
+
         <script>
 
             $(document).ready(function(){
@@ -174,20 +183,22 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                     $("#penguji").append(result);
                 });
 
+
                 $.post("AjaxJadwalSidang.php",{npmmks: ($("#Mahasiswa").val())},function(data){
-                    var mksJSON = data;
-                    console.log(data);
-                    var res = '<div class="form-group">';
-                    tres += '<label for="mks">Pilih MKS</label>';
-                    tres+=  '<select id="mks" class="form-control" name="mks" required>';
-                    tres+='<option value="">Pilih MKS</option>';
+                        var mksJSON = data;
+                        console.log(data);
+                        var tres = '<div class="form-group">';
+                        tres += '<label for="mks">Pilih MKS</label>';
+                        tres+=  '<select id="mks" class="form-control" name="mks" required>';
+                        tres+='<option value="'+def+'">'+judul+'</option>';
 
-                    $.each(JSON.parse(mksJSON),function (key,value) {
-                        tres += '<option value="'+value.idmks+'">'+value.judul+'</option>';
-                    });
+                        $.each(JSON.parse(mksJSON),function (key,value) {
+                            tres += '<option value="'+value.idmks+'">'+value.judul+'</option>';
+                        });
 
-                    $("#selectMKS").html(tres);
+                        $("#selectMKS").html(tres);
                 });
+
 
                 $("#Mahasiswa").change(function(){
                     $.post("AjaxJadwalSidang.php",{npmmks: ($("#Mahasiswa").val())},function(data){
