@@ -36,6 +36,21 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
 }
 
 
+function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname)
+{
+    $select = "<div class='form-group'>
+                <label id='label_.$label' for='" . $label . "'>$label</label>
+                <select id='" . $label . "' class='form-control' name='" . $postname . "' required>
+                <option value='".$defaultVal."'>$default</option>";
+
+    foreach ($arr as $key => $value) {
+        $select .= '<option value="' . $value[$val] . '">' . $value[$name] . '</option>';
+    }
+
+    $select .= "</select></div>";
+    return $select;
+}
+
 
 ?>
 
@@ -64,40 +79,89 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
             <div>
                 <form method="post" action="tambahJadwalSidang.php">
                     <?php
-                    echo getDropDown($mahasiswaRows,"npm","nama","Nama Mahasiswa","Mahasiswa","Mahasiswa")."<br/>";
+                    if(isset($_SESSION["tambah_prev_data"])){
+                        echo getDropDownDV($mahasiswaRows,"npm","nama",$_SESSION["tambah_prev_data"]['nama'],$_SESSION["tambah_prev_data"]["npm"],"Mahasiswa","Mahasiswa")."<br/>";
+                    }else echo getDropDown($mahasiswaRows,"npm","nama","Nama Mahasiswa","Mahasiswa","Mahasiswa")."<br/>";
                     ?>
                     <div id="selectMKS"></div>
                     <label for="tanggal">Tanggal</label><br>
-                    <input class="form-control id="tanggal" type="date" name="tanggal"><br>
+                    <input class="form-control id="tanggal" type="date" name="tanggal" <?php if(isset($_SESSION["tambah_prev_data"])) echo "value='".$_SESSION["tambah_prev_data"]["tanggal"]."'" ?>><br>
                     <label for="jam_mulai">Jam Mulai</label><br>
-                    <input class="form-control id="jam_mulai" type="time" name="jam_mulai"><br>
+                    <input class="form-control id="jam_mulai" type="time" name="jam_mulai" <?php if(isset($_SESSION["tambah_prev_data"])) echo "value='".$_SESSION["tambah_prev_data"]["jammulai"]."'" ?> ><br>
                     <label for="jam_selesai">Jam Selesai</label><br>
-                    <input class="form-control  id="jam_selesai" type="time" name="jam_selesai"><br>
+                    <input class="form-control  id="jam_selesai" type="time" name="jam_selesai" <?php if(isset($_SESSION["tambah_prev_data"])) echo "value='".$_SESSION["tambah_prev_data"]["jamselesai"]."'" ?>"><br>
                     <?php
-                       echo getDropDown($ruanganRows,"idruangan","namaruangan","Ruangan","Ruangan","idruangan")."<br/>";
+                    if(isset($_SESSION["tambah_prev_data"])){
+
+                        $db = new database();
+                        $conn = $db->connectDB();
+                        $query = "SELECT r.namaruangan FROM ruangan r WHERE r.idruangan=:id ;";
+                        $stmt = $conn->prepare($query);
+                        $stmt->execute(array(':id'=>$_SESSION["tambah_prev_data"]["idruangan"]));
+                        $namaruangan= $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $namaruangan=$namaruangan['0']['namaruangan'];
+
+                        echo getDropDownDV($ruanganRows,"idruangan","namaruangan",$namaruangan,$_SESSION["tambah_prev_data"]["idruangan"],"Ruangan","idruangan")."<br/>";
+                    }else echo getDropDown($ruanganRows,"idruangan","namaruangan","Ruangan","Ruangan","idruangan")."<br/>";
                     ?>
+
                     <div id="penguji">
                         <button id="tambahPenguji" class="btn btn-primary"> Tambah Penguji</button>
+                        <?php
+                        if(isset($_SESSION["tambah_prev_data"])){
+
+                            $count = 0;
+
+                            try {
+                                foreach ($_SESSION["tambah_prev_data"]["penguji"] as $key => $data) {
+
+                                    $count = $count + 1;
+
+                                    $db = new database();
+                                    $conn = $db->connectDB();
+                                    $stmt = $conn->prepare("SELECT d.nama FROM dosen d WHERE d.nip = :nip");
+                                    $stmt->execute(array(':nip' => $data));
+                                    $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                    echo getDropDownDV($dosenRows, "nip", "nama", $row['0']['nama'], $data, "Penguji " . $count, "Penguji[]") . "<br/>";
+                                }
+                            }catch (Exception $exception){
+
+                            }
+                        }
+                        ?>
+
                     </div>
+
                     <label class="radio-inline">
-                        <input type="radio" name="hc" value="hardcopy">Sudah Mengumpulkan Hardcopy
+                        <input type="radio" name="hc" value="hardcopy" <?php if(isset($_SESSION["tambah_prev_data"]["hc"])) echo "checked='".$_SESSION["tambah_prev_data"]["hc"]."''"?>>Sudah Mengumpulkan Hardcopy
                     </label><br>
 
                     <input class="btn btn-primary" type="submit" name="submit" value="Buat Jadwal MKS"/>
                 </form>
 
                 <?php if(isset($_SESSION["tambah_js_error"])){
+                    echo "<br>";
                     foreach ($_SESSION["tambah_js_error"] as $key=>$data){
                         echo "<div class='alert alert-danger' role='alert'>".$data."</div>";
                     }
+                    unset($_SESSION["tambah_js_error"]);
+
                 }?>
             </div>
         </div>
+
+        <?php if(isset($count)){
+            echo "<script>var counter=".$count.";</script>";
+        }else{
+            echo "<script> var counter =0;</script>";
+        }
+        ?>
+
         <script>
 
             $(document).ready(function(){
                 console.log("Script on!")
-                var counter = 0;
 
                 $("#tambahPenguji").click(function(e){
                     e.preventDefault();
@@ -114,6 +178,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
                     }
                     $("#penguji").append(result);
                 });
+
 
                 $("#Mahasiswa").change(function(){
                     console.log("Change!!");
@@ -135,6 +200,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
                 });
             });
 
+            <?php unset($_SESSION["tambah_prev_data"])?>
 
         </script>
 </section>
