@@ -1,5 +1,5 @@
 <nav id="navbar" class="navbar navbar-light navbar-fixed-top bg-faded">
-    <a href="/basdat" class="navbar-brand"><span class="text-highlight">Sistem Informasi Sidang</span></a>
+    <a href="index.php" class="navbar-brand"><span class="text-highlight">Sistem Informasi Sidang</span></a>
     <button class="navbar-toggler hidden-md-up float-xs-right" type="button" data-toggle="collapse"
             data-target="#navbar-collapse">
     </button>

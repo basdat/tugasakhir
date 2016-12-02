@@ -15,7 +15,7 @@ $stmt = $conn->prepare($query);
 $stmt->execute(array());
 $ruanganRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$query = "SELECT nama,npm from mahasiswa";
+$query = "SELECT nama,npm from mahasiswa ORDER BY nama";
 $stmt = $conn->prepare($query);
 $stmt->execute(array());
 $mahasiswaRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -30,6 +30,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
     foreach ($arr as $key => $value) {
         $select .= '<option value="' . $value[$val] . '">' . $value[$name] . '</option>';
     }
+
     $select .= "</select></div>";
     return $select;
 }
@@ -61,7 +62,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
     <div class="container">
         <div class="row">
             <div>
-                <form method="post" action="jadwalSidang.php">
+                <form method="post" action="tambahJadwalSidang.php">
                     <?php
                     echo getDropDown($mahasiswaRows,"npm","nama","Nama Mahasiswa","Mahasiswa","Mahasiswa")."<br/>";
                     ?>
@@ -73,13 +74,13 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
                     <label for="jam_selesai">Jam Selesai</label><br>
                     <input class="form-control  id="jam_selesai" type="time" name="jam_selesai"><br>
                     <?php
-                       echo getDropDown($ruanganRows,"namaruangan","idruangan","Ruangan","Ruangan","Ruangan")."<br/>";
+                       echo getDropDown($ruanganRows,"idruangan","namaruangan","Ruangan","Ruangan","idruangan")."<br/>";
                     ?>
                     <div id="penguji">
                         <button id="tambahPenguji" class="btn btn-primary"> Tambah Penguji</button>
                     </div>
                     <label class="radio-inline">
-                        <input type="radio" name="hardcopy" value="hardcopy">Sudah Mengumpulkan Hardcopy
+                        <input type="radio" name="hc" value="hardcopy">Sudah Mengumpulkan Hardcopy
                     </label><br>
 
                     <input class="btn btn-primary" type="submit" name="submit" value="Buat Jadwal MKS"/>
@@ -111,22 +112,19 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
 
                 $("#Mahasiswa").change(function(){
                     console.log("Change!!");
-                    $.post("/tugasakhir/AjaxJadwalSidang.php",{npmmks: ($("#Mahasiswa").val())},function(data){
-                        console.log(data);
+                    $.post("AjaxJadwalSidang.php",{npmmks: ($("#Mahasiswa").val())},function(data){
                         var mksJSON = data;
+                        console.log(data);
                         var res = '<div class="form-group">';
                         res += '<label for="mks">Pilih MKS</label>';
                         res+=  '<select id="mks" class="form-control" name="mks" required>';
                         res+='<option value="">Pilih MKS</option>';
 
-                        for(var j=0;j<mksJSON.length;j++)
-                        {
-                            res += '<option value="'+mksJSON[j].idmks+'">'+mksJSON[j].judul+'</option>';
-                        }
+                        $.each(JSON.parse(mksJSON),function (key,value) {
+                            res += '<option value="'+value.idmks+'">'+value.judul+'</option>';
+                        });
 
                         $("#selectMKS").html(res);
-
-
                     })
 
                 });
