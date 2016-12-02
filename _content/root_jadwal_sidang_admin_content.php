@@ -1,5 +1,6 @@
 <?php
 require_once "database.php";
+if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="admin") {echo "400 Bad Request"; die();}
 
 if(isset($_POST{"edit"})){
     $_SESSION["edit_idjs"] = $_POST["edit"];

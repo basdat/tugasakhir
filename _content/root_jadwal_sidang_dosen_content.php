@@ -1,5 +1,6 @@
 <?php
 require_once "database.php";
+if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="dosen") {echo "400 Bad Request"; die();}
 
 function generateTable($order){
 
@@ -110,35 +111,6 @@ ORDER BY :order;");
                  <?php
                  echo generateTable('mh.nama');
                  ?>
-                <!--Mockup-->
-                <!--<table class="table">
-                    <thead>
-                    <tr>
-                        <th>Mahasiswa</th>
-                        <th>Jenis Sidang</th>
-                        <th>Juduk</th>
-                        <th>Waktu & Lokasi</th>
-                        <th>Pembimbing lain</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-/*                    for ($i = 0; $i < 10; $i++) {
-                        echo "<tr>
-                        <td>Andi</td>
-                        <td>Skripsi<br>Sebagai:<br>Pembimbing</td>
-                        <td>Green ICT</td>
-                        <td>17 November 2016<br>09.00-10.30<br>2.2301</td>
-                        <td>Alief</td>
-                        <td>Izin Masuk Sidang</td>
-                    </tr>";
-                    }
-                    */?>
-                    </tbody>
-
-                </table>-->
-
             </div>
         </div>
 </section>

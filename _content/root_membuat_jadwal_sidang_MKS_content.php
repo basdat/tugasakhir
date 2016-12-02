@@ -1,6 +1,6 @@
 <?php
 require_once "database.php";
-//TODO check logged in == admin
+if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="admin") {echo "400 Bad Request"; die();}
 
 $db = new database();
 $conn = $db->connectDB();
