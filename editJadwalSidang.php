@@ -140,6 +140,11 @@ $conn = $db->connectDB();
     }catch (Exception $e){
 
         $_SESSION["edit_js_error"][] = $e->getMessage();
+        try{
+            $_SESSION["edit_prev_data"]= array("hc"=> $hc,"penguji"=>$_POST["Penguji"],'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
+        }catch (Exception $e){
+
+        }
         header('Location: edit_jadwal_sidang_MKS.php');
         /*echo $e->getMessage();*/
     }

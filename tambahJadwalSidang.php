@@ -138,6 +138,27 @@ try {
 
 }catch (Exception $e){
     $_SESSION["tambah_js_error"][] = $e->getMessage();
+    try{
+        $db = new database();
+        $conn = $db->connectDB();
+        $query = "SELECT nama FROM mahasiswa m WHERE m.npm=:npm ;";
+        $stmt = $conn->prepare($query);
+        $stmt->execute(array(':npm'=>$_POST["Mahasiswa"]));
+        $name= $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $name=$name['0']["nama"];
+
+        $db = new database();
+        $conn = $db->connectDB();
+        $query = "SELECT judul FROM mata_kuliah_spesial WHERE idmks = :id ;";
+        $stmt = $conn->prepare($query);
+        $stmt->execute(array(':id'=>$_POST["mks"]));
+        $jmks= $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $jmks=$jmks['0']["judul"];
+
+        $_SESSION["tambah_prev_data"]= array("namamks"=>$jmks ,"hc"=> $hc,"penguji"=>$_POST["Penguji"],'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
+    }catch(Exception $e){
+        
+    }
     header('Location: membuat_jadwal_sidang_MKS.php');
 }
 
