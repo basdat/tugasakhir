@@ -39,6 +39,7 @@ if (navigation::is_in_page('login.php')) {
     <script src="js/vendor/bootstrap.js"></script>
     <script src="js/main.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.css"/>
 </head>
 <body>
 <header>
