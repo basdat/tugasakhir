@@ -47,19 +47,39 @@ print_r($datas);
                 </thead>
                 <tbody>
                 <?php
-                $tanggal = 1;
-                for ($i = 1; $i <= 4; $i++) {
-                    echo "<tr>";
-                    for (; $tanggal <= 7 * $i; $tanggal++) {
-                        printf("<td>
-    %d<br/>
-    %s
-</td>", $tanggal, "<div class=\"tag tag-success\">Skripsi</div><br/>
-<div class=\"tag tag-success\">Tugas Akhir</div>");
+                $lastDay = new DateTime('1999-03-25');
+                $lastDay->modify('last day of');
+                echo $lastDay->format('M jS, Y');
+                echo $lastDay->format('D');
+                $dowMap = array('Mon' => 1, 'Tue' => 2, 'Wed' => 3, 'Thu' => 4, 'Fri' => 5, 'Sat' => 6, 'Sun' => 7);
+                $maxDay = (int)($lastDay->format('j'));
+                $firstDay = $dowMap[$lastDay->modify('first day of')->format('D')];
+
+                $counter = 1;
+                echo $maxDay . " ====== > " . ((int)(($maxDay + $firstDay) / 7));
+                $totalDay = $maxDay + $firstDay - 1;
+                $max7MulDay = 7 * ((int)(($totalDay) / 7) + (($totalDay % 7 == 0) ? 0 : 1));
+                echo "max7FUllDay" . $max7MulDay;
+
+                for ($i = 2 - $firstDay; $i <= $max7MulDay - $firstDay + 1; $i++, $counter++) {
+                    if ($counter % 7 == 1) {
+                        echo "<tr>";
+                    }
+                    if ($i < 1 || $i > $maxDay) {
+                        printf("<td></td>");
+                        continue;
                     }
 
-                    echo "</tr>";
+                    printf("<td>
+    %d<br/>
+    %s
+</td>", $i, "<div class=\"tag tag-success\">Skripsi</div><br/>
+<div class=\"tag tag-success\">Tugas Akhir</div>");
+                    if ($counter % 7 == 0) {
+                        echo "</tr>";
+                    }
                 }
+
                 ?>
                 </tbody>
             </table>
