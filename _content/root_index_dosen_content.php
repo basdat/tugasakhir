@@ -9,7 +9,7 @@ WHERE dp.nipdosenpenguji=:nip
 ORDER BY js.tanggal, js.jammulai ASC;");
 $stmt->execute(array(':nip' => $_SESSION['userdata']['nip']));
 $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-print_r($datas);
+//print_r($datas);
 ?>
 <section>
     <style>
@@ -27,9 +27,27 @@ print_r($datas);
         }
     </style>
     <div class="container">
+        <?php
+        $lastDay = new DateTime('2016-02-08');
+        $lastDay->modify('last day of');
+        $calendarMonth = $lastDay->format('m');
+        $calendarMonthName = $lastDay->format('M');
+        $calendarYear = $lastDay->format('Y');
+//        echo $lastDay->format('M jS, Y');
+//        echo $lastDay->format('D');
+        $dowMap = array('Mon' => 1, 'Tue' => 2, 'Wed' => 3, 'Thu' => 4, 'Fri' => 5, 'Sat' => 6, 'Sun' => 7);
+        $maxDay = (int)($lastDay->format('j'));
+        $firstDay = $dowMap[$lastDay->modify('first day of')->format('D')];
+//        echo $maxDay . " ====== > " . ((int)(($maxDay + $firstDay) / 7));
+
+        $counter = 1;
+        $totalDay = $maxDay + $firstDay - 1;
+        $max7MulDay = 7 * ((int)(($totalDay) / 7) + (($totalDay % 7 == 0) ? 0 : 1));
+//        echo "max7FUllDay" . $max7MulDay;
+        ?>
         <div class="row text-xs-center">
             <div class="display-4">
-                November 2016
+                <?= $calendarMonthName . " " . $calendarYear ?>
             </div>
         </div>
         <div class="row">
@@ -47,20 +65,6 @@ print_r($datas);
                 </thead>
                 <tbody>
                 <?php
-                $lastDay = new DateTime('1999-03-25');
-                $lastDay->modify('last day of');
-                echo $lastDay->format('M jS, Y');
-                echo $lastDay->format('D');
-                $dowMap = array('Mon' => 1, 'Tue' => 2, 'Wed' => 3, 'Thu' => 4, 'Fri' => 5, 'Sat' => 6, 'Sun' => 7);
-                $maxDay = (int)($lastDay->format('j'));
-                $firstDay = $dowMap[$lastDay->modify('first day of')->format('D')];
-
-                $counter = 1;
-                echo $maxDay . " ====== > " . ((int)(($maxDay + $firstDay) / 7));
-                $totalDay = $maxDay + $firstDay - 1;
-                $max7MulDay = 7 * ((int)(($totalDay) / 7) + (($totalDay % 7 == 0) ? 0 : 1));
-                echo "max7FUllDay" . $max7MulDay;
-
                 for ($i = 2 - $firstDay; $i <= $max7MulDay - $firstDay + 1; $i++, $counter++) {
                     if ($counter % 7 == 1) {
                         echo "<tr>";
@@ -70,14 +74,28 @@ print_r($datas);
                         continue;
                     }
 
+                    $content = "";
+                    foreach ($datas as $data) {
+                        $currentMKS = $data['namamks'];
+                        $currentDate = $lastDay->modify($data['tanggal']);
+                        $currentDay = $currentDate->format('j');
+                        $currentMonth = $currentDate->format('m');
+                        $currentYear = $currentDate->format('Y');
+
+                        if ($currentYear == $calendarYear AND $currentMonth == $calendarMonth AND $i == $currentDay) {
+                            $content = $content . sprintf("<div style='cursor: pointer' onclick='alert(\"%s\")' class=\"tag tag-success\">%s</div><br/>", $data['nama'], $currentMKS) ;
+                        }
+
+
+                    }
                     printf("<td>
     %d<br/>
     %s
-</td>", $i, "<div class=\"tag tag-success\">Skripsi</div><br/>
-<div class=\"tag tag-success\">Tugas Akhir</div>");
+</td>", $i, $content);
                     if ($counter % 7 == 0) {
                         echo "</tr>";
                     }
+
                 }
 
                 ?>
