@@ -99,7 +99,10 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                     ?>
 
                     <div id="penguji">
-                        <button id="tambahPenguji" class="btn btn-primary"> Tambah Penguji</button>
+                        <br>
+                        <h3>Penguji</h3>
+                        <button style="float: right;" id="tambahPenguji" class="btn btn-primary"> Tambah Penguji</button>
+                        <br><br>
                         <?php
                         if(isset($_SESSION["tambah_prev_data"])){
 
@@ -133,7 +136,10 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                     </label><br>
 
                     <input class="btn btn-primary" type="submit" name="submit" value="Buat Jadwal MKS"/>
+                    <a href="jadwal_sidang.php"  class="btn btn-danger">Batal</a>
                 </form>
+                <br>
+
 
                 <?php if(isset($_SESSION["tambah_js_error"])){
                     echo "<br>";
@@ -162,13 +168,23 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
         }
         ?>
 
+
+
         <script>
 
             $(document).ready(function(){
-                console.log("Script on!")
+                console.log("Script on!");
+
+                <?php if(!isset($_SESSION["tambah_prev_data"])){
+                echo "addOne();";}
+                ?>
 
                 $("#tambahPenguji").click(function(e){
                     e.preventDefault();
+                    addOne();
+                });
+                function addOne() {
+                    console.log("Click!");
                     counter++;
                     var dosenJSON = <?php  echo json_encode($dosenRows)?>;
                     var result = '<div class="form-group">';
@@ -181,8 +197,7 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                         result += '<option value="'+dosenJSON[i].nip+'">'+dosenJSON[i].nama+'</option>';
                     }
                     $("#penguji").append(result);
-                });
-
+                }
 
                 $.post("AjaxJadwalSidang.php",{npmmks: ($("#Mahasiswa").val())},function(data){
                         var mksJSON = data;
@@ -222,6 +237,8 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
             <?php unset($_SESSION["tambah_prev_data"])?>
 
         </script>
+
+
 </section>
 
 

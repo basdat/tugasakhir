@@ -78,7 +78,7 @@ ORDER BY ".$order);
 <section>
     <div class="container">
         <div class="row">
-            <button class="btn btn-primary" id="btntambah" style="float: right">Tambah Jadwal Sidang</button><br>
+            <button class="btn btn-primary" id="btntambah" style="float: right">Tambah Jadwal Sidang</button>
             <select style="float: right;" id="sort">
                 <option value="waktu">Waktu</option>
                 <option value="mahasiswa">Mahasiswa</option>
