@@ -1,22 +1,23 @@
 <?php
 require_once "database.php";
-if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="dosen") {echo "400 Bad Request"; die();}
 
 function generateTable($order){
+
+    /*$bottom = ($page-1)*$datasperPage+ 1;
+    $top = $page*$datasperPage;*/
 
     $db = new database();
     $conn = $db->connectDB();
     $stmt = $conn->prepare("SELECT mks.ijinmajusidang,mks.pengumpulanhardcopy,mh.nama,jm.namamks,mks.judul,js.tanggal,js.jammulai,js.jamselesai,dp.nipdosenpenguji,dpem.nipdosenpembimbing,mks.idmks,r.namaruangan
 FROM jadwal_sidang js NATURAL JOIN mata_kuliah_spesial mks NATURAL JOIN mahasiswa mh JOIN jenis_mks jm ON mks.idjenismks = jm.id  NATURAL LEFT OUTER JOIN dosen_pembimbing dpem NATURAL LEFT OUTER JOIN dosen_penguji dp NATURAL JOIN ruangan r
 WHERE dp.nipdosenpenguji=:nip OR dpem.nipdosenpembimbing =:nip 
-ORDER BY ".$order);
-
-    $stmt->execute(array(':nip' =>$_SESSION['userdata']['nip']));
+ORDER BY :order;");
+    $stmt->execute(array(':nip' =>$_SESSION['userdata']['nip'],':order'=>$order));
     $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $html = "<table class='table dataTable'><thead><tr>";
+    $html = "<table class='table'><thead><tr>";
 
-    $columnName = array('Mahasiswa','Jenis Sidang','Judul','Waktu dan Lokasi','Penguji','Pembimbing','Status');
+    $columnName = array('Mahasiswa','Jenis Sidang','Judul','Waktu dan Lokasi','Pembimbing','Penguji','Status');
     foreach ($columnName as $th){
         $html = $html."<th>".$th." </th>";
     }
@@ -24,11 +25,6 @@ ORDER BY ".$order);
 
     foreach ($datas as $key => $dataRow){
         $html = $html."<tr>";
-
-        $html = $html."<td>".$dataRow['nama']."</td>".
-            "<td>".$dataRow['judul']."</td>".
-            "<td>".$dataRow['namamks']
-        ;
 
         $sebagai = "\nSebagai :";
 
@@ -49,14 +45,31 @@ ORDER BY ".$order);
             $sebagai = $sebagai."\n Dosen Penguji";
         }
 
-        $sebagai = $sebagai."</td>";
+        $html = $html."<td>".$dataRow['nama']."</td>".
+            "<td>".$dataRow['namamks'].$sebagai."</td>".
+            "<td>".$dataRow['judul']."</td>"
+        ;
 
-        $html=$html.$sebagai;
+
+
 
         $waktudanlokasi = "<td>";
 
+
         $waktudanlokasi = $waktudanlokasi.$dataRow['tanggal']."\n".$dataRow['jammulai']."-".$dataRow['jamselesai']."\n".$dataRow['namaruangan']."</td>";
         $html=$html.$waktudanlokasi;
+
+        $dospemlainhtml ="<td>";
+        $stmt = $conn->prepare("SELECT d.nama FROM dosen_pembimbing dpem JOIN dosen d ON d.nip = dpem.nipdosenpembimbing WHERE dpem.idmks=:idmks");
+        $stmt->execute(array(':idmks'=>$dataRow['idmks']));
+        $dospemlain = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($dospemlain as $key0 => $dataR2){
+            $dospemlainhtml=$dospemlainhtml.$dataR2['nama']."\n";
+        }
+        $dospemlainhtml=$dospemlainhtml."</td>";
+
+        $html=$html.$dospemlainhtml;
 
         $dospenglainhtml="<td>";
 
@@ -64,7 +77,7 @@ ORDER BY ".$order);
         $stmt->execute(array(':idmks'=>$dataRow['idmks']));
         $dospenglain = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($dospenglain as $key => $dataR){
+        foreach ($dospenglain as $key0 => $dataR){
             $dospenglainhtml=$dospenglainhtml.$dataR['nama']."\n";
         }
 
@@ -72,17 +85,6 @@ ORDER BY ".$order);
 
         $html=$html.$dospenglainhtml;
 
-        $dospemlainhtml ="<td>";
-        $stmt = $conn->prepare("SELECT d.nama FROM dosen_pembimbing dpem JOIN dosen d ON d.nip = dpem.nipdosenpembimbing WHERE dpem.idmks=:idmks");
-        $stmt->execute(array(':idmks'=>$dataRow['idmks']));
-        $dospemlain = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($dospemlain as $key => $dataR2){
-            $dospemlainhtml=$dospemlainhtml.$dataR2['nama']."\n";
-        }
-        $dospemlainhtml=$dospemlainhtml."</td>";
-
-        $html=$html.$dospemlainhtml;
 
         $res ="";
         if($dataRow['ijinmajusidang'] == true){
@@ -105,50 +107,39 @@ ORDER BY ".$order);
 <section>
     <div class="container">
         <div class="row">
-            <select style="float: right;" id="sort">
-                <option value="waktu">Waktu</option>
-                <option value="mahasiswa">Mahasiswa</option>
-                <option value="jenis_sidang">Jenis Sidang</option>
-            </select>
-            <div id="table_dosen">
-                <?php
-                   echo generateTable('js.tanggal ASC, js.jammulai ASC');
-                ?>
+            <div>
+                 <?php
+                 echo generateTable('mh.nama');
+                 ?>
+                <!--Mockup-->
+                <!--<table class="table">
+                    <thead>
+                    <tr>
+                        <th>Mahasiswa</th>
+                        <th>Jenis Sidang</th>
+                        <th>Juduk</th>
+                        <th>Waktu & Lokasi</th>
+                        <th>Pembimbing lain</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+/*                    for ($i = 0; $i < 10; $i++) {
+                        echo "<tr>
+                        <td>Andi</td>
+                        <td>Skripsi<br>Sebagai:<br>Pembimbing</td>
+                        <td>Green ICT</td>
+                        <td>17 November 2016<br>09.00-10.30<br>2.2301</td>
+                        <td>Alief</td>
+                        <td>Izin Masuk Sidang</td>
+                    </tr>";
+                    }
+                    */?>
+                    </tbody>
+
+                </table>-->
 
             </div>
         </div>
-        <script>
-            $(document).ready(function() {
-                $('.table').DataTable( {
-                    "paging":   true,
-                    "ordering": false,
-                    "info":false,
-                } );
-
-                $("#sort").change(function () {
-                    var val = $("#sort").val();
-                    var order = "";
-
-                    if(val=='mahasiswa'){
-                        order = "mh.nama";
-                    }else if(val=='jenis_sidang'){
-                        order = "jm.namamks";
-                    }else if(val=='waktu'){
-                        order = 'js.tanggal ASC, js.jammulai ASC';
-                    }else{
-                        order = 'js.tanggal ASC, js.jammulai ASC';
-                    }
-
-                    $.post("server/server_jadwal_sidang_dosen.php",{dosen_order: order},function(response){
-                        $("#table_dosen").html(response);
-                        $('.table').DataTable( {
-                            "paging":   true,
-                            "ordering": false,
-                            "info":false,
-                        } );
-                    });
-                });
-
-            } );
-        </script>
 </section>
