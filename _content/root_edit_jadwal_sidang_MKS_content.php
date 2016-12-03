@@ -133,10 +133,10 @@ return $static;
                         ?>
                     </div>
                     <label class="radio-inline">
-                        <input type="radio" name="hc" value="hardcopy"  <?php if(isset($_SESSION["edit_prev_data"]["hc"])){echo "checked='".$_SESSION["edit_prev_data"]["hc"]."''";} else echo $mks["pengumpulanhardcopy"]?>>Sudah Mengumpulkan Hardcopy
+                        <input type="checkbox" name="hc" value="hardcopy"  <?php if(isset($_SESSION["edit_prev_data"]["hc"])){echo "checked='".$_SESSION["edit_prev_data"]["hc"]."'";} else echo $mks["pengumpulanhardcopy"]?>>Sudah Mengumpulkan Hardcopy
                     </label><br>
 
-                    <input class="btn btn-primary" type="submit" name="submit" value="Buat Jadwal MKS"/>
+                    <input class="btn btn-primary" type="submit" name="submit" value="Ubah Jadwal MKS"/>
                     <input class="btn btn-primary" type="submit" name="" value="Batal"/>
                 </form>
 

@@ -26,7 +26,7 @@ class database
             die("Connection failed: " + mysqli_connect_error());
         }
 
-        $conn->query("set search_path to sisidang");
+        $conn->query("set search_path to test");
         return $conn;
     }
 

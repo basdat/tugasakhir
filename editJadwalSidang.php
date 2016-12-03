@@ -16,6 +16,7 @@ if(isset($_POST["Penguji"] )) {
         $stmt = $conn->prepare($query);
         $stmt->execute(array(':nip' => $datas));
         $time = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         foreach ($time as $key => $data) {
             if (check_in_range($data['tanggalmulai'], $data['tanggalselesai'], $_POST['tanggal'])) {
                 $validated = false;
@@ -77,7 +78,7 @@ if(!isset($_POST["jam_selesai"]) || $_POST["jam_selesai"]=="" || empty($_POST["j
 }
 
 if ($validated == true){
-    if(strtotime($_POST["jam_mulai"])>strtotime($_POST["jam_selesai"])){
+    if(strtotime($_POST["jam_mulai"]) > strtotime($_POST["jam_selesai"])){
         $validated=false;
         $_SESSION["edit_js_error"][] = "Jam mulai harus sebelum jam selesai";
     }
@@ -96,12 +97,15 @@ $conn = $db->connectDB();
         $stmt = $conn->prepare($query);
 
         $stmt->execute(array(':tanggal' => $_POST["tanggal"],':jammulai'=>$_POST["jam_mulai"],':jamselesai'=>$_POST["jam_selesai"],':idruangan'=>$_POST["idruangan"],':idmks'=> $_POST["mks"],':id'=> $_SESSION["edit_idjs"]));
-        $hc=false;
 
-        if($hc=="hardcopy"){
-            $hc = True;
-        }else{
-            $hc = false;
+        if(isset($_POST["hc"])){
+            $hc = $_POST["hc"];
+        }
+
+        if ($hc == "hardcopy") {
+            $hc = 'true';
+        } else {
+            $hc = 'false';
         }
 
         $query = "UPDATE mata_kuliah_spesial SET pengumpulanhardcopy = :hc WHERE idmks =:idmks;";
@@ -141,7 +145,11 @@ $conn = $db->connectDB();
 
         $_SESSION["edit_js_error"][] = $e->getMessage();
         try{
-            $_SESSION["edit_prev_data"]= array("hc"=> $hc,"penguji"=>$_POST["Penguji"],'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
+            $_SESSION["edit_prev_data"]= array("hc"=> $hc,'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
+
+            if(isset($_POST["Penguji"])){
+                $_SESSION["EDIT_prev_data"]["penguji"] = $_POST["Penguji"];
+            }
         }catch (Exception $e){
 
         }
@@ -158,7 +166,11 @@ $conn = $db->connectDB();
     $name= $stmt->fetchAll(PDO::FETCH_ASSOC);
     $name=$name['0']["nama"];
 
-    $_SESSION["edit_prev_data"]= array("hc"=> $hc,"penguji"=>$_POST["Penguji"],'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
+    $_SESSION["edit_prev_data"]= array("hc"=> $hc,'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
+    if(isset($_POST["Penguji"])){
+        $_SESSION["edit_prev_data"]["penguji"] = $_POST["Penguji"];
+    }
+
     header('Location: edit_jadwal_sidang_MKS.php');
 }
 
