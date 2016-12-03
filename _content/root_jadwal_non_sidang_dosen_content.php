@@ -3,14 +3,30 @@ require_once "database.php";
 $db = new database();
 $conn = $db->connectDB();
 
-$stmt_get_all_nama_dosen = $conn->prepare("Select nip, nama from Dosen;");
-$stmt_get_all_nama_dosen->execute(array());
-$allNamaDosen = $stmt_get_all_nama_dosen->fetchAll(PDO::FETCH_ASSOC);
+if(isset($_SESSION['userdata']['nip'])){
+	$nipDosen = $_SESSION['userdata']['nip'];
+	$sql = "Select nip, nama from Dosen where nip = '$nipDosen';";
+	$stmt_get_all_nama_dosen = $conn->prepare($sql);
+	$stmt_get_all_nama_dosen->execute(array());
 
-$stmt_get_all_jadwal = $conn->prepare("Select idjadwal, tanggalmulai, tanggalselesai, alasan, repetisi, nama, nipdosen from jadwal_non_sidang jns, dosen d where jns.nipdosen = d.nip;");
+	$allNamaDosen = $stmt_get_all_nama_dosen->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt_get_all_jadwal->execute(array());
-$allJadwal = $stmt_get_all_jadwal->fetchAll(PDO::FETCH_ASSOC);
+
+	$stmt_get_all_jadwal = $conn->prepare("Select idjadwal, tanggalmulai, tanggalselesai, alasan, repetisi, nama, nipdosen from jadwal_non_sidang jns, dosen d where jns.nipdosen = d.nip and d.nip = '$nipDosen' order by tanggalmulai ;");
+
+	$stmt_get_all_jadwal->execute(array());
+	$allJadwal = $stmt_get_all_jadwal->fetchAll(PDO::FETCH_ASSOC);
+} else {
+	$stmt_get_all_nama_dosen = $conn->prepare("Select nip, nama from Dosen;");
+	$stmt_get_all_nama_dosen->execute(array());
+	$allNamaDosen = $stmt_get_all_nama_dosen->fetchAll(PDO::FETCH_ASSOC);
+
+
+	$stmt_get_all_jadwal = $conn->prepare("Select idjadwal, tanggalmulai, tanggalselesai, alasan, repetisi, nama, nipdosen from jadwal_non_sidang jns, dosen d where jns.nipdosen = d.nip order by tanggalmulai;");
+
+	$stmt_get_all_jadwal->execute(array());
+	$allJadwal = $stmt_get_all_jadwal->fetchAll(PDO::FETCH_ASSOC);
+}
 
 //TODO: Handling dia admin atau dosen
 
@@ -30,6 +46,7 @@ $allJadwal = $stmt_get_all_jadwal->fetchAll(PDO::FETCH_ASSOC);
 <section>
 	<div class="container">
 		<div class="row">
+			<?php echo "<h4> Welcome, " . $_SESSION['userdata']['nama'] . "! </h4> <br><br>"; ?>
 			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalTambah">Tambah Jadwal Non Sidang</button>
 		</div>
 		<br>
@@ -133,13 +150,13 @@ $allJadwal = $stmt_get_all_jadwal->fetchAll(PDO::FETCH_ASSOC);
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title" id="editTitle">Edit Jadwal Non Sidang &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp ID Jadwal: <span></span></h4>
+						<h4 class="modal-title" id="editTitle">Edit Jadwal Non Sidang &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</h4>
 					</div>
 					<div class="modal-body">
 						<form action="helper_jadwal_non_sidang.php" method="post">
 							<div class="form-group">
 								<label for="namaDosen">Nama Dosen: </label> <br>
-								<select class="form-control" id="editNama" name="nipDosen" disabled>
+								<select class="form-control" id="editNama" name="nipDosen">
 								</select>
 							</div>
 							<div class="form-group col-xs-6">
@@ -192,8 +209,7 @@ $allJadwal = $stmt_get_all_jadwal->fetchAll(PDO::FETCH_ASSOC);
 
 		function updateData(id, nama, tglMulai, tglSelesai, repetisi, alasan, nip){
 			$("#idJadwal").val(id);
-			$("#editTitle span").html(id);
-			$("#editNama").append('<option value=' + nip + '>'+ nama +'</option>');
+			$("#editNama").append('<option name="nipDosen" value=' + nip + '>'+ nama +'</option>');
 			$("#editTanggalMulai").val(tglMulai);
 			$("#editTanggalSelesai").val(tglSelesai);
 			$("#editKeterangan").val(alasan);

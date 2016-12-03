@@ -50,8 +50,6 @@ class jadwal_non_sidang
         $stmt_update_jadwal_non_sidang = $conn->prepare($sql);
         $stmt_update_jadwal_non_sidang->execute();
 
-        echo $sql;
-
         //header("Location: jadwal_non_sidang_dosen.php");
     } 
 } 
