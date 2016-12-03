@@ -10,7 +10,7 @@ function generateTable($order){
 
     $db = new database();
     $conn = $db->connectDB();
-    $stmt = $conn->prepare("SELECT js.idjadwal,mks.ijinmajusidang,mks.pengumpulanhardcopy,mh.nama,jm.namamks,mks.judul,js.tanggal,js.jammulai,js.jamselesai,dp.nipdosenpenguji,dpem.nipdosenpembimbing,mks.idmks,r.namaruangan
+    $stmt = $conn->prepare("SELECT DISTINCT js.idjadwal,mks.ijinmajusidang,mks.pengumpulanhardcopy,mh.nama,jm.namamks,mks.judul,js.tanggal,js.jammulai,js.jamselesai,dp.nipdosenpenguji,dpem.nipdosenpembimbing,mks.idmks,r.namaruangan
 FROM jadwal_sidang js NATURAL JOIN mata_kuliah_spesial mks NATURAL JOIN mahasiswa mh JOIN jenis_mks jm ON mks.idjenismks = jm.id  NATURAL LEFT OUTER JOIN dosen_pembimbing dpem NATURAL LEFT OUTER JOIN dosen_penguji dp NATURAL JOIN ruangan r
 WHERE mks.issiapsidang = true
 ORDER BY ".$order);
@@ -19,7 +19,7 @@ ORDER BY ".$order);
     $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $html = "<table class='table dataTable'><thead><tr>";
 
-    $columnName = array('Mahasiswa','Jenis Sidang','Judul','Waktu dan Lokasi','Penguji','Pembimbing','Action');
+    $columnName = array('Mahasiswa','Judul','Jenis Sidang','Waktu dan Lokasi','Penguji','Pembimbing','Action');
     foreach ($columnName as $th){
         $html = $html."<th>".$th." </th>";
     }
