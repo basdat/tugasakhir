@@ -1,3 +1,19 @@
+<?php
+
+require_once "database.php";
+$db = new database();
+$conn = $db->connectDB();
+
+$stmt = $conn->prepare("SELECT * FROM sisidang.jenis_mks");
+$stmt->execute();
+$jenisMKS = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//print_r($jenisMKS);
+$stmt = $conn->prepare("SELECT * FROM sisidang.term");
+$stmt->execute();
+$terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//print_r($terms);
+?>
+
 <div class="container">
     <div class="row">
         <div class="col-md-8 offset-md-2">
@@ -14,21 +30,32 @@
                     <label for="inputTerm" class="col-sm-2 form-control-label">Term</label>
                     <div class="col-sm-10">
                         <select class="custom-select" id="inputTerm">
-                            <option selected>Genap 2015/2016</option>
-                            <option value="1">Ganjil 2015/2016</option>
-                            <option value="2">Genap 2016/2017</option>
-                            <option value="3">Ganjil 2016/2017</option>
+                            <?php
+                            foreach ($terms as $term) {
+                                $semesterId = (int)($term['semester']);
+                                $semester = "";
+                                if ($semesterId == 3) {
+                                    $semester = "Semester Pendek";
+                                } elseif ($semesterId % 2 == 0) {
+                                    $semester = "Genap";
+                                } else
+                                    $semester = "Ganjil";
+
+                                printf("<option value=\"%s,%s\">%s %s</option>", $semesterId, $term['tahun'], $semester, $term['tahun']);
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="inputJenis" class="col-sm-2 form-control-label">Jenis Sidang</label>
                     <div class="col-sm-10">
-                        <select class="custom-select">
-                            <option></option>
-                            <option value="1">Skripsi</option>
-                            <option value="2">Disertasi</option>
-                            <option value="3">Thesis</option>
+                        <select id="inputJenis" class="custom-select">
+                            <?php
+                            foreach ($jenisMKS as $mks) {
+                                printf("<option value=\"%s\">%s</option>", $mks['id'], $mks['namamks']);
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -51,8 +78,8 @@
                     </thead>
                     <tbody>
                     <?php
-                        for ($i = 0; $i < 10; $i++) {
-                            echo "<tr>
+                    for ($i = 0; $i < 10; $i++) {
+                        echo "<tr>
                         <td>Andi</td>
                         <td>Skripsi<br>Sebagai:<br>Pembimbing</td>
                         <td>Green ICT</td>
@@ -61,7 +88,7 @@
                         <td>Anto<br>Alif</td>
                         <td><a class=\"btn btn-primary\" href=\"#\">Edit</a></td>
                     </tr>";
-                        }
+                    }
                     ?>
                     </tbody>
 

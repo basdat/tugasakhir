@@ -28,7 +28,7 @@ $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </style>
     <div class="container">
         <?php
-        $lastDay = new DateTime('2016-02-08');
+        $lastDay = new DateTime(); // isi dengan tanggal 'yyyy-mm-dd'
         $lastDay->modify('last day of');
         $calendarMonth = $lastDay->format('m');
         $calendarMonthName = $lastDay->format('M');
