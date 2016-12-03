@@ -10,7 +10,7 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="container">
         <div class="row">
             <?php
-//            print_r($userRows[0]);
+            print_r($userRows[0]);
             /*foreach ($userRows as $row) {
                 printf("<div class=\"card\">
 <div class=\"card-header\">
@@ -23,36 +23,55 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }*/
             ?>
             <div class="card-deck-wrapper">
-                <div class="card-deck">
-                    <div class="card">
-                        <div class="card-header">
-                            Skripsi
+                <?php
+                foreach ($userRows as $key => $row) {
+
+                    if ((int)$key % 3 == 0) {
+                        echo "<div class=\"card-deck\">";
+                    }
+
+                    $dospenglainhtml="<td>";
+
+                    $stmt = $conn->prepare("SELECT d.nama FROM dosen_penguji dpem JOIN dosen d ON d.nip = dpem.nipdosenpenguji WHERE dpem.idmks=:idmks");
+                    $stmt->execute(array(':idmks'=>$dataRow['idmks']));
+                    $dospenglain = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                    foreach ($dospenglain as $key => $dataR){
+                        $dospenglainhtml=$dospenglainhtml.$dataR['nama']."\n";
+                    }
+
+                    $dospenglainhtml = $dospenglainhtml."</td>";
+
+                    printf("
+                    <div class=\"card\">
+                        <div class=\"card-header\">
+                            %s
                         </div>
-                        <div class="card-block">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-3">
+                        <div class=\"card-block\">
+                            <div class=\"container\">
+                                <div class=\"row\">
+                                    <div class=\"col-md-3\">
                                         Judul
                                     </div>
-                                    <div class="col-md-9" scope="row">Aplikasi “Web Traffic Engineering”</div>
+                                    <div class=\"col-md-9\" scope=\"row\">%s</div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-3">
+                                <div class=\"row\">
+                                    <div class=\"col-md-3\">
                                         Jadwal Sidang
                                     </div>
-                                    <div class="col-md-9">2016-01-26</div>
+                                    <div class=\"col-md-9\">%s</div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-3">
+                                <div class=\"row\">
+                                    <div class=\"col-md-3\">
                                         Waktu Sidang
                                     </div>
-                                    <div class="col-md-9"><p>09:00 – 10:30 WIB @ 2.2301</p></div>
+                                    <div class=\"col-md-9\"><p>%s</p></div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-3">
+                                <div class=\"row\">
+                                    <div class=\"col-md-3\">
                                         Dosen Penguji
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class=\"col-md-9\">
                                         <ul>
                                             <li>dosen</li>
                                             <li>dosen</li>
@@ -63,9 +82,18 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                         </div>
                     </div>
-                    <div class="card"></div>
-                    <div class="card"></div>
-                </div>
+                    ",
+                        $row['namamks'],
+                        $row['judul'],
+                        $row['tanggal'],
+                        sprintf("%s – %s @ %s", $row['jammulai'], $row['jamselesai'], $row['namaruangan'])
+                        );
+
+                    if ((int)$key % 3 == 2) {
+                        echo "</div>";
+                    }
+                }
+                ?>
             </div>
         </div>
     </div>
