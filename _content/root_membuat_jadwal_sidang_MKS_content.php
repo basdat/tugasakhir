@@ -1,6 +1,6 @@
 <?php
 require_once "database.php";
-if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="admin") {echo "400 Bad Request"; die();}
+if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="admin") {echo "Bad Request: Must be logged in as role:admin"; die();}
 
 $db = new database();
 $conn = $db->connectDB();
@@ -129,7 +129,7 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                     </div>
 
                     <label class="radio-inline">
-                        <input type="radio" name="hc" value="hardcopy" <?php if(isset($_SESSION["tambah_prev_data"]["hc"])) echo "checked='".$_SESSION["tambah_prev_data"]["hc"]."''"?>>Sudah Mengumpulkan Hardcopy
+                        <input type="checkbox" name="hc" value="hardcopy" <?php if(isset($_SESSION["tambah_prev_data"]["hc"])) echo "checked='".$_SESSION["tambah_prev_data"]["hc"]."'"?>>Sudah Mengumpulkan Hardcopy
                     </label><br>
 
                     <input class="btn btn-primary" type="submit" name="submit" value="Buat Jadwal MKS"/>

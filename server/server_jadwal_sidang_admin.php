@@ -1,5 +1,7 @@
 <?php
-require_once "database.php";
+session_start();
+require_once "../database.php";
+if (! $_POST) {echo "400 Bad Request"; die();}
 if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="admin") {echo "400 Bad Request"; die();}
 
 if(isset($_POST{"edit"})){
@@ -60,7 +62,6 @@ ORDER BY ".$order);
         foreach ($dospem as $key => $dataR2){
             $dospemhtml=$dospemhtml.$dataR2['nama']."\n";
         }
-
         $dospemhtml=$dospemhtml."</td>";
 
         $html=$html.$dospemhtml;
@@ -73,66 +74,7 @@ ORDER BY ".$order);
     return $html;
 }
 
+if(isset($_POST["admin_order"])){
+    echo generateTable($_POST["admin_order"]);
+}
 ?>
-
-<section>
-    <div class="container">
-        <div class="row">
-            <button class="btn btn-primary" id="btntambah" style="float: right">Tambah Jadwal Sidang</button><br>
-            <select style="float: right;" id="sort">
-                <option value="waktu">Waktu</option>
-                <option value="mahasiswa">Mahasiswa</option>
-                <option value="jenis_sidang">Jenis Sidang</option>
-            </select>
-            <div id="table_admin">
-                <?php
-                echo generateTable('js.tanggal ASC, js.jammulai ASC');
-                ?>
-            </div>
-        </div>
-        <script>
-            $(document).ready(function(){
-                $(".edit").click(function() {
-                    console.log("Edit");
-                    $.post("jadwal_sidang.php", {edit: ($(this).attr("id"))}, function () {
-                        window.location.href = "edit_jadwal_sidang_MKS.php";
-                    });
-
-                });
-                $("#btntambah").click(function() {
-                    console.log("Tambah");
-                    window.location.href="membuat_jadwal_sidang_MKS.php"
-                });
-
-                $('.table').DataTable( {
-                    "paging":   true,
-                    "ordering": false,
-                    "info":     false,
-                } );
-
-                $("#sort").change(function () {
-                    var val = $("#sort").val();
-                    var order = "";
-
-                    if(val=='mahasiswa'){
-                        order = "mh.nama";
-                    }else if(val=='jenis_sidang'){
-                        order = "jm.namamks";
-                    }else if(val=='waktu'){
-                        order = 'js.tanggal ASC, js.jammulai ASC';
-                    }else{
-                        order = 'js.tanggal ASC, js.jammulai ASC';
-                    }
-
-                    $.post("server/server_jadwal_sidang_admin.php",{admin_order: order},function(response){
-                        $("#table_admin").html(response);
-                        $('.table').DataTable( {
-                            "paging":   true,
-                            "ordering": false,
-                            "info":false,
-                        } );
-                    });
-                });
-            });
-        </script>
-</section>

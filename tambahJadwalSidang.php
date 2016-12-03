@@ -3,7 +3,7 @@ require_once "database.php";
 session_start();
 if (! $_POST) {echo "400 Bad Request"; die();}
 
-$hc = false;
+$hc = "";
 $validated = true;
 unset($_SESSION["tambah_js_error"]);
 $_SESSION["tambah_js_error"] = array();
@@ -79,7 +79,7 @@ if(!isset($_POST["jam_selesai"]) || $_POST["jam_selesai"]=="" || empty($_POST["j
 }
 
 if ($validated == true){
-    if(strtotime($_POST["jam_mulai"])>strtotime($_POST["jam_selesai"])){
+    if(strtotime($_POST["jam_mulai"]) > strtotime($_POST["jam_selesai"])){
         $validated=false;
         $_SESSION["tambah_js_error"][] = "Jam mulai harus sebelum jam selesai";
     }
@@ -103,22 +103,22 @@ try {
 
     $stmt->execute($arr);
 
-
-    $hc = false;
+    if(isset($_POST["hc"])){
+        $hc = $_POST["hc"];
+    }
 
     if ($hc == "hardcopy") {
-        $hc = True;
+        $hc = 'true';
     } else {
-        $hc = false;
+        $hc = 'false';
     }
 
 
-    $query = "UPDATE mata_kuliah_spesial SET pengumpulanhardcopy = :hc WHERE idmks =:idmks;";
+    $query = "UPDATE mata_kuliah_spesial SET pengumpulanhardcopy =".$hc." WHERE idmks =:idmks;";
     $stmt = $conn->prepare($query);
     /*if (!$stmt) {
         print_r($conn->errorInfo());
     }*/
-    $stmt->bindParam(':hc', $hc, PDO::PARAM_BOOL);
     $stmt->bindParam('idmks', $_POST["mks"]);
     $stmt->execute();
 
@@ -155,7 +155,13 @@ try {
         $jmks= $stmt->fetchAll(PDO::FETCH_ASSOC);
         $jmks=$jmks['0']["judul"];
 
-        $_SESSION["tambah_prev_data"]= array("namamks"=>$jmks ,"hc"=> $hc,"penguji"=>$_POST["Penguji"],'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
+        $_SESSION["tambah_prev_data"]= array("namamks"=>$jmks ,"hc"=> $hc,'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
+
+        if(isset($_POST["Penguji"])){
+            $_SESSION["tambah_prev_data"]["penguji"] = $_POST["Penguji"];
+        }
+
+
     }catch(Exception $e){
 
     }
@@ -180,8 +186,11 @@ try {
     $jmks= $stmt->fetchAll(PDO::FETCH_ASSOC);
     $jmks=$jmks['0']["judul"];
 
-    $_SESSION["tambah_prev_data"]= array("namamks"=>$jmks ,"hc"=> $hc,"penguji"=>$_POST["Penguji"],'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
+    $_SESSION["tambah_prev_data"]= array("namamks"=>$jmks ,"hc"=> $hc,'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
 
+    if(isset($_POST["Penguji"])){
+        $_SESSION["tambah_prev_data"]["penguji"] = $_POST["Penguji"];
+    }
     header('Location: membuat_jadwal_sidang_MKS.php');
 }
 

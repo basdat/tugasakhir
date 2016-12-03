@@ -1,7 +1,7 @@
 <?php
 require_once "database.php";
-if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="admin") {echo "400 Bad Request"; die();}
-
+if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="admin") {echo "Bad Request: Must be logged in as role:admin"; die();}
+if(!isset($_SESSION["edit_idjs"])) {echo "400 Bad Request: ID of edit:Jadwal Sidang is undefined"; die();}
 
 $db = new database();
 $conn = $db->connectDB();
@@ -133,10 +133,10 @@ return $static;
                         ?>
                     </div>
                     <label class="radio-inline">
-                        <input type="radio" name="hc" value="hardcopy"  <?php if(isset($_SESSION["edit_prev_data"]["hc"])){echo "checked='".$_SESSION["edit_prev_data"]["hc"]."''";} else echo $mks["pengumpulanhardcopy"]?>>Sudah Mengumpulkan Hardcopy
+                        <input type="checkbox" name="hc" value="hardcopy"  <?php if(isset($_SESSION["edit_prev_data"]["hc"])){echo "checked='".$_SESSION["edit_prev_data"]["hc"]."'";} else echo $mks["pengumpulanhardcopy"]?>>Sudah Mengumpulkan Hardcopy
                     </label><br>
 
-                    <input class="btn btn-primary" type="submit" name="submit" value="Buat Jadwal MKS"/>
+                    <input class="btn btn-primary" type="submit" name="submit" value="Ubah Jadwal MKS"/>
                     <input class="btn btn-primary" type="submit" name="" value="Batal"/>
                 </form>
 
