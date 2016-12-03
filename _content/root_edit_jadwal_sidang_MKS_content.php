@@ -106,7 +106,10 @@ return $static;
                     echo getDropDownDV($ruanganRows,"idruangan","namaruangan",$mks["namaruangan"],$mks["idruangan"],"Ruangan","idruangan")."<br/>";
                     ?>
                     <div id="penguji">
-                        <button id="tambahPenguji" class="btn btn-primary"> Tambah Penguji</button>
+                        <br>
+                        <h3>Penguji</h3>
+                        <button style="float: right;" id="tambahPenguji" class="btn btn-primary"> Tambah Penguji</button>
+                        <br><br>
                         <?php
                         if(isset($_SESSION["edit_prev_data"])){
                             $count = 0;
@@ -137,8 +140,11 @@ return $static;
                     </label><br>
 
                     <input class="btn btn-primary" type="submit" name="submit" value="Ubah Jadwal MKS"/>
-                    <input class="btn btn-primary" type="submit" name="" value="Batal"/>
+
                 </form>
+
+                <br>
+                <a href="jadwal_sidang.php" style="float: left;" class="btn btn-danger">Batal</a>
 
                 <?php if(isset($_SESSION["edit_js_error"])){
                     echo "<br>";
@@ -192,8 +198,8 @@ return $static;
 
                     });
                 }
-                
-                
+
+
                 $("#tambahPenguji").click(function(e){
                     e.preventDefault();
                     counter++;
