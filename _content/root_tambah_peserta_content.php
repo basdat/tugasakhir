@@ -63,21 +63,134 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
                                      }
                              echo" </select>
                          </div>";
-                    echo getDropDown($jenisRows,"id","namamks", "Nama Mks","Jenis MKS","Jenis")."<br/>";
-                    echo getDropDown($mahasiswaRows,"npm","nama","Nama Mahasiswa","Mahasiswa","Mahasiswa")."<br/>";
+                    echo getDropDown($jenisRows,"id","namamks", "Nama Mks","Jenis MKS","Jenis");
+                    echo getDropDown($mahasiswaRows,"npm","nama","Nama Mahasiswa","Mahasiswa","Mahasiswa");
                     echo '<div class="form-group">
                                 Judul MKS
                                 <input type="text" class="form-control" name="judul" placeholder="Judul"/>
-                            </div><br/>';
-                    echo getDropDown($dosenRows,"nip","nama","Nama Dosen Pembimbing 1","Pembimbing 1","Pembimbing1")."<br/>";
-//                    echo getDropDown($dosenRows,"nip","nama", "Nama Dosen Pembimbing 2","Pembimbing 2")."<br/>";
-//                    echo getDropDown($dosenRows,"nip","nama", "Nama Dosen Pembimbing 3","Pembimbing 3")."<br/>";
-                    echo getDropDown($dosenRows,"nip","nama", "Nama Dosen Penguji 1", "Penguji 1","Penguji1")."<br/>";
+                            </div>';
+
+                echo "<div id='TextBoxesGroupPembimbing'>
+	                            <div id=\"TextBoxDivPembimbing1\">";
+                    echo getDropDown($dosenRows,"nip","nama","Dosen","Pembimbing 1","pembimbing[]");
+                echo "</div></div>";
+                    echo "<div id='TextBoxesGroup'>
+	                            <div id=\"TextBoxDiv1\">";
+                    echo getDropDown($dosenRows,"nip","nama", "Dosen", "Penguji 1","penguji[]");
+                     echo "</div></div>"
 
                 ?>
-                <input class="btn btn-primary" type="submit" name="submit" value="Tambah Peserta"/>
+                <input class="btn btn-primary" type="submit" name="submit" value="tambahpeserta"/>
                 <a class="btn btn-danger" href="mata_kuliah_spesial.php">Cancel</a>
+
             </form>
+                <input type='button' class="btn btn-success" value='Add Pembimbing' id='addPembimbing'>
+                <input type='button' class="btn btn-success" value='Remove Pembimbing' id='removePembimbing'>
+                <input type='button' class="btn btn-success" value='Add Penguji' id='addButton'>
+                <input type='button' class="btn btn-success" value='Remove Penguji' id='removeButton'>
+
+
         </div>
     </div>
 </section>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.3.2.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+        var counter = 2;
+        var counter2 = 2;
+
+        $("#addButton").click(function () {
+
+            if(counter>5){
+                alert("Only 5 textboxes allow");
+                return false;
+            }
+
+            var newTextBoxDiv = $(document.createElement('div'))
+                .attr("id", 'TextBoxDiv' + counter);
+
+
+//            foreach ($arr as $key => $value) {
+//                $select .= '<option value="'.dosenJSON[i].nip.'">'.$value[$name].'</option>';
+//            }
+//            $select .= "</select></div>";
+            var dosenJSON = <?php  echo json_encode($dosenRows)?>;
+            var result = '<div class="form-group">';
+            result += '<label for="Penguji'+counter+'">Penguji '+ counter+'</label>';
+            result +=  '<select id="Penguji'+counter+'" class="form-control" name="penguji[]" required>';
+            result += '<option value="">Pilih Dosen</option>';
+
+            for(var i=0;i<dosenJSON.length;i++)
+            {
+
+                result += '<option value="'+dosenJSON[i].nip+'">'+dosenJSON[i].nama+'</option>';
+            }
+            result += "</select></div>";
+            newTextBoxDiv.after().html(result);
+
+            newTextBoxDiv.appendTo("#TextBoxesGroup");
+
+
+            counter++;
+        });
+
+        $("#addPembimbing").click(function () {
+
+            if(counter2>5){
+                alert("Only 5 textboxes allow");
+                return false;
+            }
+
+            var newTextBoxDiv = $(document.createElement('div'))
+                .attr("id", 'TextBoxDivPembimbing' + counter2);
+
+
+//            foreach ($arr as $key => $value) {
+//                $select .= '<option value="'.dosenJSON[i].nip.'">'.$value[$name].'</option>';
+//            }
+//            $select .= "</select></div>";
+            var dosenJSON = <?php  echo json_encode($dosenRows)?>;
+            var result = '<div class="form-group">';
+            result += '<label for="Pembimbing'+counter2+'">Pembimbing '+ counter2+'</label>';
+            result +=  '<select id="Pembimbing'+counter2+'" class="form-control" name="pembimbing[]" required>';
+            result += '<option value="">Pilih Dosen</option>';
+
+            for(var i=0;i<dosenJSON.length;i++)
+            {
+
+                result += '<option value="'+dosenJSON[i].nip+'">'+dosenJSON[i].nama+'</option>';
+            }
+            result += "</select></div>";
+            newTextBoxDiv.after().html(result);
+
+            newTextBoxDiv.appendTo("#TextBoxesGroupPembimbing");
+
+
+            counter2++;
+        });
+
+
+        $("#removeButton").click(function () {
+            if(counter==1){
+                alert("No more textbox to remove");
+                return false;
+            }
+            counter--;
+            $("#TextBoxDiv" + counter).remove();
+
+        });
+
+        $("#removePembimbing").click(function () {
+            if(counter2==1){
+                alert("No more textbox to remove");
+                return false;
+            }
+            counter2--;
+            $("#TextBoxDivPembimbing" + counter).remove();
+
+        });
+    });
+</script>

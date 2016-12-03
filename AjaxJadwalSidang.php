@@ -15,3 +15,18 @@ if(isset($_POST['npmmks'])){
     unset($_POST['npmmks']);
     echo json_encode($mksrows,JSON_FORCE_OBJECT);
 }
+
+if(isset($_POST["pengujiIdmks"])){
+    $db = new database();
+    $conn = $db->connectDB();
+
+    $query = "SELECT * FROM dosen d JOIN dosen_penguji dp ON d.nip = dp.nipdosenpenguji WHERE dp.idmks=:idmks";
+    $stmt = $conn->prepare($query);
+    if(!$stmt){
+        print_r($conn->errorInfo());
+    }
+    $stmt->execute(array(':idmks'=> $_POST["pengujiIdmks"]));
+    $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo json_encode($datas,JSON_FORCE_OBJECT);
+}

@@ -67,7 +67,9 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </thead>
                 <tbody>
         <?php
+            $var = 0;
             foreach ($userRows as $key => $value) {
+                if($var == 10) break;
                 echo "<tr>";
                 echo "<td>";
                     print_r($value['idmks']);
@@ -104,6 +106,7 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 echo "</td>";
                 echo "</tr>";
+                $var = $var + 1;
             }
         ?>
                 </tbody>
