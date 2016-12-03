@@ -20,8 +20,7 @@ class peserta
         $jenismks =  stripslashes($_POST['Jenis']);
         $npm =  stripslashes($_POST['Mahasiswa']);
         $judul = stripslashes($_POST['judul']);
-        $nippembimbing = stripslashes($_POST['Pembimbing1']);
-        $nippenguji = stripslashes($_POST['Penguji1']);
+
         $termarr = explode(" ", stripslashes($_POST['term']));
         $tahun = $termarr[0];
         $semester = $termarr[1];
@@ -31,14 +30,17 @@ class peserta
         $stmt = $this->conn->prepare($query);
         $stmt->execute(array($npm,$tahun,$semester,$judul,$jenismks));
 
+        foreach ($_POST['pembimbing'] as $key => $value) {
+            $query = "INSERT INTO dosen_pembimbing VALUES((SELECT max(idmks) from mata_kuliah_spesial),?)";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute(array($value));
+        }
+        foreach ($_POST['penguji'] as $key => $value) {
 
-        $query = "INSERT INTO dosen_pembimbing VALUES((SELECT max(idmks) from mata_kuliah_spesial),?)";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute(array($nippembimbing));
-
-        $query = "INSERT INTO dosen_penguji VALUES((SELECT max(idmks) from mata_kuliah_spesial),?)";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute(array($nippenguji));
+            $query = "INSERT INTO dosen_penguji VALUES((SELECT max(idmks) from mata_kuliah_spesial),?)";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute(array($value));
+        }
 
         header("Location: mata_kuliah_spesial.php");
 
@@ -52,7 +54,10 @@ class peserta
 
 $peserta = new peserta();
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        echo "hai";
         if ($_POST['submit'] === 'tambahpeserta') {
+
             $peserta->tambah_peserta();
+
         }
     }

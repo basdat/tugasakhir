@@ -1,5 +1,7 @@
 <?php
-require_once "database.php";
+session_start();
+require_once "../database.php";
+if (! $_POST) {echo "400 Bad Request"; die();}
 if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="dosen") {echo "400 Bad Request"; die();}
 
 function generateTable($order){
@@ -100,55 +102,7 @@ ORDER BY ".$order);
     return $html;
 }
 
+if(isset($_POST["dosen_order"])){
+    echo generateTable($_POST["dosen_order"]);
+}
 ?>
-
-<section>
-    <div class="container">
-        <div class="row">
-            <select style="float: right;" id="sort">
-                <option value="waktu">Waktu</option>
-                <option value="mahasiswa">Mahasiswa</option>
-                <option value="jenis_sidang">Jenis Sidang</option>
-            </select>
-            <div id="table_dosen">
-                <?php
-                   echo generateTable('js.tanggal ASC, js.jammulai ASC');
-                ?>
-
-            </div>
-        </div>
-        <script>
-            $(document).ready(function() {
-                $('.table').DataTable( {
-                    "paging":   true,
-                    "ordering": false,
-                    "info":false,
-                } );
-
-                $("#sort").change(function () {
-                    var val = $("#sort").val();
-                    var order = "";
-
-                    if(val=='mahasiswa'){
-                        order = "mh.nama";
-                    }else if(val=='jenis_sidang'){
-                        order = "jm.namamks";
-                    }else if(val=='waktu'){
-                        order = 'js.tanggal ASC, js.jammulai ASC';
-                    }else{
-                        order = 'js.tanggal ASC, js.jammulai ASC';
-                    }
-
-                    $.post("server/server_jadwal_sidang_dosen.php",{dosen_order: order},function(response){
-                        $("#table_dosen").html(response);
-                        $('.table').DataTable( {
-                            "paging":   true,
-                            "ordering": false,
-                            "info":false,
-                        } );
-                    });
-                });
-
-            } );
-        </script>
-</section>

@@ -1,22 +1,25 @@
 <?php
 require_once "database.php";
-if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="dosen") {echo "400 Bad Request"; die();}
+if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="admin") {echo "400 Bad Request"; die();}
+
+if(isset($_POST{"edit"})){
+    $_SESSION["edit_idjs"] = $_POST["edit"];
+}
 
 function generateTable($order){
 
     $db = new database();
     $conn = $db->connectDB();
-    $stmt = $conn->prepare("SELECT mks.ijinmajusidang,mks.pengumpulanhardcopy,mh.nama,jm.namamks,mks.judul,js.tanggal,js.jammulai,js.jamselesai,dp.nipdosenpenguji,dpem.nipdosenpembimbing,mks.idmks,r.namaruangan
+    $stmt = $conn->prepare("SELECT DISTINCT js.idjadwal,mks.ijinmajusidang,mks.pengumpulanhardcopy,mh.nama,jm.namamks,mks.judul,js.tanggal,js.jammulai,js.jamselesai,dp.nipdosenpenguji,dpem.nipdosenpembimbing,mks.idmks,r.namaruangan
 FROM jadwal_sidang js NATURAL JOIN mata_kuliah_spesial mks NATURAL JOIN mahasiswa mh JOIN jenis_mks jm ON mks.idjenismks = jm.id  NATURAL LEFT OUTER JOIN dosen_pembimbing dpem NATURAL LEFT OUTER JOIN dosen_penguji dp NATURAL JOIN ruangan r
-WHERE dp.nipdosenpenguji=:nip OR dpem.nipdosenpembimbing =:nip 
+WHERE mks.issiapsidang = true
 ORDER BY ".$order);
 
-    $stmt->execute(array(':nip' =>$_SESSION['userdata']['nip']));
+    $stmt->execute(array());
     $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
     $html = "<table class='table dataTable'><thead><tr>";
 
-    $columnName = array('Mahasiswa','Jenis Sidang','Judul','Waktu dan Lokasi','Penguji','Pembimbing','Status');
+    $columnName = array('Mahasiswa','Judul','Jenis Sidang','Waktu dan Lokasi','Penguji','Pembimbing','Action');
     foreach ($columnName as $th){
         $html = $html."<th>".$th." </th>";
     }
@@ -30,69 +33,39 @@ ORDER BY ".$order);
             "<td>".$dataRow['namamks']
         ;
 
-        $sebagai = "\nSebagai :";
-
-        $stmt = $conn->prepare("SELECT COUNT(*) As Jumlah FROM dosen_pembimbing dpem WHERE dpem.nipdosenpembimbing=:nip AND dpem.idmks=:idmks");
-        $stmt->execute(array(':nip' =>$_SESSION['userdata']['nip'],':idmks'=>$dataRow['idmks']));
-        $dospem = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        if($dospem[0]['jumlah'] > 0){
-            $sebagai = $sebagai."\n Dosen Pembimbing";
-        }
-
-
-        $stmt = $conn->prepare("SELECT COUNT(*) As Jumlah FROM dosen_penguji dpem WHERE dpem.nipdosenpenguji=:nip AND dpem.idmks=:idmks");
-        $stmt->execute(array(':nip' =>$_SESSION['userdata']['nip'],':idmks'=>$dataRow['idmks']));
-        $dospeng = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        if($dospeng[0]['jumlah'] > 0){
-            $sebagai = $sebagai."\n Dosen Penguji";
-        }
-
-        $sebagai = $sebagai."</td>";
-
-        $html=$html.$sebagai;
 
         $waktudanlokasi = "<td>";
-
         $waktudanlokasi = $waktudanlokasi.$dataRow['tanggal']."\n".$dataRow['jammulai']."-".$dataRow['jamselesai']."\n".$dataRow['namaruangan']."</td>";
         $html=$html.$waktudanlokasi;
 
-        $dospenglainhtml="<td>";
+        $dospenghtml="<td>";
 
         $stmt = $conn->prepare("SELECT d.nama FROM dosen_penguji dpem JOIN dosen d ON d.nip = dpem.nipdosenpenguji WHERE dpem.idmks=:idmks");
         $stmt->execute(array(':idmks'=>$dataRow['idmks']));
-        $dospenglain = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $dospeng = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($dospenglain as $key => $dataR){
-            $dospenglainhtml=$dospenglainhtml.$dataR['nama']."\n";
+        foreach ($dospeng as $key => $dataR){
+            $dospenghtml=$dospenghtml.$dataR['nama']."\n";
         }
 
-        $dospenglainhtml = $dospenglainhtml."</td>";
+        $dospenghtml = $dospenghtml."</td>";
 
-        $html=$html.$dospenglainhtml;
+        $html=$html.$dospenghtml;
 
-        $dospemlainhtml ="<td>";
+        $dospemhtml ="<td>";
         $stmt = $conn->prepare("SELECT d.nama FROM dosen_pembimbing dpem JOIN dosen d ON d.nip = dpem.nipdosenpembimbing WHERE dpem.idmks=:idmks");
         $stmt->execute(array(':idmks'=>$dataRow['idmks']));
-        $dospemlain = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $dospem = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($dospemlain as $key => $dataR2){
-            $dospemlainhtml=$dospemlainhtml.$dataR2['nama']."\n";
-        }
-        $dospemlainhtml=$dospemlainhtml."</td>";
-
-        $html=$html.$dospemlainhtml;
-
-        $res ="";
-        if($dataRow['ijinmajusidang'] == true){
-            $res=$res."Izin Masuk Sidang";
-        }
-        if($dataRow['pengumpulanhardcopy'] == true){
-            $res=$res."Kumpul Hard Copy";
+        foreach ($dospem as $key => $dataR2){
+            $dospemhtml=$dospemhtml.$dataR2['nama']."\n";
         }
 
-        $html = $html."<td>".$res."</td>";
+        $dospemhtml=$dospemhtml."</td>";
+
+        $html=$html.$dospemhtml;
+
+        $html=$html."<td>.<button id='".$dataRow['idjadwal']."' class='btn btn-primary edit'>Edit</button>.</td>";
 
         $html = $html."</tr>";
     }
@@ -105,24 +78,36 @@ ORDER BY ".$order);
 <section>
     <div class="container">
         <div class="row">
+            <button class="btn btn-primary" id="btntambah" style="float: right">Tambah Jadwal Sidang</button>
             <select style="float: right;" id="sort">
                 <option value="waktu">Waktu</option>
                 <option value="mahasiswa">Mahasiswa</option>
                 <option value="jenis_sidang">Jenis Sidang</option>
             </select>
-            <div id="table_dosen">
+            <div id="table_admin">
                 <?php
-                   echo generateTable('js.tanggal ASC, js.jammulai ASC');
+                echo generateTable('js.tanggal ASC, js.jammulai ASC');
                 ?>
-
             </div>
         </div>
         <script>
-            $(document).ready(function() {
+            $(document).ready(function(){
+                $(".edit").click(function() {
+                    console.log("Edit");
+                    $.post("jadwal_sidang.php", {edit: ($(this).attr("id"))}, function () {
+                        window.location.href = "edit_jadwal_sidang_MKS.php";
+                    });
+
+                });
+                $("#btntambah").click(function() {
+                    console.log("Tambah");
+                    window.location.href="membuat_jadwal_sidang_MKS.php"
+                });
+
                 $('.table').DataTable( {
                     "paging":   true,
                     "ordering": false,
-                    "info":false,
+                    "info":     false,
                 } );
 
                 $("#sort").change(function () {
@@ -139,8 +124,8 @@ ORDER BY ".$order);
                         order = 'js.tanggal ASC, js.jammulai ASC';
                     }
 
-                    $.post("server/server_jadwal_sidang_dosen.php",{dosen_order: order},function(response){
-                        $("#table_dosen").html(response);
+                    $.post("server/server_jadwal_sidang_admin.php",{admin_order: order},function(response){
+                        $("#table_admin").html(response);
                         $('.table').DataTable( {
                             "paging":   true,
                             "ordering": false,
@@ -148,7 +133,6 @@ ORDER BY ".$order);
                         } );
                     });
                 });
-
-            } );
+            });
         </script>
 </section>
