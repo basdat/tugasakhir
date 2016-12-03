@@ -19,58 +19,54 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="col-md-8 offset-md-2">
             <div class="row">
                 <div class="row">
-                    <h2 class="display-4 text-xs-center">Filter</h2>
-                    <hr/>
-                </div>
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Jadwal Sidang</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Mahasiswa</a>
-                    </li>
-                </ul>
-                <div class="form-group row">
-                    <label for="inputTerm" class="col-sm-2 form-control-label">Term</label>
-                    <div class="col-sm-10">
-                        <select class="custom-select" id="inputTerm">
-                            <?php
-                            foreach ($terms as $term) {
-                                $semesterId = (int)($term['semester']);
-                                $semester = "";
-                                if ($semesterId == 3) {
-                                    $semester = "Semester Pendek";
-                                } elseif ($semesterId % 2 == 0) {
-                                    $semester = "Genap";
-                                } else
-                                    $semester = "Ganjil";
-
-                                printf("<option value=\"%s,%s\">%s %s</option>", $semesterId, $term['tahun'], $semester, $term['tahun']);
-                            }
-                            ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="inputJenis" class="col-sm-2 form-control-label">Jenis Sidang</label>
-                    <div class="col-sm-10">
-                        <select id="inputJenis" class="custom-select">
-                            <?php
-                            foreach ($jenisMKS as $mks) {
-                                printf("<option value=\"%s\">%s</option>", $mks['id'], $mks['namamks']);
-                            }
-                            ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="row text-xs-right">
-                    <input type="submit" name="submit" class="btn btn-primary btn-login" value="Pilih">
-                </div>
-            </div>
-            <div class="row">
-                <div class="row">
                     <h2 class="display-4 text-xs-center">Data Sidang</h2>
                     <hr/>
+                </div>
+                <div class="row">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">Jadwal Sidang</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Mahasiswa</a>
+                        </li>
+                    </ul>
+                    <div class="form-group row">
+                        <label for="inputTerm" class="col-sm-2 form-control-label">Term</label>
+                        <div class="col-sm-10">
+                            <select class="custom-select" id="inputTerm">
+                                <?php
+                                foreach ($terms as $term) {
+                                    $semesterId = (int)($term['semester']);
+                                    $semester = "";
+                                    if ($semesterId == 3) {
+                                        $semester = "Semester Pendek";
+                                    } elseif ($semesterId % 2 == 0) {
+                                        $semester = "Genap";
+                                    } else
+                                        $semester = "Ganjil";
+
+                                    printf("<option value=\"%s,%s\">%s %s</option>", $semesterId, $term['tahun'], $semester, $term['tahun']);
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputJenis" class="col-sm-2 form-control-label">Jenis Sidang</label>
+                        <div class="col-sm-10">
+                            <select id="inputJenis" class="custom-select">
+                                <?php
+                                foreach ($jenisMKS as $mks) {
+                                    printf("<option value=\"%s\">%s</option>", $mks['id'], $mks['namamks']);
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row text-xs-right">
+                        <input type="submit" name="submit" class="btn btn-primary btn-login" value="Pilih">
+                    </div>
                 </div>
                 <div class="row">
                     <label for="sort">Sort by</label>
