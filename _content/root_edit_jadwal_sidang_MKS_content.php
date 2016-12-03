@@ -1,7 +1,7 @@
 <?php
 require_once "database.php";
-if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="admin") {echo "400 Bad Request"; die();}
-
+if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="admin") {echo "Bad Request: Must be logged in as role:admin"; die();}
+if(!isset($_SESSION["edit_idjs"])) {echo "400 Bad Request: ID of edit:Jadwal Sidang is undefined"; die();}
 
 $db = new database();
 $conn = $db->connectDB();

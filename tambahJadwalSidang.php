@@ -165,7 +165,7 @@ try {
     }catch(Exception $e){
 
     }
-    //header('Location: membuat_jadwal_sidang_MKS.php');
+    header('Location: membuat_jadwal_sidang_MKS.php');
 }
 
 
@@ -191,7 +191,7 @@ try {
     if(isset($_POST["Penguji"])){
         $_SESSION["tambah_prev_data"]["penguji"] = $_POST["Penguji"];
     }
-    //header('Location: membuat_jadwal_sidang_MKS.php');
+    header('Location: membuat_jadwal_sidang_MKS.php');
 }
 
 
