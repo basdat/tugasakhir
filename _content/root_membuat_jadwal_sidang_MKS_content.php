@@ -136,9 +136,10 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                     </label><br>
 
                     <input class="btn btn-primary" type="submit" name="submit" value="Buat Jadwal MKS"/>
+                    <a href="jadwal_sidang.php"  class="btn btn-danger">Batal</a>
                 </form>
                 <br>
-                <a href="jadwal_sidang.php" style="float: left;" class="btn btn-danger">Batal</a>
+
 
                 <?php if(isset($_SESSION["tambah_js_error"])){
                     echo "<br>";
