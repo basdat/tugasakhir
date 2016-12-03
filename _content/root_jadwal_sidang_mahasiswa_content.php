@@ -9,19 +9,6 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <section id="jadwal">
     <div class="container">
         <div class="row">
-            <?php
-            print_r($userRows[0]);
-            /*foreach ($userRows as $row) {
-                printf("<div class=\"card\">
-<div class=\"card-header\">
-%s
-</div>
-            <div class=\"card-block\">
-                <p class=\"card-text\">Some more card content</p>
-            </div>
-        </div>", $row['namamks']);
-        }*/
-            ?>
             <div class="card-deck-wrapper">
                 <?php
                 foreach ($userRows as $key => $row) {
@@ -30,17 +17,18 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         echo "<div class=\"card-deck\">";
                     }
 
-                    $dospenglainhtml="<td>";
+                    $dospenglainhtml = "<td>";
 
                     $stmt = $conn->prepare("SELECT d.nama FROM dosen_penguji dpem JOIN dosen d ON d.nip = dpem.nipdosenpenguji WHERE dpem.idmks=:idmks");
-                    $stmt->execute(array(':idmks'=>$dataRow['idmks']));
+                    $stmt->execute(array(':idmks' => $row['idmks']));
                     $dospenglain = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                    foreach ($dospenglain as $key => $dataR){
-                        $dospenglainhtml=$dospenglainhtml.$dataR['nama']."\n";
+                    foreach ($dospenglain as $keyi => $dataR) {
+
+                        $dospenglainhtml = $dospenglainhtml . sprintf("<li>%s</li>", $dataR['nama']) . "\n";
                     }
 
-                    $dospenglainhtml = $dospenglainhtml."</td>";
+                    $dospenglainhtml = $dospenglainhtml . "</td>";
 
                     printf("
                     <div class=\"card\">
@@ -73,9 +61,7 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     </div>
                                     <div class=\"col-md-9\">
                                         <ul>
-                                            <li>dosen</li>
-                                            <li>dosen</li>
-                                            <li>dosen</li>
+                                            %s
                                         </ul>
                                     </div>
                                 </div>
@@ -86,8 +72,9 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         $row['namamks'],
                         $row['judul'],
                         $row['tanggal'],
-                        sprintf("%s – %s @ %s", $row['jammulai'], $row['jamselesai'], $row['namaruangan'])
-                        );
+                        sprintf("%s – %s @ %s", $row['jammulai'], $row['jamselesai'], $row['namaruangan']),
+                        $dospenglainhtml
+                    );
 
                     if ((int)$key % 3 == 2) {
                         echo "</div>";
@@ -96,5 +83,6 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 ?>
             </div>
         </div>
+
     </div>
 </section>
