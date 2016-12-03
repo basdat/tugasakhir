@@ -42,7 +42,7 @@ class peserta
             $stmt->execute(array($value));
         }
 
-        header("Location: mata_kuliah_spesial.php");
+        header("Location: index.php");
 
 
 
