@@ -10,7 +10,7 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="container">
         <div class="row">
             <?php
-            print_r($userRows[0]);
+//            print_r($userRows[0]);
             /*foreach ($userRows as $row) {
                 printf("<div class=\"card\">
 <div class=\"card-header\">
