@@ -77,7 +77,7 @@ return $static;
     <div class="container">
         <div class="row">
             <div class="row text-xs-center">
-                <span class="display-3">Mata Kuliah Spesial</span>
+                <span class="display-3">Edit Jadwal Sidang</span>
             </div>
             <div class="col-xs-2 offset-xs-5">
                 <hr/>
@@ -108,7 +108,7 @@ return $static;
                     <div id="penguji">
                         <br>
                         <h3>Penguji</h3>
-                        <button style="float: right;" id="tambahPenguji" class="btn btn-primary"> Tambah Penguji</button>
+                        <button type="button" style="float: right;" id="tambahPenguji" class="btn btn-primary"> Tambah Penguji</button>
                         <br><br>
                         <?php
                         if(isset($_SESSION["edit_prev_data"])){
@@ -139,7 +139,7 @@ return $static;
                         <input type="checkbox" name="hc" value="hardcopy"  <?php if(isset($_SESSION["edit_prev_data"]["hc"])){echo "checked='".$_SESSION["edit_prev_data"]["hc"]."'";} else echo $mks["pengumpulanhardcopy"]?>>Sudah Mengumpulkan Hardcopy
                     </label><br>
 
-                    <input class="btn btn-primary" type="submit" name="submit" value="Ubah Jadwal MKS"/>
+                    <input class="btn btn-primary" type="submit" name="submit" value="Ubah Jadwal Sidang"/>
                     <a href="jadwal_sidang.php"  class="btn btn-danger">Batal</a>
                 </form>
 

@@ -89,7 +89,11 @@ ORDER BY ".$order);
     <div class="container">
         <div class="row">
             <button class="btn btn-primary" id="btntambah" style="float: right">Tambah Jadwal Sidang</button>
-            <select style="float: right;" id="sort">
+            <br>
+            <br>
+
+            Sort :
+            <select style="float:left;" id="sort">
                 <option value="waktu">Waktu</option>
                 <option value="mahasiswa">Mahasiswa</option>
                 <option value="jenis_sidang">Jenis Sidang</option>
@@ -99,6 +103,8 @@ ORDER BY ".$order);
                 echo generateTable('js.tanggal ASC, js.jammulai ASC');
                 ?>
             </div>
+            <br>
+            <br>
         </div>
         <script>
             $(document).ready(function(){

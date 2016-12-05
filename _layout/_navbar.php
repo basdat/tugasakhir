@@ -39,8 +39,11 @@
                     Mata Kuliah Spesial
                 </a>
                 <div class="dropdown-menu" aria-labelledby="Preview">
-                    <a class="dropdown-item" href="tambah_peserta.php">Tambah Peserta MKS</a>
                     <?php
+                    if($_SESSION['userdata']['role'] == 'admin'){
+                        echo '<a class="dropdown-item" href="tambah_peserta.php">Tambah Peserta MKS</a>';
+                    }
+
                     if ($_SESSION['userdata']['role'] != 'mahasiswa') {
                         echo "<a class=\"dropdown-item\" href=\"mata_kuliah_spesial.php\">Lihat Daftar MKS</a>";
                     }
