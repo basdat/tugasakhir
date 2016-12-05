@@ -52,7 +52,7 @@ $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <div class="row">
             <table class="table table-bordered">
-                <thead class="thead-inverse">
+                <thead>
                 <tr>
                     <th>Senin</th>
                     <th>Selasa</th>

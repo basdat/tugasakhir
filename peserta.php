@@ -24,7 +24,7 @@ class peserta
         $termarr = explode(" ", stripslashes($_POST['term']));
         $tahun = $termarr[0];
         $semester = $termarr[1];
-
+        
         $query = "INSERT INTO Mata_Kuliah_Spesial(npm,tahun,semester,judul,idjenismks) VALUES(?,?,?,?,?)";
 
         $stmt = $this->conn->prepare($query);
@@ -42,7 +42,7 @@ class peserta
             $stmt->execute(array($value));
         }
 
-        header("Location: mata_kuliah_spesial.php");
+        header("Location: index.php");
 
 
 

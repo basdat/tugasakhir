@@ -10,14 +10,25 @@ function generateTable($order){
 
     $db = new database();
     $conn = $db->connectDB();
-    $stmt = $conn->prepare("SELECT DISTINCT js.idjadwal,mks.ijinmajusidang,mks.pengumpulanhardcopy,mh.nama,jm.namamks,mks.judul,js.tanggal,js.jammulai,js.jamselesai,dp.nipdosenpenguji,dpem.nipdosenpembimbing,mks.idmks,r.namaruangan
-FROM jadwal_sidang js NATURAL JOIN mata_kuliah_spesial mks NATURAL JOIN mahasiswa mh JOIN jenis_mks jm ON mks.idjenismks = jm.id  NATURAL LEFT OUTER JOIN dosen_pembimbing dpem NATURAL LEFT OUTER JOIN dosen_penguji dp NATURAL JOIN ruangan r
+    $stmt = $conn->prepare("SELECT js.idjadwal,mks.ijinmajusidang,mks.pengumpulanhardcopy,mh.nama,jm.namamks,mks.judul,js.tanggal,js.jammulai,js.jamselesai,mks.idmks,r.namaruangan
+FROM jadwal_sidang js NATURAL JOIN mata_kuliah_spesial mks NATURAL JOIN mahasiswa mh JOIN jenis_mks jm ON mks.idjenismks = jm.id NATURAL JOIN ruangan r
 WHERE mks.issiapsidang = true
 ORDER BY ".$order);
 
+
     $stmt->execute(array());
     $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $html = "<table class='table dataTable'><thead><tr>";
+    $html = "<table class='table dataTable'>";
+     $html .= "<colgroup>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:1%'>
+            </colgroup>";
+    $html .= "<thead><tr>";
 
     $columnName = array('Mahasiswa','Judul','Jenis Sidang','Waktu dan Lokasi','Penguji','Pembimbing','Action');
     foreach ($columnName as $th){
@@ -78,16 +89,9 @@ ORDER BY ".$order);
 <section>
     <div class="container">
         <div class="row">
-            <button class="btn btn-primary" id="btntambah" style="float: right">Tambah Jadwal Sidang</button>
+            <button class="btn btn-primary" id="btntambah" style="float: left">Tambah Jadwal Sidang</button>
             <br>
             <br>
-
-            Sort :
-            <select style="float:left;" id="sort">
-                <option value="waktu">Waktu</option>
-                <option value="mahasiswa">Mahasiswa</option>
-                <option value="jenis_sidang">Jenis Sidang</option>
-            </select>
             <div id="table_admin">
                 <?php
                 echo generateTable('js.tanggal ASC, js.jammulai ASC');
@@ -98,6 +102,23 @@ ORDER BY ".$order);
         </div>
         <script>
             $(document).ready(function(){
+
+
+
+                $('.table').DataTable( {
+                    "paging":   true,
+                    "ordering": false,
+                    "info":     false,
+                } );
+
+
+                var html = '&nbsp&nbsp&nbsp<label for="sort">Sort by: &nbsp</label><select id="sort"><option value="waktu" clas="input-large" ">Waktu Sidang</option><option value="mahasiswa">Nama Mahasiswa</option><option value="jenis_sidang">Jenis Sidang</option></select></div>';
+
+                $('.dataTables_length').append(html);
+                $('div.dataTables_wrapper div.dataTables_length select').css('width', '150px');
+                $('select').addClass("form-control");
+                $('input').addClass("form-control");
+
                 $(".edit").click(function() {
                     console.log("Edit");
                     $.post("jadwal_sidang.php", {edit: ($(this).attr("id"))}, function () {
@@ -110,11 +131,7 @@ ORDER BY ".$order);
                     window.location.href="membuat_jadwal_sidang_MKS.php"
                 });
 
-                $('.table').DataTable( {
-                    "paging":   true,
-                    "ordering": false,
-                    "info":     false,
-                } );
+
 
                 $("#sort").change(function () {
                     var val = $("#sort").val();
@@ -137,6 +154,13 @@ ORDER BY ".$order);
                             "ordering": false,
                             "info":false,
                         } );
+
+                        var html = '&nbsp&nbsp&nbsp<label for="sort">Sort by: &nbsp</label><select id="sort"><option value="waktu" clas="input-large" ">Waktu Sidang</option><option value="mahasiswa">Nama Mahasiswa</option><option value="jenis_sidang">Jenis Sidang</option></select></div>';
+
+                        $('.dataTables_length').append(html);
+                        $('div.dataTables_wrapper div.dataTables_length select').css('width', '150px');
+                        $('select').addClass("form-control");
+                        $('input').addClass("form-control");
                     });
                 });
             });

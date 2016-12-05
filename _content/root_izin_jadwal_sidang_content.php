@@ -29,16 +29,6 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </section>
 <section>
     <div class="container">
-		<div class="row" style="float: left;">
-			Urut berdasarkan: &nbsp
-	        <select style="float: right;" id="sort">
-	                <option value="waktu">Waktu Sidang</option>
-	                <option value="mahasiswa">Nama Mahasiswa</option>
-	                <option value="jenis_sidang">Jenis Sidang</option>
-            </select>
-            <br>
-            <br>
-		</div>
         <div class="row">
     <div id="tableArea">
 			<table class="table table-striped" id="izinSidang">
@@ -51,7 +41,7 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			    <col style="width:10%">
 			    <col style="width:5%">
   			</colgroup> 
-			<thead class="thead-inverse">
+			<thead>
 				<tr>
 					<th style="text-align:center">No</th>
 					<th style="text-align:center">Mahasiswa</th>
@@ -96,7 +86,7 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 							echo "<button type='button' class='btn btn-warning disabled'>Diizinkan</button>";
 						} else {
 
-						echo "<form action=helper_izinkan.php method='post'>	<input type='hidden' name='npm' value='". $value['npm'] . "'><input type='hidden' name='idmks' value='".$value['idmks']."'><input type='submit' name='izin' value='Izinkan' class='btn btn-warning'></form>";
+						echo "<form action=helper_izinkan.php method='post'>	<input type='hidden' name='npm' value='". $value['npm'] . "'><input type='hidden' name='idmks' value='".$value['idmks']."'><button type='submit' name='izin' class='btn btn-warning'>Izinkan</button></form>";
 						}
 					echo "</td>";	
 				
@@ -117,6 +107,14 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	        "info":     false,
 	        "order": [[ 2, "desc" ]]
     		} );
+
+	    	 var html = '&nbsp&nbsp&nbsp<label for="sort">Sort by: &nbsp</label><select id="sort"><option value="waktu" clas="input-large" ">Waktu Sidang</option><option value="mahasiswa">Nama Mahasiswa</option><option value="jenis_sidang">Jenis Sidang</option></select></div>';
+
+            $('.dataTables_length').append(html);
+            $('div.dataTables_wrapper div.dataTables_length select').css('width', '150px');
+            $('select').addClass("form-control");
+            $('input').addClass("form-control");
+
 
     		$("#sort").change(function () {
                     var val = $("#sort").val();
@@ -139,6 +137,14 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             "ordering": false,
                             "info":false,
                         } );
+
+                         var html = '&nbsp&nbsp&nbsp<label for="sort">Sort by: &nbsp</label><select id="sort"><option value="waktu" clas="input-large" ">Waktu Sidang</option><option value="mahasiswa">Nama Mahasiswa</option><option value="jenis_sidang">Jenis Sidang</option></select></div>';
+
+		                $('.dataTables_length').append(html);
+		                $('div.dataTables_wrapper div.dataTables_length select').css('width', '150px');
+		                $('select').addClass("form-control");
+		                $('input').addClass("form-control");
+
                     });
                 });
 		} );

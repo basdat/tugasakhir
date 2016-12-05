@@ -50,10 +50,10 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
 <section>
     <div class="container">
         <div class="row">
-            <div>
-            <form method="post" action="peserta.php" style="width: 30%;margin: auto;">
+            <form method="post" action="peserta.php" style="margin: auto;">
                 <?php
                      echo "<div class='form-group'>
+                            <h3>Data MKS</h3>
                                 <label for='term'>Term</label>
                                 <select id='term' class='form-control' name='term' required>
                                     <option value=''>Pilih Term</option>";
@@ -69,28 +69,35 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
                                 Judul MKS
                                 <input type="text" class="form-control" name="judul" placeholder="Judul"/>
                             </div>';
+                    echo "<br><h3 style='float: left;'>Pembimbing</h3><br><div class='btn-group' style='float: right;'>
+                    <button type='button' class='btn btn-primary' value='Add Pembimbing' id='addPembimbing'>Tambah</button>
+                    <button type='button' class='btn btn-danger' value='Remove Pembimbing' id='removePembimbing'>Kurangi</button>
+                </div><br><br>";
 
                 echo "<div id='TextBoxesGroupPembimbing'>
 	                            <div id=\"TextBoxDivPembimbing1\">";
                     echo getDropDown($dosenRows,"nip","nama","Dosen","Pembimbing 1","pembimbing[]");
                 echo "</div></div>";
+
+                echo "<br><h3 style='float: left;'>Penguji</h3><br><div class='btn-group' style='float: right;'>
+                    <button type='button' class='btn btn-primary' value='Add Penguji' id='addButton'>Tambah</button>
+                    <button type='button' class='btn btn-danger' value='Remove Penguji' id='removeButton'>Kurangi</button>
+                </div><br><br>";
+
                     echo "<div id='TextBoxesGroup'>
 	                            <div id=\"TextBoxDiv1\">";
                     echo getDropDown($dosenRows,"nip","nama", "Dosen", "Penguji 1","penguji[]");
                      echo "</div></div>"
 
                 ?>
-                <input class="btn btn-primary" type="submit" name="submit" value="tambahpeserta"/>
-                <a class="btn btn-danger" href="mata_kuliah_spesial.php">Cancel</a>
 
+                <div class="btn-group">
+                    <button class="btn btn-primary" type="submit" name="submit" value="tambahpeserta">Tambah</button>
+                    <a class="btn btn-danger" href="mata_kuliah_spesial.php">Cancel</a>
+                </div>
+            <br/><br/>
             </form>
-                <input type='button' class="btn btn-success" value='Add Pembimbing' id='addPembimbing'>
-                <input type='button' class="btn btn-success" value='Remove Pembimbing' id='removePembimbing'>
-                <input type='button' class="btn btn-success" value='Add Penguji' id='addButton'>
-                <input type='button' class="btn btn-success" value='Remove Penguji' id='removeButton'>
-
-
-        </div>
+          
     </div>
 </section>
 
