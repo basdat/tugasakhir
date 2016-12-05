@@ -43,7 +43,6 @@ if(isset($_SESSION['userdata']['nip'])){
 <section>
 	<div class="container">
 		<div class="row">
-			<?php echo "<h4> You are: " . $_SESSION['userdata']['nama'] . "</h4> <br><br>"; ?>
 			<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalTambah">Tambah Jadwal Non Sidang</button>
 		</div>
 		<br>
