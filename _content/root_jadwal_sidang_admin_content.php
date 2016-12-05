@@ -89,16 +89,9 @@ ORDER BY ".$order);
 <section>
     <div class="container">
         <div class="row">
-            <button class="btn btn-primary" id="btntambah" style="float: right">Tambah Jadwal Sidang</button>
+            <button class="btn btn-primary" id="btntambah" style="float: left">Tambah Jadwal Sidang</button>
             <br>
             <br>
-
-            Sort :
-            <select style="float:left;" id="sort">
-                <option value="waktu">Waktu</option>
-                <option value="mahasiswa">Mahasiswa</option>
-                <option value="jenis_sidang">Jenis Sidang</option>
-            </select>
             <div id="table_admin">
                 <?php
                 echo generateTable('js.tanggal ASC, js.jammulai ASC');
@@ -109,6 +102,23 @@ ORDER BY ".$order);
         </div>
         <script>
             $(document).ready(function(){
+
+
+
+                $('.table').DataTable( {
+                    "paging":   true,
+                    "ordering": false,
+                    "info":     false,
+                } );
+
+
+                var html = '&nbsp&nbsp&nbsp<label for="sort">Sort by: &nbsp</label><select id="sort"><option value="waktu" clas="input-large" ">Waktu Sidang</option><option value="mahasiswa">Nama Mahasiswa</option><option value="jenis_sidang">Jenis Sidang</option></select></div>';
+
+                $('.dataTables_length').append(html);
+                $('div.dataTables_wrapper div.dataTables_length select').css('width', '150px');
+                $('select').addClass("form-control");
+                $('input').addClass("form-control");
+
                 $(".edit").click(function() {
                     console.log("Edit");
                     $.post("jadwal_sidang.php", {edit: ($(this).attr("id"))}, function () {
@@ -121,11 +131,7 @@ ORDER BY ".$order);
                     window.location.href="membuat_jadwal_sidang_MKS.php"
                 });
 
-                $('.table').DataTable( {
-                    "paging":   true,
-                    "ordering": false,
-                    "info":     false,
-                } );
+
 
                 $("#sort").change(function () {
                     var val = $("#sort").val();
@@ -148,6 +154,13 @@ ORDER BY ".$order);
                             "ordering": false,
                             "info":false,
                         } );
+
+                        var html = '&nbsp&nbsp&nbsp<label for="sort">Sort by: &nbsp</label><select id="sort"><option value="waktu" clas="input-large" ">Waktu Sidang</option><option value="mahasiswa">Nama Mahasiswa</option><option value="jenis_sidang">Jenis Sidang</option></select></div>';
+
+                        $('.dataTables_length').append(html);
+                        $('div.dataTables_wrapper div.dataTables_length select').css('width', '150px');
+                        $('select').addClass("form-control");
+                        $('input').addClass("form-control");
                     });
                 });
             });

@@ -43,47 +43,59 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <section>
     <div class="container">
         <div class="row">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="sort">Urutkan:</label>
+                    <select id="sort" class="pick">
+                        <option value="mahasiswa">Mahasiswa</option>
+                        <option value="jenis">Jenis MKS</option>
+                        <option value="term">Term</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter">&nbsp Filter term:</label>
+                    <select id="filter" class="pick">
+                      <option value="all">All</option>
+                      <?php
 
-            <?php
+                          $conn = $db->connectDB();
+                          $query = "SELECT * FROM TERM";
+                          $stmt = $conn->prepare($query);
+                          $stmt->execute(array());
+                          $termRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                          foreach ($termRows as $key => $value){
+                            $semester = "";
+                            if($value['semester'] % 2 == 0){
+                                $semester =  "Genap";
+                            }
+                            else {
+                                $semester = "Gasal";
+                            }
+                              echo '<option value="'.$value['semester'].' '.$value['tahun'].'">'.$semester.' '.$value['tahun'].'</option>';
+                          }
+                       ?>
+                   </select>
+                   </div>
+                    <?php
                 if($_SESSION['userdata']['role'] == 'admin') {
-                    echo "<a href=\"tambah_peserta.php\" class=\"btn btn-success\">Tambah</a>";
+                    echo "<div class='form-group'><a href=\"tambah_peserta.php\" class=\"btn btn-success\">Tambah</a></div>";
                 }
-
             ?>
-
-                <p>Sort By</p>
-                <select id="sort" class="pick">
-                    <option value="mahasiswa">Mahasiswa</option>
-                    <option value="jenis">Jenis MKS</option>
-                    <option value="term">Term</option>
-                </select>
-
-                <p>Filter by Term</p>
-                <select id="filter" class="pick">
-                  <option value="all">All</option>
-                  <?php
-
-                      $conn = $db->connectDB();
-                      $query = "SELECT * FROM TERM";
-                      $stmt = $conn->prepare($query);
-                      $stmt->execute(array());
-                      $termRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                      foreach ($termRows as $key => $value){
-                        $semester = "";
-                        if($value['semester'] % 2 == 0){
-                            $semester =  "Genap";
-                        }
-                        else {
-                            $semester = "Gasal";
-                        }
-                          echo '<option value="'.$value['semester'].' '.$value['tahun'].'">'.$semester.' '.$value['tahun'].'</option>';
-                      }
-                   ?>
-               </select>
-
+            </form>
+            <br>
+        </div>
+        <div class='row'>
             <div id="tableArea">
-            <table  id="example" class="display" cellspacing="0" width="100%">
+            <table id="example" class="table">
+            <colgroup>
+                <col style='width:1%'>
+                <col style='width:20%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+            </colgroup>
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -141,7 +153,7 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </tbody>
             </table>
             </div>
-
+        </div>
             <div class="row">
     </div>
 </section>
@@ -155,9 +167,13 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             "paging":   true,
             "ordering": false,
             "info":     false
-        } );
+        } );   
 
+        $('select').addClass("form-control");
+        $('select').css("width", "150px");
 
+        $('input').addClass("form-control");
+        
         $(".pick").change(function () {
             var val = $("#sort").val();
             var order = "";
@@ -170,6 +186,7 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 order = 'mata_kuliah_spesial.tahun, mata_kuliah_spesial.semester';
             }
 
+            
             var val2 = $("#filter").val();
 
             var semester = -1;
@@ -188,6 +205,10 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     "ordering": false,
                     "info":false,
                 } );
+
+                $('select').addClass("form-control");
+                $('input').addClass("form-control");
+        
             });
         });
 
