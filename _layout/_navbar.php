@@ -9,7 +9,7 @@
                 Hello,
                 <strong>
                     <?php
-                    echo $_SESSION['username'];
+                    echo $_SESSION['userdata']['nama'];
                     ?>
                 </strong>
             </li>
@@ -33,23 +33,23 @@
 
                 </div>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
-                   aria-expanded="false">
-                    Mata Kuliah Spesial
-                </a>
-                <div class="dropdown-menu" aria-labelledby="Preview">
-                    <?php
-                    if($_SESSION['userdata']['role'] == 'admin'){
-                        echo '<a class="dropdown-item" href="tambah_peserta.php">Tambah Peserta MKS</a>';
-                    }
-
-                    if ($_SESSION['userdata']['role'] != 'mahasiswa') {
-                        echo "<a class=\"dropdown-item\" href=\"mata_kuliah_spesial.php\">Lihat Daftar MKS</a>";
-                    }
-                    ?>
-                </div>
-            </li>
+            <?php if ($_SESSION['userdata']['role'] != 'mahasiswa'){ ?>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                       aria-haspopup="true"
+                       aria-expanded="false">
+                        Mata Kuliah Spesial
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="Preview">
+                        <?php
+                        if ($_SESSION['userdata']['role'] == 'admin') {
+                            echo '<a class="dropdown-item" href="tambah_peserta.php">Tambah Peserta MKS</a>';
+                        }
+                        ?>
+                        <a class="dropdown-item" href="mata_kuliah_spesial.php">Lihat Daftar MKS</a>
+                    </div>
+                </li>
+            <?php } ?>
             <li class="nav-item">
                 <form method="post" action="auth.php">
                     <div class="row text-xs-right">

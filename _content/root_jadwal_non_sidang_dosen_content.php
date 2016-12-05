@@ -43,7 +43,6 @@ if(isset($_SESSION['userdata']['nip'])){
 <section>
 	<div class="container">
 		<div class="row">
-			<?php echo "<h4> You are: " . $_SESSION['userdata']['nama'] . "</h4> <br><br>"; ?>
 			<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalTambah">Tambah Jadwal Non Sidang</button>
 		</div>
 		<br>
@@ -57,7 +56,7 @@ if(isset($_SESSION['userdata']['nip'])){
 			    <col style="width:10%">
 			    <col style="width:1%">
   			</colgroup> 
-				<thead class="thead-inverse">
+				<thead>
 					<tr>
 						<th style="text-align:center">No.</th>
 						<th style="text-align:center">Nama</th>
@@ -86,7 +85,7 @@ if(isset($_SESSION['userdata']['nip'])){
 							echo "<td>" . $jadwal['tanggalmulai'] . " - " . $jadwal['tanggalselesai'] . "</td>";
 							echo "<td>" . ucwords($jadwal['repetisi']) . "</td>";
 							echo "<td>" . ucwords($jadwal['alasan']) . "</td>";
-							echo '<td><button type="button" data-toggle="modal" data-target="#modalEdit" class="btn btn-warning btn-sm" id="' . $jadwal['idjadwal'] . '" onclick="updateData(\''.$id.'\',\''.$nama.'\',\''.$tglMulai.'\',\''.$tglSelesai.'\',\''.$repetisi.'\',\''.$alasan.'\',\''.$nip.'\');">Edit</button></td>';
+							echo '<td><button type="button" data-toggle="modal" data-target="#modalEdit" class="btn btn-primary" id="' . $jadwal['idjadwal'] . '" onclick="updateData(\''.$id.'\',\''.$nama.'\',\''.$tglMulai.'\',\''.$tglSelesai.'\',\''.$repetisi.'\',\''.$alasan.'\',\''.$nip.'\');">Edit</button></td>';
 							echo "</tr>";
 							$counter++;
 						}
@@ -210,6 +209,9 @@ if(isset($_SESSION['userdata']['nip'])){
 	        "ordering": false,
 	        "info":     false
     		} );
+
+            $('input').addClass("form-control");
+            $('select').addClass("form-control");
 
     		$('#buttonSubmit').click(function(){
     			swal({

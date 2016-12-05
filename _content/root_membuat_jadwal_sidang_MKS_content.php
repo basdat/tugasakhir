@@ -134,9 +134,10 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                     <label class="radio-inline">
                         <input type="checkbox" name="hc" value="hardcopy" <?php if(isset($_SESSION["tambah_prev_data"]["hc"])) echo "checked='".$_SESSION["tambah_prev_data"]["hc"]."'"?>>Sudah Mengumpulkan Hardcopy
                     </label><br>
-
-                    <input class="btn btn-primary" type="submit" name="submit" value="Buat Jadwal Sidang"/>
+                    <div class="btn-group">
+                    <input class="btn btn-primary" type="submit" name="submit" value="Buat Jadwal"/>
                     <a href="jadwal_sidang.php"  class="btn btn-danger">Batal</a>
+                    </div>
                 </form>
                 <br>
 
