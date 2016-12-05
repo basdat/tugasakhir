@@ -9,7 +9,7 @@ MKS.NPM = Mhs.NPM AND
 MKS.idjenisMKS = jenis_MKS.id AND
 jsidang.idMKS = dospem.IDMKS AND
 dospem.NIPdosenpembimbing = dosen.NIP AND
-jsidang.Idruangan = ruangan.idruangan
+jsidang.Idruangan = ruangan.idruangan AND MKS.ijinmajusidang = false
 Group By jsidang.idjadwal, IDSidang, Mahasiswa, Jenis, Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, MKS.ijinmajusidang
 order by idjadwal asc;");
 $stmt->execute(array());
