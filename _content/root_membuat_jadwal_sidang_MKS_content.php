@@ -15,7 +15,7 @@ $stmt = $conn->prepare($query);
 $stmt->execute(array());
 $ruanganRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$query = "SELECT nama,npm from mahasiswa ORDER BY nama";
+$query = "SELECT nama,npm from mahasiswa NATURAL JOIN mata_kuliah_spesial ORDER BY nama";
 $stmt = $conn->prepare($query);
 $stmt->execute(array());
 $mahasiswaRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -25,7 +25,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname)
     $select = "<div class='form-group'>
                 <label id='label_.$label' for='" . $label . "'>$label</label>
                 <select id='" . $label . "' class='form-control' name='" . $postname . "' required>
-                <option value=''>Pilih " . $default . "</option>";
+                ";
 
     foreach ($arr as $key => $value) {
         $select .= '<option value="' . $value[$val] . '">' . $value[$name] . '</option>';
@@ -212,7 +212,6 @@ function getDropDownDVc($arr, $val, $name, $default,$defaultVal,$label, $postnam
 
                     result += '<label style="display: block;" for="Penguji'+counter+'">Penguji '+ counter+'</label>';
                     result+=  '<select style="float: left;display: inline-block;width: 90%;"  id="Penguji'+counter+'" class="form-control" name="Penguji[]" required>';
-                    result+='<option value="">Pilih Dosen</option>';
 
                     for(var i=0;i<dosenJSON.length;i++)
                     {
@@ -248,7 +247,6 @@ function getDropDownDVc($arr, $val, $name, $default,$defaultVal,$label, $postnam
                         var res = '<div class="form-group">';
                         res += '<label for="mks">Pilih MKS</label>';
                         res+=  '<select id="mks" class="form-control" name="mks" required>';
-                        res+='<option value="">Pilih MKS</option>';
 
                         $.each(JSON.parse(mksJSON),function (key,value) {
                             res += '<option value="'+value.idmks+'">'+value.judul+'</option>';
