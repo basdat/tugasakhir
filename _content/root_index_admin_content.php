@@ -141,7 +141,7 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         });
 
                         $('#btnSubmit').click(function () {
-                            $("#table_admin").html("<div class="alert alert-warning">Sedang mengunduh data...</div>");
+                            $("#table_admin").html("<div class=\"alert alert-warning\">Sedang mengunduh data...</div>");
                             $.post("server/server_jadwal_sidang_admin.php", {admin_order: 'js.tanggal ASC, js.jammulai ASC', input_term: inputTerm, input_jenis: inputJenis}, function (response) {
                                 $("#table_admin").html(response);
                                 $('.table').DataTable({
@@ -174,7 +174,7 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             } else {
                                 order = 'js.tanggal ASC, js.jammulai ASC';
                             }
-                            $("#table_admin").html("<div class="alert alert-warning">Sedang mengunduh data...</div>");
+                            $("#table_admin").html("<div class=\"alert alert-warning\">Sedang mengunduh data...</div>");
                             $.post("server/server_jadwal_sidang_admin.php", {admin_order: order, input_term: inputTerm, input_jenis: inputJenis}, function (response) {
                                 $("#table_admin").html(response);
                                 $('.table').DataTable({
