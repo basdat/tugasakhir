@@ -102,7 +102,7 @@ if(isset($_SESSION['userdata']['nip'])){
 						<h4 class="modal-title">Tambah Jadwal Non Sidang</h4>
 					</div>
 					<div class="modal-body">
-						<form action="helper_jadwal_non_sidang.php" method="post">
+						<form>
 							<div class="form-group">
 								<label for="namaDosen">Nama Dosen: </label> <br>
 								<select class="form-control" id="sel1" name="nipDosen">
@@ -138,7 +138,7 @@ if(isset($_SESSION['userdata']['nip'])){
 						
 					</div>
 					<div class="modal-footer">
-						<input type="submit" class="btn btn-success" name="simpan" value="Simpan" id="buttonSubmit">
+						<input type="button" class="btn btn-success" name="simpan" value="Simpan" id="buttonSubmit">
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
 					</div>
 					</form>
@@ -209,6 +209,55 @@ if(isset($_SESSION['userdata']['nip'])){
 	        "ordering": false,
 	        "info":     false
     		} );
+
+    		$('#buttonSubmit').click(function(){
+    			var isTanggalValid, isRepetisiValid, isKeteranganValid = false;
+    			var varTanggalMulai = new Date($('#tanggalMulai').val());
+    			var varTanggalSelesai= new Date($('#tanggalSelesai').val());
+    			var varRepetisi = $('input[name=repetisi]:checked').val();
+    			var varKeterangan = $('#keterangan').val();
+    			var varNIPDosen = $('#sel1').val();
+    			if(varTanggalMulai < varTanggalSelesai){
+    				isTanggalValid = true;
+    			}
+
+    			if(varRepetisi == null){
+    				isRepetisiValid = false;
+    			} else {
+    				isRepetisiValid = true;
+    			}
+
+    			if(varKeterangan != ""){
+    				isKeteranganValid = true;
+    			}
+
+    			var isAllValid = isTanggalValid && isRepetisiValid && isKeteranganValid;
+
+    			if(isAllValid){
+    				$.post( "helper_jadwal_non_sidang.php", { simpan: "Simpan", nipDosen: varNIPDosen, tanggalMulai: varTanggalMulai, tanggalSelesai: varTanggalSelesai, repetisi: varRepetisi, keterangan: varKeterangan})
+  						.done(function( data ) {
+    					sweetAlert("Yes!", "Data berhasil ditambahkan", "success");
+    					$('#jadwaltable').DataTable( {
+					        "paging":   true,
+					        "ordering": false,
+					        "info":     false
+				    		} );
+  					});
+    			} else {
+    				var message = "";
+    				if(!isTanggalValid){
+    					message += "Tanggal yang dimasukkan tidak valid. ";
+    				}
+    				if(!isRepetisiValid){
+    					message += "Repetisi tidak boleh kosong. ";
+    				}
+    				if(!isKeteranganValid){
+    					message += "Keterangan tidak boleh kosong. ";
+    				}
+    				sweetAlert("Oops...", message, "error");
+    			}
+    			
+    		});
 
             $('input').addClass("form-control");
             $('select').addClass("form-control");
