@@ -53,7 +53,16 @@ function generateTable($order, $semester, $tahun){
 
     $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $html = '<table  id="example" class="display" cellspacing="0" width="100%"><thead>
+    $html = '<table  id="example" class="table" 
+                     <colgroup>
+                        <col style=\'width:1%\'>
+                        <col style=\'width:20%\'>
+                        <col style=\'width:10%\'>
+                        <col style=\'width:10%\'>
+                        <col style=\'width:10%\'>
+                        <col style=\'width:10%\'>
+                    </colgroup>
+                    <thead>
 						<tr>
                              <th>Id</th>
                             <th>Judul</th>
