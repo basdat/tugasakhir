@@ -6,7 +6,7 @@ function generateTable($order){
 
     $db = new database();
     $conn = $db->connectDB();
-    $stmt = $conn->prepare("SELECT mks.ijinmajusidang,mks.pengumpulanhardcopy,mh.nama,jm.namamks,mks.judul,js.tanggal,js.jammulai,js.jamselesai,dp.nipdosenpenguji,dpem.nipdosenpembimbing,mks.idmks,r.namaruangan
+    $stmt = $conn->prepare("SELECT mks.ijinmajusidang,mks.pengumpulanhardcopy,mh.nama,jm.namamks,mks.judul,js.tanggal,js.jammulai,js.jamselesai,dp.nipdosenpenguji,dpem.nipdosenpembimbing,mks.idmks,r.namaruangan,js.idjadwal,js.idjadwal,r.idruangan
 FROM jadwal_sidang js NATURAL JOIN mata_kuliah_spesial mks NATURAL JOIN mahasiswa mh JOIN jenis_mks jm ON mks.idjenismks = jm.id  NATURAL LEFT OUTER JOIN dosen_pembimbing dpem NATURAL LEFT OUTER JOIN dosen_penguji dp NATURAL JOIN ruangan r
 WHERE dp.nipdosenpenguji=:nip OR dpem.nipdosenpembimbing =:nip 
 ORDER BY ".$order);
@@ -31,6 +31,17 @@ ORDER BY ".$order);
         $html = $html."<th>".$th." </th>";
     }
     $html = $html."</thead></tr>";
+
+    $existOnce = array();
+
+    foreach ($datas as $key => $value) {
+        $skey = $value['idjadwal'].",".$value['idruangan'].",".$value['tanggal'].",".$value['jammulai'].",".$value['jamselesai'];
+        if(in_array($skey, $existOnce)){
+            unset($datas[$key]);
+        }else{
+            $existOnce[]=$skey;
+        }
+    }
 
     foreach ($datas as $key => $dataRow){
         $html = $html."<tr>";
