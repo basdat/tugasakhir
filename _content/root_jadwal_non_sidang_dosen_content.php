@@ -185,7 +185,7 @@ if(isset($_SESSION['userdata']['nip'])){
 					</div>
 					<div class="modal-footer">
 						<input type="hidden" name="idJadwal" id="idJadwal">
-						<input type="submit" class="btn btn-success" name="simpan" value="Update">
+						<input type="submit" id="buttonUpdate" class="btn btn-success" name="simpan" value="Update">
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
 					</div>
 					</form>
@@ -237,6 +237,55 @@ if(isset($_SESSION['userdata']['nip'])){
     				$.post( "helper_jadwal_non_sidang.php", { simpan: "Simpan", nipDosen: varNIPDosen, tanggalMulai: varTanggalMulai, tanggalSelesai: varTanggalSelesai, repetisi: varRepetisi, keterangan: varKeterangan})
   						.done(function( data ) {
     					sweetAlert("Yes!", "Data berhasil ditambahkan", "success");
+    					$('#jadwaltable').DataTable( {
+					        "paging":   true,
+					        "ordering": false,
+					        "info":     false
+				    		} );
+  					});
+    			} else {
+    				var message = "";
+    				if(!isTanggalValid){
+    					message += "Tanggal yang dimasukkan tidak valid. ";
+    				}
+    				if(!isRepetisiValid){
+    					message += "Repetisi tidak boleh kosong. ";
+    				}
+    				if(!isKeteranganValid){
+    					message += "Keterangan tidak boleh kosong. ";
+    				}
+    				sweetAlert("Oops...", message, "error");
+    			}
+    			
+    		});
+
+    		$('#buttonUpdate').click(function(){
+    			var isTanggalValid, isRepetisiValid, isKeteranganValid = false;
+    			var varTanggalMulai = new Date($('#editTanggalMulai').val());
+    			var varTanggalSelesai= new Date($('#editTanggalSelesai').val());
+    			var varRepetisi = $('input[name=repetisi]:checked').val();
+    			var varKeterangan = $('#editKeterangan').val();
+    			var varNIPDosen = $('#editNama').val();
+    			if(varTanggalMulai < varTanggalSelesai){
+    				isTanggalValid = true;
+    			}
+
+    			if(varRepetisi == null){
+    				isRepetisiValid = false;
+    			} else {
+    				isRepetisiValid = true;
+    			}
+
+    			if(varKeterangan != ""){
+    				isKeteranganValid = true;
+    			}
+
+    			var isAllValid = isTanggalValid && isRepetisiValid && isKeteranganValid;
+
+    			if(isAllValid){
+    				$.post( "helper_jadwal_non_sidang.php", { simpan: "Update", nipDosen: varNIPDosen, tanggalMulai: varTanggalMulai, tanggalSelesai: varTanggalSelesai, repetisi: varRepetisi, keterangan: varKeterangan})
+  						.done(function( data ) {
+    					sweetAlert("Yes!", "Data berhasil diedit", "success");
     					$('#jadwaltable').DataTable( {
 					        "paging":   true,
 					        "ordering": false,
