@@ -106,6 +106,14 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     $('div.dataTables_wrapper div.dataTables_length select').css('width', '150px');
                                     $('#table_admin select').addClass("form-control");
                                     $('#table_admin input').addClass("form-control");
+
+                                    $(".edit").click(function() {
+                                        console.log("Edit");
+                                        $.post("jadwal_sidang.php", {edit: ($(this).attr("id"))}, function () {
+                                            window.location.href = "edit_jadwal_sidang_MKS.php";
+                                        });
+
+                                    });
                                 }
                             });
 
@@ -203,6 +211,13 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             }, function (response) {
                                 $("#table_admin").html(response);
                                 currentTable = getTable();
+                                $(".edit").click(function() {
+                                    console.log("Edit");
+                                    $.post("jadwal_sidang.php", {edit: ($(this).attr("id"))}, function () {
+                                        window.location.href = "edit_jadwal_sidang_MKS.php";
+                                    });
+
+                                });
                             });
                         });
                     });
