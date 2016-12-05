@@ -111,6 +111,17 @@ if ($validated == true){
     }
 }
 
+$existOnce = array();
+
+foreach ($_POST["Penguji"] as $key => $data){
+    if(in_array($data,$existOnce)){
+        $validated=false;
+        $_SESSION["edit_js_error"][] = "Ada penguji duplikat (bernilai sama) pada saat pengisian form";
+    }else{
+        $existOnce[] = $data;
+    }
+}
+
 if($validated){
 
 $db = new database();
@@ -130,14 +141,15 @@ $conn = $db->connectDB();
         }
 
         if ($hc == "hardcopy") {
-            $hc = 'true';
+            $hc = 'TRUE';
         } else {
-            $hc = 'false';
+            $hc = 'FALSE';
         }
 
-        $query = "UPDATE mata_kuliah_spesial SET pengumpulanhardcopy = :hc WHERE idmks =:idmks;";
+        echo $hc;
+
+        $query = "UPDATE mata_kuliah_spesial SET pengumpulanhardcopy =".$hc." WHERE idmks =:idmks;";
         $stmt = $conn->prepare($query);
-        $stmt->bindParam(':hc',$hc,PDO::PARAM_BOOL);
         $stmt->bindParam('idmks',$_POST["mks"]);
 
         $stmt->execute();
@@ -166,6 +178,7 @@ $conn = $db->connectDB();
 
             unset($_SESSION["edit_idjs"]);
             unset($_SESSION["edit_js_error"]);
+            unset($_SESSION["edit_prev_data"]);
             header('Location: index.php');
         }
     }catch (Exception $e){
@@ -175,7 +188,7 @@ $conn = $db->connectDB();
             $_SESSION["edit_prev_data"]= array("hc"=> $hc,'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
 
             if(isset($_POST["Penguji"])){
-                $_SESSION["EDIT_prev_data"]["penguji"] = $_POST["Penguji"];
+                $_SESSION["edit_prev_data"]["penguji"] = $_POST["Penguji"];
             }
         }catch (Exception $e){
 

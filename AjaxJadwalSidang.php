@@ -7,7 +7,7 @@ if(isset($_POST['npmmks'])){
     $db = new database();
     $conn = $db->connectDB();
 
-    $query = "SELECT * from mata_kuliah_spesial mks WHERE mks.npm =:npm ";
+    $query = "SELECT * from mata_kuliah_spesial mks WHERE mks.npm =:npm SORT BY tanggal DESC";
     $stmt = $conn->prepare($query);
     $stmt->execute(array(':npm'=> $_POST['npmmks']));
     $mksrows = $stmt->fetchAll(PDO::FETCH_ASSOC);
