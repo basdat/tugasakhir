@@ -1,4 +1,8 @@
 <?php
+
+if($_SESSION['userdata']['role'] != 'admin'){
+    header("Location: index.php");
+}
 require_once "database.php";
 $db = new database();
 $conn = $db->connectDB();
@@ -203,14 +207,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
 
         });
 
-        $('#TextBoxesGroupPembimbing').bind('change','.pembimbing',function(){
-          alert($(this).find("select").val());
-            // var prev = $(this).data('previous');
-            // $('.pembimbing').not(this).find('option[value="'+prev+'"]').show();
-            // var val = $(this).val();
-            // $(this).data('previous',val);
-            // $('.pembimbing').not(this).find('option[value="'+val+'"]').hide();
-        });
+
 
 
 
