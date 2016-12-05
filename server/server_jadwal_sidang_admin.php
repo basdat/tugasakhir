@@ -17,6 +17,7 @@ FROM jadwal_sidang js NATURAL JOIN mata_kuliah_spesial mks NATURAL JOIN mahasisw
 WHERE mks.issiapsidang = true
 ORDER BY ".$order);
 
+
     $stmt->execute(array());
     $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $html = "<table class='table dataTable'>";
@@ -72,6 +73,7 @@ ORDER BY ".$order);
         foreach ($dospem as $key => $dataR2){
             $dospemhtml=$dospemhtml.$dataR2['nama']."\n";
         }
+
         $dospemhtml=$dospemhtml."</td>";
 
         $html=$html.$dospemhtml;
