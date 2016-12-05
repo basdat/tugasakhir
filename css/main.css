@@ -1,33 +1,131 @@
-
+/* white-color      : #F4F7ED
+ hightlight-color   : #86EE60
+ main-color         : #2E6E65
+ dark-color         : #2B3752
+ black-color        : #10151f*/
 
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
 
+/* override bootstrap */
+
+.btn-primary {
+    background: #2E6E65;
+    border-color: #1d4b42;
+}
+
+.btn-primary:hover {
+    background: #306259;
+    border-color: #1d4b42;
+}
+
+.btn-primary:active {
+    background: #29534a !important;
+    border-color: #1d4b42;
+}
+
+.btn-primary:focus {
+    background: #2E6E65;
+    border-color: #1d4b42;
+}
+
+html, body {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body {
+    color: #2B3752;
+    position: relative;
+    height: 100%;
+}
+
 nav ul li {
-    padding-left: .5em;
-    padding-right: .5em;
+	padding-left: .5em;
+	padding-right: .5em;
 }
 
 footer .credit{
-    color: white;
+	color: white;
 }
 
 .header {
-    background: url("../img/header.jpg") center center;
-    background-size: cover;
-    min-height: 20em;
-    height: 50vh;
-    padding-top: 5em;
-    color: white;
-    margin-bottom: 5em;
+	background: url("../img/header.jpg") center center;
+	background-size: cover;
+	min-height: 20em;
+	height: 50vh;
+	padding-top: 5em;
+	color: white;
+	margin-bottom: 5em;
 }
 
 .header hr {
-    border-color: whitesmoke;
+	border-color: whitesmoke;
 }
 
 section {
-    padding-top: 5em;
-    padding-bottom: 5em;
+	padding-top: 3em;
+	padding-bottom: 3em;
+    min-height: 50em;
+    height: 100em;
+}
+
+section.login-form {
+    padding: 0;
+    min-height: 70vh;
+    height: 70%;
+    background: url("../img/bg_login.jpg") center center fixed;
+    background-size: cover;
+
+}
+
+section.login-form div:not(.title) {
+    height: 100%;
+}
+
+section.login-form .login-sidebar {
+    padding-right: 0;
+}
+
+section.login-form .login-sidebar form {
+    padding: .5em 2em;
+}
+
+section.login-form .bg-white {
+    padding-top: 10%;
+    background-color: #F4F7ED;
+    height: 100%;
+    -webkit-box-shadow: 0px -3px 5px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0px -3px 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px -3px 5px rgba(0, 0, 0, 0.5);
+    z-index: 0;
+}
+
+footer {
+    z-index: 1;
+    border: 0;
+    min-height: 30vh;
+    background: #2B3752;
+    color: #F4F7ED;
+}
+
+.nicequote {
+    padding-top: 2em;
+    font-size: xx-large;
+}
+
+#credit {
+    margin-top: -1em;
+    padding: .5em;
+	background: #10151f;
+	border-top: 1px solid #3b4252;
+    color: #F4F7ED;
+    font-size: small;
 }
