@@ -61,6 +61,12 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
 <section>
     <div class="container">
         <div class="row">
+            <?php
+                if(isset($_SESSION['errorMsg'])){
+                    echo '<div class="alert alert-danger" role="alert">Error : '.$_SESSION['errorMsg'].' tidak boleh duplikat</div>';
+                    unset($_SESSION['errorMsg']);
+                }
+            ?>
             <form method="post" action="peserta.php" style="margin: auto;">
                 <?php
                      echo "<div class='form-group'>
@@ -109,7 +115,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
                 </div>
             <br/><br/>
             </form>
-          
+
     </div>
 </section>
 
