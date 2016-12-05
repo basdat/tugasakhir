@@ -27,9 +27,6 @@ if(isset($_SESSION['userdata']['nip'])){
 	$stmt_get_all_jadwal->execute(array());
 	$allJadwal = $stmt_get_all_jadwal->fetchAll(PDO::FETCH_ASSOC);
 }
-
-//TODO: Handling dia admin atau dosen
-
 ?>
 <section id="hero" class="header">
     <div class="container">
@@ -46,49 +43,55 @@ if(isset($_SESSION['userdata']['nip'])){
 <section>
 	<div class="container">
 		<div class="row">
-			<?php echo "<h4> Welcome, " . $_SESSION['userdata']['nama'] . "! </h4> <br><br>"; ?>
-			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalTambah">Tambah Jadwal Non Sidang</button>
+			<?php echo "<h4> You are: " . $_SESSION['userdata']['nama'] . "</h4> <br><br>"; ?>
+			<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalTambah">Tambah Jadwal Non Sidang</button>
 		</div>
 		<br>
 		<div class="row">
-			<table>
-				<table id="jadwaltable" class="table table-striped">
-					<thead class="thead-inverse">
-						<tr>
-							<th>No.</th>
-							<th>Nama</th>
-							<th>Tanggal</th>
-							<th>Repetisi</th>
-							<th>Keterangan</th>
-							<th>Action</th>
-						</tr>
-					</thead>
-					<tbody class="table-condensed">
-						<?php 
-							$counter = 1;
-							foreach ($allJadwal as $key => $jadwal) {
-								
-								$id = $jadwal['idjadwal'];
-								$nama = $jadwal['nama'];
-								$tglMulai = $jadwal['tanggalmulai'];
-								$tglSelesai = $jadwal['tanggalselesai'];
-								$repetisi = $jadwal['repetisi'];
-								$alasan = $jadwal['alasan'];
-								$nip = $jadwal['nipdosen'];
+			<table id="jadwaltable" class="table table-striped">
+			<colgroup>
+			    <col style="width:1%">
+			    <col style="width:10%">
+			    <col style="width:10%">
+			    <col style="width:10%">
+			    <col style="width:10%">
+			    <col style="width:1%">
+  			</colgroup> 
+				<thead>
+					<tr>
+						<th style="text-align:center">No.</th>
+						<th style="text-align:center">Nama</th>
+						<th style="text-align:center">Tanggal</th>
+						<th style="text-align:center">Repetisi</th>
+						<th style="text-align:center">Keterangan</th>
+						<th style="text-align:center">Action</th>
+					</tr>
+				</thead>
+				<tbody class="table-condensed">
+					<?php 
+						$counter = 1;
+						foreach ($allJadwal as $key => $jadwal) {
+							
+							$id = $jadwal['idjadwal'];
+							$nama = $jadwal['nama'];
+							$tglMulai = $jadwal['tanggalmulai'];
+							$tglSelesai = $jadwal['tanggalselesai'];
+							$repetisi = $jadwal['repetisi'];
+							$alasan = $jadwal['alasan'];
+							$nip = $jadwal['nipdosen'];
 
-								echo "<tr>";
-								echo "<td>" . $counter . "</td>";
-								echo "<td>" . $jadwal['nama'] . "</td>";
-								echo "<td>" . $jadwal['tanggalmulai'] . " - " . $jadwal['tanggalselesai'] . "</td>";
-								echo "<td>" . ucwords($jadwal['repetisi']) . "</td>";
-								echo "<td>" . ucwords($jadwal['alasan']) . "</td>";
-								echo '<td><button type="button" data-toggle="modal" data-target="#modalEdit" class="btn btn-warning" id="' . $jadwal['idjadwal'] . '" onclick="updateData(\''.$id.'\',\''.$nama.'\',\''.$tglMulai.'\',\''.$tglSelesai.'\',\''.$repetisi.'\',\''.$alasan.'\',\''.$nip.'\');">Edit</button></td>';
-								echo "</tr>";
-								$counter++;
-							}
-						?>
-					</tbody>
-				</table>
+							echo "<tr>";
+							echo "<td>" . $counter . "</td>";
+							echo "<td>" . $jadwal['nama'] . "</td>";
+							echo "<td>" . $jadwal['tanggalmulai'] . " - " . $jadwal['tanggalselesai'] . "</td>";
+							echo "<td>" . ucwords($jadwal['repetisi']) . "</td>";
+							echo "<td>" . ucwords($jadwal['alasan']) . "</td>";
+							echo '<td><button type="button" data-toggle="modal" data-target="#modalEdit" class="btn btn-primary" id="' . $jadwal['idjadwal'] . '" onclick="updateData(\''.$id.'\',\''.$nama.'\',\''.$tglMulai.'\',\''.$tglSelesai.'\',\''.$repetisi.'\',\''.$alasan.'\',\''.$nip.'\');">Edit</button></td>';
+							echo "</tr>";
+							$counter++;
+						}
+					?>
+				</tbody>
 			</table>
 		</div>
 		<div id="modalTambah" class="modal fade" role="dialog">
@@ -136,7 +139,7 @@ if(isset($_SESSION['userdata']['nip'])){
 						
 					</div>
 					<div class="modal-footer">
-						<input type="submit" class="btn btn-success" name="simpan" value="Simpan">
+						<input type="submit" class="btn btn-success" name="simpan" value="Simpan" id="buttonSubmit">
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
 					</div>
 					</form>
@@ -198,6 +201,8 @@ if(isset($_SESSION['userdata']['nip'])){
 	src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
 	}
 	</style>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 	<script>
 		$(document).ready(function() {
 	    	$('#jadwaltable').DataTable( {
@@ -205,6 +210,18 @@ if(isset($_SESSION['userdata']['nip'])){
 	        "ordering": false,
 	        "info":     false
     		} );
+
+            $('input').addClass("form-control");
+            $('select').addClass("form-control");
+
+    		$('#buttonSubmit').click(function(){
+    			swal({
+				  title: "Berhasil",
+				  text: "Data berhasil ditambahkan!",
+				  timer: 5000,
+				  type: "success"
+				});
+    		});
 		} );
 
 		function updateData(id, nama, tglMulai, tglSelesai, repetisi, alasan, nip){

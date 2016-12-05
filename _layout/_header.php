@@ -33,11 +33,13 @@ if (navigation::is_in_page('login.php')) {
     <link rel="stylesheet" href="css/tether.css">
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
     <script src="js/vendor/jquery-3.1.1.js"></script>
     <script src="js/vendor/tether.js"></script>
     <script src="js/vendor/bootstrap.js"></script>
     <script src="js/main.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.css"/>
 </head>
 <body>
 <header>

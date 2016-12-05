@@ -19,7 +19,7 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	<div class="container">
 		<div class="row">
 			<div class="row text-xs-center">
-				<span class="display-3">Buat Jadwal Non-Sidang</span>
+				<span class="display-3">Izin Jadwal Sidang</span>
 			</div>
 			<div class="col-xs-2 offset-xs-5">
 				<hr/>
@@ -30,62 +30,73 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <section>
     <div class="container">
         <div class="row">
-	<table class="table table-striped" id="izinSidang">
-	<thead class="thead-inverse">
-		<tr>
-			<th>No</th>
-			<th>Mahasiswa</th>
-			<th>Jenis Sidang</th>
-			<th>Judul</th>
-			<th>Waktu dan Lokasi</th>
-			<th>Dosen pembimbing</th>
-			<th>Izin sidang</th>
-		</tr>
-	</thead>
-		<?php 
-			$counter = 1;
-			foreach ($jadwalSidangRows as $key => $value) {
-			echo "<tr>";
-			echo "<td>";
-				echo $counter;
-			echo "</td>";
-			echo "<td>";
-				echo $value['mahasiswa'];
-			echo "</td>";
-			echo "<td>";
-				echo $value['jenis'];
-			echo "</td>";
-			echo "<td>";
-				echo $value['judul'];
-			echo "</td>";
-			echo "<td>";
-				echo $value['tanggal'] . "<br>";
-				echo $value['jammulai'] . " - " . $value['jamselesai'] . "<br>";
-				echo $value['namaruangan'];
-			echo "</td>";
-			echo "<td>";
-				$dosen = explode("|", $value['string_agg']);
-				echo "<ul>";
-				foreach ($dosen as $key => $d) {
-					echo "<li>" . $d . "</li>" ;
-				}
-				echo "</ul>";
-			echo "</td>";
-			echo "<td>";
-				if($value['ijinmajusidang'] == 'true'){
-					echo "<button type='button' class='btn btn-warning disabled'>Diizinkan</button>";
-				} else {
+    <div id="tableArea">
+			<table class="table table-striped" id="izinSidang">
+			<colgroup>
+			    <col style="width:2%">
+			    <col style="width:10%">
+			    <col style="width:10%">
+			    <col style="width:10%">
+			    <col style="width:10%">
+			    <col style="width:10%">
+			    <col style="width:5%">
+  			</colgroup> 
+			<thead>
+				<tr>
+					<th style="text-align:center">No</th>
+					<th style="text-align:center">Mahasiswa</th>
+					<th style="text-align:center">Jenis Sidang</th>
+					<th style="text-align:center">Judul</th>
+					<th style="text-align:center">Waktu dan Lokasi</th>
+					<th style="text-align:center">Dosen pembimbing</th>
+					<th style="text-align:center">Izin sidang</th>
+				</tr>
+			</thead>
+				<?php 
+					$counter = 1;
+					foreach ($jadwalSidangRows as $key => $value) {
+					echo "<tr>";
+					echo "<td>";
+						echo $counter;
+					echo "</td>";
+					echo "<td>";
+						echo $value['mahasiswa'];
+					echo "</td>";
+					echo "<td>";
+						echo $value['jenis'];
+					echo "</td>";
+					echo "<td>";
+						echo $value['judul'];
+					echo "</td>";
+					echo "<td>";
+						echo $value['tanggal'] . "<br>";
+						echo $value['jammulai'] . " - " . $value['jamselesai'] . "<br>";
+						echo $value['namaruangan'];
+					echo "</td>";
+					echo "<td>";
+						$dosen = explode("|", $value['string_agg']);
+						echo "<ul>";
+						foreach ($dosen as $key => $d) {
+							echo "<li>" . $d . "</li>" ;
+						}
+						echo "</ul>";
+					echo "</td>";
+					echo "<td>";
+						if($value['ijinmajusidang'] == 'true'){
+							echo "<button type='button' class='btn btn-warning disabled'>Diizinkan</button>";
+						} else {
 
-				echo "<form action=helper_izinkan.php method='post'>	<input type='hidden' name='npm' value='". $value['npm'] . "'><input type='hidden' name='idmks' value='".$value['idmks']."'><input type='submit' name='izin' value='Izinkan' class='btn btn-warning'></form>";
+						echo "<form action=helper_izinkan.php method='post'>	<input type='hidden' name='npm' value='". $value['npm'] . "'><input type='hidden' name='idmks' value='".$value['idmks']."'><button type='submit' name='izin' class='btn btn-warning'>Izinkan</button></form>";
+						}
+					echo "</td>";	
+				
+					echo "</tr>";
+					$counter++;
 				}
-			echo "</td>";	
-		
-			echo "</tr>";
-			$counter++;
-		}
 
-		?>
-</table>
+				?>
+		</table>
+	</div>
             <div class="row">
     </div>
     <script>
@@ -96,6 +107,46 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	        "info":     false,
 	        "order": [[ 2, "desc" ]]
     		} );
+
+	    	 var html = '&nbsp&nbsp&nbsp<label for="sort">Sort by: &nbsp</label><select id="sort"><option value="waktu" clas="input-large" ">Waktu Sidang</option><option value="mahasiswa">Nama Mahasiswa</option><option value="jenis_sidang">Jenis Sidang</option></select></div>';
+
+            $('.dataTables_length').append(html);
+            $('div.dataTables_wrapper div.dataTables_length select').css('width', '150px');
+            $('select').addClass("form-control");
+            $('input').addClass("form-control");
+
+
+    		$("#sort").change(function () {
+                    var val = $("#sort").val();
+                    var order = "";
+
+                    if(val=='mahasiswa'){
+                        order = "Mhs.nama";
+                    }else if(val=='jenis_sidang'){
+                        order = "jenis_mks.namamks";
+                    }else if(val=='waktu'){
+                        order = 'jsidang.tanggal ASC, jsidang.jammulai ASC';
+                    }else{
+                        order = 'jsidang.tanggal ASC, jsidang.jammulai ASC';
+                    }
+
+                    $.post("server/server_izin_sidang.php",{order: order},function(response){
+                        $("#tableArea").html(response);
+                        $('.table').DataTable( {
+                            "paging":   true,
+                            "ordering": false,
+                            "info":false,
+                        } );
+
+                         var html = '&nbsp&nbsp&nbsp<label for="sort">Sort by: &nbsp</label><select id="sort"><option value="waktu" clas="input-large" ">Waktu Sidang</option><option value="mahasiswa">Nama Mahasiswa</option><option value="jenis_sidang">Jenis Sidang</option></select></div>';
+
+		                $('.dataTables_length').append(html);
+		                $('div.dataTables_wrapper div.dataTables_length select').css('width', '150px');
+		                $('select').addClass("form-control");
+		                $('input').addClass("form-control");
+
+                    });
+                });
 		} );
 	</script>
 </section>

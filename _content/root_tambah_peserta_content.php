@@ -82,7 +82,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
                 ?>
                 <input class="btn btn-primary" type="submit" name="submit" value="tambahpeserta"/>
                 <a class="btn btn-danger" href="mata_kuliah_spesial.php">Cancel</a>
-
+            <br/><br/>
             </form>
                 <input type='button' class="btn btn-success" value='Add Pembimbing' id='addPembimbing'>
                 <input type='button' class="btn btn-success" value='Remove Pembimbing' id='removePembimbing'>

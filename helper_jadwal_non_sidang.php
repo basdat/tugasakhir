@@ -28,8 +28,6 @@ class jadwal_non_sidang
         $stmt_insert_new_jadwal_non_sidang = $conn->prepare($sql);
         $stmt_insert_new_jadwal_non_sidang->execute();
 
-        echo $sql;
-
         header("Location: jadwal_non_sidang_dosen.php");
     } 
     public function update_jadwal(){ 
@@ -50,7 +48,7 @@ class jadwal_non_sidang
         $stmt_update_jadwal_non_sidang = $conn->prepare($sql);
         $stmt_update_jadwal_non_sidang->execute();
 
-        //header("Location: jadwal_non_sidang_dosen.php");
+        header("Location: jadwal_non_sidang_dosen.php");
     } 
 } 
 

@@ -16,7 +16,18 @@ ORDER BY ".$order);
     $stmt->execute(array(':nip' =>$_SESSION['userdata']['nip']));
     $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $html = "<table class='table dataTable'><thead><tr>";
+    $html = "<table class='table dataTable'>";
+    $html .= "<colgroup>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:1%'>
+            </colgroup>";
+    $html .= "<thead><tr>";
+
 
     $columnName = array('Mahasiswa','Jenis Sidang','Judul','Waktu dan Lokasi','Penguji','Pembimbing','Status');
     foreach ($columnName as $th){

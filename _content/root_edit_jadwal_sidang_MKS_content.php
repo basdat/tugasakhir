@@ -77,7 +77,7 @@ return $static;
     <div class="container">
         <div class="row">
             <div class="row text-xs-center">
-                <span class="display-3">Mata Kuliah Spesial</span>
+                <span class="display-3">Edit Jadwal Sidang</span>
             </div>
             <div class="col-xs-2 offset-xs-5">
                 <hr/>
@@ -106,7 +106,10 @@ return $static;
                     echo getDropDownDV($ruanganRows,"idruangan","namaruangan",$mks["namaruangan"],$mks["idruangan"],"Ruangan","idruangan")."<br/>";
                     ?>
                     <div id="penguji">
-                        <button id="tambahPenguji" class="btn btn-primary"> Tambah Penguji</button>
+                        <br>
+                        <h3>Penguji</h3>
+                        <button type="button" style="float: right;" id="tambahPenguji" class="btn btn-primary"> Tambah Penguji</button>
+                        <br><br>
                         <?php
                         if(isset($_SESSION["edit_prev_data"])){
                             $count = 0;
@@ -136,9 +139,12 @@ return $static;
                         <input type="checkbox" name="hc" value="hardcopy"  <?php if(isset($_SESSION["edit_prev_data"]["hc"])){echo "checked='".$_SESSION["edit_prev_data"]["hc"]."'";} else echo $mks["pengumpulanhardcopy"]?>>Sudah Mengumpulkan Hardcopy
                     </label><br>
 
-                    <input class="btn btn-primary" type="submit" name="submit" value="Ubah Jadwal MKS"/>
-                    <input class="btn btn-primary" type="submit" name="" value="Batal"/>
+                    <input class="btn btn-primary" type="submit" name="submit" value="Ubah Jadwal Sidang"/>
+                    <a href="jadwal_sidang.php"  class="btn btn-danger">Batal</a>
                 </form>
+
+                <br>
+
 
                 <?php if(isset($_SESSION["edit_js_error"])){
                     echo "<br>";
@@ -192,8 +198,8 @@ return $static;
 
                     });
                 }
-                
-                
+
+
                 $("#tambahPenguji").click(function(e){
                     e.preventDefault();
                     counter++;

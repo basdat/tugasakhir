@@ -17,7 +17,17 @@ ORDER BY ".$order);
 
     $stmt->execute(array());
     $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $html = "<table class='table dataTable'><thead><tr>";
+    $html = "<table class='table dataTable'>";
+     $html .= "<colgroup>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:1%'>
+            </colgroup>";
+    $html .= "<thead><tr>";
 
     $columnName = array('Mahasiswa','Judul','Jenis Sidang','Waktu dan Lokasi','Penguji','Pembimbing','Action');
     foreach ($columnName as $th){
@@ -78,8 +88,12 @@ ORDER BY ".$order);
 <section>
     <div class="container">
         <div class="row">
-            <button class="btn btn-primary" id="btntambah" style="float: right">Tambah Jadwal Sidang</button><br>
-            <select style="float: right;" id="sort">
+            <button class="btn btn-primary" id="btntambah" style="float: right">Tambah Jadwal Sidang</button>
+            <br>
+            <br>
+
+            Sort :
+            <select style="float:left;" id="sort">
                 <option value="waktu">Waktu</option>
                 <option value="mahasiswa">Mahasiswa</option>
                 <option value="jenis_sidang">Jenis Sidang</option>
@@ -89,6 +103,8 @@ ORDER BY ".$order);
                 echo generateTable('js.tanggal ASC, js.jammulai ASC');
                 ?>
             </div>
+            <br>
+            <br>
         </div>
         <script>
             $(document).ready(function(){

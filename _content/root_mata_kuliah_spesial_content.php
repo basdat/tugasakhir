@@ -3,13 +3,12 @@ require_once "database.php";
 $db = new database();
 $conn = $db->connectDB();
 $userRows = null;
-$query = "SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks 
-          WHERE mata_kuliah_spesial.NPM = mahasiswa.NPM AND idjenismks = id 
-          ORDER BY mahasiswa.nama, namamks
-          LIMIT 10";
+$query = "SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks
+          WHERE mata_kuliah_spesial.NPM = mahasiswa.NPM AND idjenismks = id
+          ORDER BY mahasiswa.nama, namamks";
 if($_SESSION['userdata']['role'] == 'dosen') {
     echo "MANCAY";
-    $query = "SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks 
+    $query = "SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks
               WHERE mata_kuliah_spesial.NPM = mahasiswa.NPM AND idjenismks = id
               AND mata_kuliah_spesial.idmks IN(
               Select dpem.idmks from dosen_pembimbing dpem, dosen d where nipdosenpembimbing = nip
@@ -17,19 +16,16 @@ if($_SESSION['userdata']['role'] == 'dosen') {
               UNION ALL
               Select dpen.idmks from dosen_penguji dpen, dosen d where nipdosenpenguji = nip
               AND d.username = ?)
-              ORDER BY mahasiswa.nama,namamks
-              LIMIT 10";
+              ORDER BY mahasiswa.nama,namamks";
     $stmt = $conn->prepare($query);
     $stmt->execute(array($_SESSION['userdata']['username'], $_SESSION['userdata']['username']));
 }
 else {
-
     $stmt = $conn->prepare($query);
     $stmt->execute(array());
 }
 
 $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 
 ?>
 <section id="hero" class="header">
@@ -54,7 +50,40 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 }
 
             ?>
-            <table class="table table-striped">
+
+                <p>Sort By</p>
+                <select id="sort" class="pick">
+                    <option value="mahasiswa">Mahasiswa</option>
+                    <option value="jenis">Jenis MKS</option>
+                    <option value="term">Term</option>
+                </select>
+
+                <p>Filter by Term</p>
+                <select id="filter" class="pick">
+                  <option value="all">All</option>
+                  <?php
+
+                      $conn = $db->connectDB();
+                      $query = "SELECT * FROM TERM";
+                      $stmt = $conn->prepare($query);
+                      $stmt->execute(array());
+                      $termRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                      foreach ($termRows as $key => $value){
+                        $semester = "";
+                        if($value['semester'] % 2 == 0){
+                            $semester =  "Genap";
+                        }
+                        else {
+                            $semester = "Gasal";
+                        }
+                          echo '<option value="'.$value['semester'].' '.$value['tahun'].'">'.$semester.' '.$value['tahun'].'</option>';
+                      }
+                   ?>
+               </select>
+
+            <div id="tableArea">
+            <table  id="example" class="display" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -67,9 +96,9 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </thead>
                 <tbody>
         <?php
-            $var = 0;
+
             foreach ($userRows as $key => $value) {
-                if($var == 10) break;
+
                 echo "<tr>";
                 echo "<td>";
                     print_r($value['idmks']);
@@ -106,30 +135,66 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 echo "</td>";
                 echo "</tr>";
-                $var = $var + 1;
+
             }
         ?>
                 </tbody>
             </table>
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                    </li>
-                    <li class="active page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            </div>
+
             <div class="row">
     </div>
 </section>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css"/>
+<script src="https://code.jquery.com/jquery-1.12.3.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable( {
+            "paging":   true,
+            "ordering": false,
+            "info":     false
+        } );
+
+
+        $(".pick").change(function () {
+            var val = $("#sort").val();
+            var order = "";
+
+            if(val=='mahasiswa'){
+                order = "nama";
+            }else if(val=='jenis'){
+                order = "namamks";
+            }else{
+                order = 'mata_kuliah_spesial.tahun, mata_kuliah_spesial.semester';
+            }
+
+            var val2 = $("#filter").val();
+
+            var semester = -1;
+            var tahun = -1;
+            if(val2 != "all"){
+              var arrTerm = val2.split(" ");
+              semester = arrTerm[0];
+              tahun = arrTerm[1];
+            }
+            
+
+            $.post("server/server_mata_kuliah_spesial.php",{order: order, semester: semester, tahun: tahun},function(response){
+                $("#tableArea").html(response);
+                $('.display').DataTable( {
+                    "paging":   true,
+                    "ordering": false,
+                    "info":false,
+                } );
+            });
+        });
+
+
+
+
+    });
+
+
+</script>
