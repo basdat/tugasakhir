@@ -48,6 +48,7 @@ class auth
                     if ($username == 'admin') {
                         $_SESSION['username'] = $username;
                         $_SESSION['userdata'] = array('nama' => 'admin', 'role' => 'admin');
+                        $_SESSION['role'] = 'admin';
                         navigation::go_to_url('index.php');
                     } else if ($statementMhs->rowCount() > 0) {
                         $_SESSION['username'] = $username;

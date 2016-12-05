@@ -2,7 +2,10 @@
 require_once "database.php";
 $db = new database();
 $conn = $db->connectDB();
-$stmt = $conn->prepare("Select jsidang.idjadwal as IDSidang, Mhs.Nama as Mahasiswa, jenis_MKS.NamaMKS as Jenis, MKS.Judul as Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, MKS.ijinmajusidang, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, string_agg(dosen.nama, '|')
+$role = $_SESSION['userdata']['role'];
+$sql;
+if ($role == 'admin'){
+	$sql = "Select jsidang.idjadwal as IDSidang, Mhs.Nama as Mahasiswa, jenis_MKS.NamaMKS as Jenis, MKS.Judul as Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, MKS.ijinmajusidang, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, string_agg(dosen.nama, '|')
 From jadwal_sidang jsidang, mata_kuliah_spesial MKS, Mahasiswa Mhs, dosen_pembimbing dospem, jenis_mks, dosen, ruangan
 where jsidang.idMKS = MKS.idMKS AND
 MKS.NPM = Mhs.NPM AND
@@ -11,9 +14,27 @@ jsidang.idMKS = dospem.IDMKS AND
 dospem.NIPdosenpembimbing = dosen.NIP AND
 jsidang.Idruangan = ruangan.idruangan AND MKS.ijinmajusidang = false
 Group By jsidang.idjadwal, IDSidang, Mahasiswa, Jenis, Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, MKS.ijinmajusidang
-order by idjadwal asc;");
+order by idjadwal asc;";
+}
+
+if($role == 'dosen'){
+	$nip = $_SESSION['userdata']['nip'];
+	$sql = "Select jsidang.idjadwal as IDSidang, Mhs.Nama as Mahasiswa, jenis_MKS.NamaMKS as Jenis, MKS.Judul as Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, MKS.ijinmajusidang, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, string_agg(dosen.nama, '|')
+From jadwal_sidang jsidang, mata_kuliah_spesial MKS, Mahasiswa Mhs, dosen_pembimbing dospem, jenis_mks, dosen, ruangan
+where jsidang.idMKS = MKS.idMKS AND
+MKS.NPM = Mhs.NPM AND
+MKS.idjenisMKS = jenis_MKS.id AND
+jsidang.idMKS = dospem.IDMKS AND
+dospem.NIPdosenpembimbing = dosen.NIP AND
+dosen.NIP = '$nip' AND
+jsidang.Idruangan = ruangan.idruangan AND MKS.ijinmajusidang = false
+Group By jsidang.idjadwal, IDSidang, Mahasiswa, Jenis, Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, MKS.ijinmajusidang
+order by idjadwal asc;";
+}
+$stmt = $conn->prepare($sql);
 $stmt->execute(array());
 $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$totalRow = count($jadwalSidangRows);
 ?>
 <section id="hero" class="header">
 	<div class="container">
@@ -30,7 +51,11 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <section>
     <div class="container">
         <div class="row">
-    <div id="tableArea">
+    <?php
+    	if($totalRow == '0'){
+    		echo "<h3 style='text-align: center; text-decoration: underline;'>Tidak ada jadwal sidang yang perlu diizinkan </h3>";
+    	} else {
+    		echo '<div id="tableArea">
 			<table class="table table-striped" id="izinSidang">
 			<colgroup>
 			    <col style="width:2%">
@@ -51,8 +76,7 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					<th style="text-align:center">Dosen pembimbing</th>
 					<th style="text-align:center">Izin sidang</th>
 				</tr>
-			</thead>
-				<?php 
+			</thead>';      
 					$counter = 1;
 					foreach ($jadwalSidangRows as $key => $value) {
 					echo "<tr>";
@@ -93,7 +117,7 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					echo "</tr>";
 					$counter++;
 				}
-
+			}
 				?>
 		</table>
 	</div>

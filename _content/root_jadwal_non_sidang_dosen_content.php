@@ -171,7 +171,7 @@ if(isset($_SESSION['userdata']['nip'])){
 							</div>
 							<div class="col-xs-12">
 								Repetisi Kegiatan:
-								<div class="form-control">
+								<div>
 									<label class="form-control radio-inline"><input type="radio" name="repetisi" value="harian"> Harian&nbsp</label>
 									<label class="form-control radio-inline"><input type="radio" name="repetisi" value="mingguan"> Mingguan&nbsp</label>
 									<label class="form-control radio-inline"><input type="radio" name="repetisi" value="bulanan"> Bulanan&nbsp</label>
@@ -212,15 +212,6 @@ if(isset($_SESSION['userdata']['nip'])){
 
             $('input').addClass("form-control");
             $('select').addClass("form-control");
-
-    		$('#buttonSubmit').click(function(){
-    			swal({
-				  title: "Berhasil",
-				  text: "Data berhasil ditambahkan!",
-				  timer: 5000,
-				  type: "success"
-				});
-    		});
 		} );
 
 		function updateData(id, nama, tglMulai, tglSelesai, repetisi, alasan, nip){
