@@ -24,10 +24,17 @@ $stmt->execute(array());
 $dosenRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 function getDropDown($arr, $val, $name, $default,$label, $postname){
+
     $select = "<div class='form-group'>
                 <label for='".$label."'>$label</label>
-                <select id='".$label."' class='form-control' name='".$postname."' required>
+                <select id='".$label."' class='".$postname." form-control' name='".$postname."' required>
                 <option value=''>Pilih ".$default."</option>";
+    if($default === 'Dosen'){
+      $select = "<div class='form-group'>
+                  <label for='".$label."'>$label</label>
+                  <select id='".$label."' class='pembimbing form-control'  name='".$postname."' required>
+                  <option value=''>Pilih ".$default."</option>";
+    }
     foreach ($arr as $key => $value) {
         $select .= '<option value="'.$value[$val].'">'.$value[$name].'</option>';
     }
@@ -75,9 +82,10 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
                     echo getDropDown($dosenRows,"nip","nama","Dosen","Pembimbing 1","pembimbing[]");
                 echo "</div></div>";
                     echo "<div id='TextBoxesGroup'>
-	                            <div id=\"TextBoxDiv1\">";
+	                            <div id=\"TextBoxDiv1\">
+                              <div class='helper'>";
                     echo getDropDown($dosenRows,"nip","nama", "Dosen", "Penguji 1","penguji[]");
-                     echo "</div></div>"
+                     echo "</div></div></div>"
 
                 ?>
                 <input class="btn btn-primary" type="submit" name="submit" value="tambahpeserta"/>
@@ -120,7 +128,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
             var dosenJSON = <?php  echo json_encode($dosenRows)?>;
             var result = '<div class="form-group">';
             result += '<label for="Penguji'+counter+'">Penguji '+ counter+'</label>';
-            result +=  '<select id="Penguji'+counter+'" class="form-control" name="penguji[]" required>';
+            result +=  '<select id="Penguji'+counter+'" class="form-control penguji" name="penguji[]" required>';
             result += '<option value="">Pilih Dosen</option>';
 
             for(var i=0;i<dosenJSON.length;i++)
@@ -147,15 +155,10 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
             var newTextBoxDiv = $(document.createElement('div'))
                 .attr("id", 'TextBoxDivPembimbing' + counter2);
 
-
-//            foreach ($arr as $key => $value) {
-//                $select .= '<option value="'.dosenJSON[i].nip.'">'.$value[$name].'</option>';
-//            }
-//            $select .= "</select></div>";
             var dosenJSON = <?php  echo json_encode($dosenRows)?>;
             var result = '<div class="form-group">';
             result += '<label for="Pembimbing'+counter2+'">Pembimbing '+ counter2+'</label>';
-            result +=  '<select id="Pembimbing'+counter2+'" class="form-control" name="pembimbing[]" required>';
+            result +=  '<select id="Pembimbing'+counter2+'" class="pembimbing form-control"  name="pembimbing[]" required>';
             result += '<option value="">Pilih Dosen</option>';
 
             for(var i=0;i<dosenJSON.length;i++)
@@ -174,7 +177,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
 
 
         $("#removeButton").click(function () {
-            if(counter==1){
+            if(counter==2){
                 alert("No more textbox to remove");
                 return false;
             }
@@ -184,13 +187,27 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
         });
 
         $("#removePembimbing").click(function () {
-            if(counter2==1){
+            if(counter2==2){
                 alert("No more textbox to remove");
                 return false;
             }
             counter2--;
-            $("#TextBoxDivPembimbing" + counter).remove();
+            $("#TextBoxDivPembimbing" + counter2).remove();
 
         });
+
+        $('#TextBoxesGroupPembimbing').bind('change','.pembimbing',function(){
+          alert($(this).find("select").val());
+            // var prev = $(this).data('previous');
+            // $('.pembimbing').not(this).find('option[value="'+prev+'"]').show();
+            // var val = $(this).val();
+            // $(this).data('previous',val);
+            // $('.pembimbing').not(this).find('option[value="'+val+'"]').hide();
+        });
+
+
+
     });
+
+
 </script>

@@ -179,7 +179,7 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
               semester = arrTerm[0];
               tahun = arrTerm[1];
             }
-            
+
 
             $.post("server/server_mata_kuliah_spesial.php",{order: order, semester: semester, tahun: tahun},function(response){
                 $("#tableArea").html(response);
@@ -190,6 +190,8 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 } );
             });
         });
+
+
 
 
 
