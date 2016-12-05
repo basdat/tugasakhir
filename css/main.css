@@ -80,7 +80,7 @@ section.login-form {
     padding: 0;
     min-height: 70vh;
     height: 70%;
-    background: url("../img/bg_login.jpg") center center fixed;
+    background: url("../img/bg_login.jpg") center center;
     background-size: cover;
 
 }
