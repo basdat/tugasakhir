@@ -7,15 +7,37 @@ function generateTable($order){
 
     $db = new database();
     $conn = $db->connectDB();
-    $sql = "Select jsidang.idjadwal as IDSidang, Mhs.Nama as Mahasiswa, jenis_MKS.NamaMKS as Jenis, MKS.Judul as Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, MKS.ijinmajusidang, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, string_agg(dosen.nama, '|')
+
+    $role = $_SESSION['userdata']['role'];
+    $sql;
+
+    if($role == 'admin'){
+        $sql = "Select jsidang.idjadwal as IDSidang, Mhs.Nama as Mahasiswa, jenis_MKS.NamaMKS as Jenis, MKS.Judul as Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, MKS.ijinmajusidang, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, string_agg(dosen.nama, '|')
 From jadwal_sidang jsidang, mata_kuliah_spesial MKS, Mahasiswa Mhs, dosen_pembimbing dospem, jenis_mks, dosen, ruangan
 where jsidang.idMKS = MKS.idMKS AND
 MKS.NPM = Mhs.NPM AND
 MKS.idjenisMKS = jenis_MKS.id AND
 jsidang.idMKS = dospem.IDMKS AND
 dospem.NIPdosenpembimbing = dosen.NIP AND
-jsidang.Idruangan = ruangan.idruangan
+jsidang.Idruangan = ruangan.idruangan AND MKS.ijinmajusidang = false
 Group By jsidang.idjadwal, IDSidang, Mahasiswa, Jenis, Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, MKS.ijinmajusidang order by " . $order . ";";
+    }
+
+    if($role == 'dosen'){
+        $nip = $_SESSION['userdata']['nip'];
+        $sql = "Select jsidang.idjadwal as IDSidang, Mhs.Nama as Mahasiswa, jenis_MKS.NamaMKS as Jenis, MKS.Judul as Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, MKS.ijinmajusidang, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, string_agg(dosen.nama, '|')
+From jadwal_sidang jsidang, mata_kuliah_spesial MKS, Mahasiswa Mhs, dosen_pembimbing dospem, jenis_mks, dosen, ruangan
+where jsidang.idMKS = MKS.idMKS AND
+MKS.NPM = Mhs.NPM AND
+MKS.idjenisMKS = jenis_MKS.id AND
+jsidang.idMKS = dospem.IDMKS AND
+dospem.NIPdosenpembimbing = dosen.NIP AND
+dosen.NIP = '$nip' AND
+jsidang.Idruangan = ruangan.idruangan AND MKS.ijinmajusidang = false
+Group By jsidang.idjadwal, IDSidang, Mahasiswa, Jenis, Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, MKS.ijinmajusidang order by " . $order . ";";
+    }
+
+    
 
     $stmt = $conn->prepare($sql);
 
@@ -53,12 +75,8 @@ Group By jsidang.idjadwal, IDSidang, Mahasiswa, Jenis, Judul, jsidang.tanggal, j
             $html .= "</ul>";
         $html .= "</td>";
         $html .= "<td>";
-            if($value['ijinmajusidang'] == 'true'){
-                $html .= "<button type='button' class='btn btn-warning disabled'>Diizinkan</button>";
-            } else {
-
-            $html .= "<form action=helper_izinkan.php method='post'>    <input type='hidden' name='npm' value='". $value['npm'] . "'><input type='hidden' name='idmks' value='".$value['idmks']."'><input type='submit' name='izin' value='Izinkan' class='btn btn-warning'></form>";
-            }
+            $html .= "<button type='button' class='btn btn-warning' data-toggle='modal' data-target='#modalIzinkan' id='izinkanModal' npm='" . $value['npm']."'' idmks='" . $value['idmks']."'>Izinkan</button>";
+            
         $html .= "</td>";   
 
         $html .= "</tr>";

@@ -26,7 +26,7 @@ class izinkan
 
         echo $sql;
 
-        header("Location: izin_jadwal_sidang.php");
+        header("Location: jadwal_sidang.php");
     } 
 } 
 

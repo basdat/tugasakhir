@@ -110,10 +110,9 @@ $totalRow = count($jadwalSidangRows);
 							echo "<button type='button' class='btn btn-warning disabled'>Diizinkan</button>";
 						} else {
 
-						echo "<form action=helper_izinkan.php method='post'>	<input type='hidden' name='npm' value='". $value['npm'] . "'><input type='hidden' name='idmks' value='".$value['idmks']."'><button type='submit' name='izin' class='btn btn-warning'>Izinkan</button></form>";
+						echo '<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalIzinkan" id="izinkanModal" npm="' . $value['npm'].'" idmks="' . $value['idmks'].'">Izinkan</button>';
 						}
-					echo "</td>";	
-				
+					echo "</td>";
 					echo "</tr>";
 					$counter++;
 				}
@@ -121,8 +120,28 @@ $totalRow = count($jadwalSidangRows);
 				?>
 		</table>
 	</div>
-            <div class="row">
-    </div>
+	<div id="modalIzinkan" class="modal fade" role="dialog">
+	  <div class="modal-dialog modal-sm">
+
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Anda ingin mengizinkan?</h4>
+	      </div>
+	      <div class="modal-body">
+		      <form action=helper_izinkan.php method='post'>
+		      	<input type='hidden' id='post_npm'>
+		      	<input type='hidden' id='post_idmks'>
+		      	<button type='submit' name='izin' class='btn btn-warning'>Izinkan</button>
+		      	<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+		      </form> 
+	      </div>
+	    </div>
+
+	  </div>
+	</div>
+
     <script>
 		$(document).ready(function() {
 	    	$('#izinSidang').DataTable( {
@@ -172,5 +191,16 @@ $totalRow = count($jadwalSidangRows);
                     });
                 });
 		} );
+
+		$("#izinkanModal").click(function(){
+			var idmks = $(this).attr("idmks");
+			var npm = $(this).attr("npm");
+			$( "#post_npm" ).attr( "name", "npm" );
+			$( "#post_npm" ).attr( "value", npm );
+			$( "#post_idmks" ).attr( "name", "idmks" );
+			$( "#post_idmks" ).attr( "value", idmks );
+		});
+
+
 	</script>
 </section>
