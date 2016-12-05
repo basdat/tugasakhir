@@ -51,7 +51,21 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
     return $select;
 }
 
+function getDropDownDVc($arr, $val, $name, $default,$defaultVal,$label, $postname)
+{
+    $select = "<div style=\"margin-bottom: 60px;min-width: 882px\" style=\"float: left;display: inline-block;width: 90%;\" class='form-group dosen_penguji'>
+                <label style=\"display: block;\" id='label_.$label' for='" . $label . "'>$label</label>
+                <select style=\"float: left;display: inline-block;width: 90%;\" id='" . $label . "' class='form-control dosen_penguji' name='" . $postname . "' required>
+                <option value='".$defaultVal."'>$default</option>";
 
+    foreach ($arr as $key => $value) {
+        $select .= '<option value="' . $value[$val] . '">' . $value[$name] . '</option>';
+    }
+    $select .= "</select>";
+    $select .= "<button style='float: right;display: inline-block;' onclick='$(this).closest(\" . dosen_penguji\").remove();' type='button' class='btn btn-danger delete_dosen_penguji'>Hapus</button></div>";
+
+    return $select;
+}
 ?>
 
 <section id="hero" class="header">
@@ -97,6 +111,10 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                         echo getDropDownDV($ruanganRows,"idruangan","namaruangan",$namaruangan,$_SESSION["tambah_prev_data"]["idruangan"],"Ruangan","idruangan")."<br/>";
                     }else echo getDropDown($ruanganRows,"idruangan","namaruangan","Ruangan","Ruangan","idruangan")."<br/>";
                     ?>
+                    <br>
+                    <label class="radio-inline">
+                        <input type="checkbox" name="hc" value="hardcopy" <?php if(isset($_SESSION["tambah_prev_data"]["hc"])) echo "checked='".$_SESSION["tambah_prev_data"]["hc"]."'"?>> &nbsp Sudah Mengumpulkan Hardcopy
+                    </label><br>
 
                     <div id="penguji">
                         <br>
@@ -120,7 +138,7 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                                         $stmt->execute(array(':nip' => $data));
                                         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                        echo getDropDownDV($dosenRows, "nip", "nama", $row['0']['nama'], $data, "Penguji " . $count, "Penguji[]") . "<br/>";
+                                        echo getDropDownDVc($dosenRows, "nip", "nama", $row['0']['nama'], $data, "Penguji " . $count, "Penguji[]") . "<br/>";
                                     }
                                 }
                             }catch (Exception $exception){
@@ -130,11 +148,7 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                         ?>
 
                     </div>
-
-                    <label class="radio-inline">
-                        <input type="checkbox" name="hc" value="hardcopy" <?php if(isset($_SESSION["tambah_prev_data"]["hc"])) echo "checked='".$_SESSION["tambah_prev_data"]["hc"]."'"?>>Sudah Mengumpulkan Hardcopy
-                    </label><br>
-                    <div class="btn-group">
+                    <div style="margin-top: 15px" class="btn-group">
                     <input class="btn btn-primary" type="submit" name="submit" value="Buat Jadwal"/>
                     <a href="jadwal_sidang.php"  class="btn btn-danger">Batal</a>
                     </div>
@@ -184,19 +198,24 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                     e.preventDefault();
                     addOne();
                 });
+
+
                 function addOne() {
-                    console.log("Click!");
                     counter++;
                     var dosenJSON = <?php  echo json_encode($dosenRows)?>;
-                    var result = '<div class="form-group">';
-                    result += '<label for="Penguji'+counter+'">Penguji '+ counter+'</label>';
-                    result+=  '<select id="Penguji'+counter+'" class="form-control" name="Penguji[]" required>';
+                    var result = '<div style="margin-bottom: 60px;min-width: 882px" class="form-group dosen_penguji">';
+
+                    result += '<label style="display: block;" for="Penguji'+counter+'">Penguji '+ counter+'</label>';
+                    result+=  '<select style="float: left;display: inline-block;width: 90%;"  id="Penguji'+counter+'" class="form-control" name="Penguji[]" required>';
                     result+='<option value="">Pilih Dosen</option>';
 
                     for(var i=0;i<dosenJSON.length;i++)
                     {
                         result += '<option value="'+dosenJSON[i].nip+'">'+dosenJSON[i].nama+'</option>';
                     }
+                    result+= "</select>"
+                    result+="<button style='float: right;display: inline-block;' onclick='$(this).closest(\".dosen_penguji\").remove();' type='button' class='btn btn-danger delete_dosen_penguji'>Hapus</button>"
+                    result+= "</div>";
                     $("#penguji").append(result);
                 }
 
@@ -212,6 +231,7 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                             tres += '<option value="'+value.idmks+'">'+value.judul+'</option>';
                         });
 
+                        tres+= "</div>";
                         $("#selectMKS").html(tres);
                 });
 
@@ -229,10 +249,14 @@ function getDropDownDV($arr, $val, $name, $default,$defaultVal,$label, $postname
                             res += '<option value="'+value.idmks+'">'+value.judul+'</option>';
                         });
 
+                        res+= "</div>";
                         $("#selectMKS").html(res);
                     })
 
                 });
+
+                $(".delete_dosen_penguji").first().remove();
+
             });
 
             <?php unset($_SESSION["tambah_prev_data"])?>

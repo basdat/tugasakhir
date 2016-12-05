@@ -85,6 +85,17 @@ if ($validated == true){
     }
 }
 
+$existOnce = array();
+
+foreach ($_POST["Penguji"] as $key => $data){
+    if(in_array($data,$existOnce)){
+        $validated=false;
+        $_SESSION["tambah_js_error"][] = "Ada penguji duplikat (bernilai sama) pada saat pengisian form";
+    }else{
+        $existOnce[] = $data;
+    }
+}
+
 if($validated){
 try {
 

@@ -1,7 +1,7 @@
 <?php
 require_once "database.php";
 if(!isset($_SESSION['userdata']['role']) ||$_SESSION['userdata']['role'] !="admin") {echo "Bad Request: Must be logged in as role:admin"; die();}
-if(!isset($_SESSION["edit_idjs"])) {echo "400 Bad Request: ID of edit:Jadwal Sidang is undefined"; die();}
+if(!isset($_SESSION["edit_idjs"])) {header('Location : jadwal_sidang.php');}
 
 $db = new database();
 $conn = $db->connectDB();
@@ -71,6 +71,21 @@ $static = "<div class='form-group'>
 return $static;
 }
 
+function getDropDownDVc($arr, $val, $name, $default,$defaultVal,$label, $postname)
+{
+    $select = "<div style=\"margin-bottom: 60px;min-width: 882px\" style=\"float: left;display: inline-block;width: 90%;\" class='form-group dosen_penguji'>
+                <label style=\"display: block;\" id='label_.$label' for='" . $label . "'>$label</label>
+                <select style=\"float: left;display: inline-block;width: 90%;\" id='" . $label . "' class='form-control dosen_penguji' name='" . $postname . "' required>
+                <option value='".$defaultVal."'>$default</option>";
+
+    foreach ($arr as $key => $value) {
+        $select .= '<option value="' . $value[$val] . '">' . $value[$name] . '</option>';
+    }
+    $select .= "</select>";
+    $select .= "<button style='float: right;display: inline-block;' onclick='$(this).closest(\" . dosen_penguji\").remove();' type='button' class='btn btn-danger delete_dosen_penguji'>Hapus</button></div>";
+
+    return $select;
+}
 ?>
 
 <section id="hero" class="header">
@@ -126,7 +141,7 @@ return $static;
                                         $stmt->execute(array(':nip' => $data));
                                         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                        echo getDropDownDV($dosenRows, "nip", "nama", $row['0']['nama'], $data, "Penguji " . $count, "Penguji[]") . "<br/>";
+                                        echo getDropDownDVc($dosenRows, "nip", "nama", $row['0']['nama'], $data, "Penguji " . $count, "Penguji[]") . "<br/>";
                                     }
                                 }
                             }catch (Exception $exception){
@@ -183,18 +198,23 @@ return $static;
                         var result = "";
                         $.each(JSON.parse(pengujiJSON),function (key,value) {
                             counter++;
-                            var temp = '<div class="form-group">';
-                            temp += '<label for="Penguji'+counter+'">Penguji '+ counter+'</label>';
-                            temp+=  '<select id="Penguji'+counter+'" class="form-control" name="Penguji[]" required>';
+                            var temp = '<div style="margin-bottom:60px;min-width:882px" class="form-group dosen_penguji">';
+                            temp += '<label style="display: block;" for="Penguji'+counter+'">Penguji '+ counter+'</label>';
+                            temp+=  '<select style="float: left;display: inline-block;width: 90%;" id="Penguji'+counter+'" class="form-control" name="Penguji[]" required>';
                             temp+='<option value="'+value.nip+'">'+value.nama+'</option>';
 
                             for(var i=0;i<dosenJSON.length;i++)
                             {
                                 temp += '<option value="'+dosenJSON[i].nip+'">'+dosenJSON[i].nama+'</option>';
                             }
+                            temp+="</select>";
+                            temp+="<button style='float: right;display: inline-block;' onclick='$(this).closest(\".dosen_penguji\").remove();' type='button' class='btn btn-danger delete_dosen_penguji'>Hapus</button>"
+                            temp+= "</div>";
 
                             $("#penguji").append(temp);
                         });
+
+                        $(".delete_dosen_penguji").first().remove();
 
                     });
                 }
@@ -202,19 +222,27 @@ return $static;
 
                 $("#tambahPenguji").click(function(e){
                     e.preventDefault();
+                    addOne();
+                });
+
+                function addOne() {
                     counter++;
                     var dosenJSON = <?php  echo json_encode($dosenRows)?>;
-                    var result = '<div class="form-group">';
-                    result += '<label for="Penguji'+counter+'">Penguji '+ counter+'</label>';
-                    result+=  '<select id="Penguji'+counter+'" class="form-control" name="Penguji[]" required>';
+                    var result = '<div style="margin-bottom: 60px;min-width: 882px" class="form-group dosen_penguji">';
+
+                    result += '<label style="display: block;" for="Penguji'+counter+'">Penguji '+ counter+'</label>';
+                    result+=  '<select style="float: left;display: inline-block;width: 90%;"  id="Penguji'+counter+'" class="form-control" name="Penguji[]" required>';
                     result+='<option value="">Pilih Dosen</option>';
 
                     for(var i=0;i<dosenJSON.length;i++)
                     {
                         result += '<option value="'+dosenJSON[i].nip+'">'+dosenJSON[i].nama+'</option>';
                     }
+                    result+= "</select>"
+                    result+="<button style='float: right;display: inline-block;' onclick='$(this).closest(\".dosen_penguji\").remove();' type='button' class='btn btn-danger delete_dosen_penguji'>Hapus</button>"
+                    result+= "</div>";
                     $("#penguji").append(result);
-                });
+                }
 
 
                 $.post("AjaxJadwalSidang.php",{npmmks: ($("#Mahasiswa").val())},function(data){
@@ -231,6 +259,8 @@ return $static;
 
                 });
 
+                $(".delete_dosen_penguji").first().remove();
+
             });
 
 
@@ -238,5 +268,3 @@ return $static;
 
         <?php unset($_SESSION["edit_prev_data"])?>
 </section>
-
-sssss
