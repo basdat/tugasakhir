@@ -131,7 +131,7 @@ function getDropDownDVc($arr, $val, $name, $default,$defaultVal,$label, $postnam
                             echo "checked";}
                         } else if($mks["pengumpulanhardcopy"] == 1 ){
                             echo "checked";
-                        }?>>Sudah Mengumpulkan Hardcopy
+                        }?>> &nbsp; Sudah Mengumpulkan Hardcopy
                     </label><br>
                     <div id="penguji">
                         <br>
