@@ -3,24 +3,15 @@ session_start();
 require_once "../database.php";
 if (! $_POST) {echo "400 Bad Request"; die();}
 
-function generateTable($order, $semester, $tahun){
+function generateTable($semester,$tahun){
 
     $db = new database();
     $conn = $db->connectDB();
     $userRows = null;
-
     $query = "SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks
           WHERE mata_kuliah_spesial.NPM = mahasiswa.NPM AND idjenismks = id
-          AND semester = ".$semester." AND tahun = ".$tahun."
-          ORDER BY ".$order;
-    if($semester === "-1"){
-
-      $query = "SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks
-            WHERE mata_kuliah_spesial.NPM = mahasiswa.NPM AND idjenismks = id
-            ORDER BY ".$order;
-    }
+          ORDER BY semester".;
     if($_SESSION['userdata']['role'] == 'dosen') {
-      if($semester === "-1"){
 
         $query = "SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks
               WHERE mata_kuliah_spesial.NPM = mahasiswa.NPM AND idjenismks = id
@@ -31,18 +22,6 @@ function generateTable($order, $semester, $tahun){
               Select dpen.idmks from dosen_penguji dpen, dosen d where nipdosenpenguji = nip
               AND d.username = ?)
               ORDER BY ".$order;
-      } else {
-        $query = "SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks
-              WHERE mata_kuliah_spesial.NPM = mahasiswa.NPM AND idjenismks = id
-              AND semester = ".$semester." AND tahun = ".$tahun."
-              AND mata_kuliah_spesial.idmks IN(
-              Select dpem.idmks from dosen_pembimbing dpem, dosen d where nipdosenpembimbing = nip
-              AND d.username = ?
-              UNION ALL
-              Select dpen.idmks from dosen_penguji dpen, dosen d where nipdosenpenguji = nip
-              AND d.username = ?)
-              ORDER BY ".$order;
-        }
         $stmt = $conn->prepare($query);
         $stmt->execute(array($_SESSION['userdata']['username'], $_SESSION['userdata']['username']));
     }
@@ -106,8 +85,7 @@ function generateTable($order, $semester, $tahun){
     return $html;
 }
 
-if(isset($_POST["order"]) && isset($_POST['semester']) && isset($_POST['tahun'])){
-    echo generateTable($_POST["order"], $_POST['semester'], $_POST['tahun']);
-
+if(isset($_POST["semester"]) && isset($_POST["tahun"])){
+    echo generateTable($_POST["semester"], $_POST["tahun"]);
 }
 ?>

@@ -3,12 +3,12 @@ require_once "database.php";
 $db = new database();
 $conn = $db->connectDB();
 $userRows = null;
-$query = "SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks 
-          WHERE mata_kuliah_spesial.NPM = mahasiswa.NPM AND idjenismks = id 
+$query = "SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks
+          WHERE mata_kuliah_spesial.NPM = mahasiswa.NPM AND idjenismks = id
           ORDER BY mahasiswa.nama, namamks";
 if($_SESSION['userdata']['role'] == 'dosen') {
     echo "MANCAY";
-    $query = "SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks 
+    $query = "SELECT * FROM mata_kuliah_spesial, mahasiswa, jenis_mks
               WHERE mata_kuliah_spesial.NPM = mahasiswa.NPM AND idjenismks = id
               AND mata_kuliah_spesial.idmks IN(
               Select dpem.idmks from dosen_pembimbing dpem, dosen d where nipdosenpembimbing = nip
@@ -26,7 +26,6 @@ else {
 }
 
 $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 
 ?>
 <section id="hero" class="header">
@@ -53,11 +52,36 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             ?>
 
                 <p>Sort By</p>
-                <select id="sort">
+                <select id="sort" class="pick">
                     <option value="mahasiswa">Mahasiswa</option>
                     <option value="jenis">Jenis MKS</option>
                     <option value="term">Term</option>
                 </select>
+
+                <p>Filter by Term</p>
+                <select id="filter" class="pick">
+                  <option value="all">All</option>
+                  <?php
+
+                      $conn = $db->connectDB();
+                      $query = "SELECT * FROM TERM";
+                      $stmt = $conn->prepare($query);
+                      $stmt->execute(array());
+                      $termRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                      foreach ($termRows as $key => $value){
+                        $semester = "";
+                        if($value['semester'] % 2 == 0){
+                            $semester =  "Genap";
+                        }
+                        else {
+                            $semester = "Gasal";
+                        }
+                          echo '<option value="'.$value['semester'].' '.$value['tahun'].'">'.$semester.' '.$value['tahun'].'</option>';
+                      }
+                   ?>
+               </select>
+
             <div id="tableArea">
             <table  id="example" class="display" cellspacing="0" width="100%">
                 <thead>
@@ -134,7 +158,7 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } );
 
 
-        $("#sort").change(function () {
+        $(".pick").change(function () {
             var val = $("#sort").val();
             var order = "";
 
@@ -146,7 +170,18 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 order = 'mata_kuliah_spesial.tahun, mata_kuliah_spesial.semester';
             }
 
-            $.post("server/server_mata_kuliah_spesial.php",{order: order},function(response){
+            var val2 = $("#filter").val();
+
+            var semester = -1;
+            var tahun = -1;
+            if(val2 != "all"){
+              var arrTerm = val2.split(" ");
+              semester = arrTerm[0];
+              tahun = arrTerm[1];
+            }
+            
+
+            $.post("server/server_mata_kuliah_spesial.php",{order: order, semester: semester, tahun: tahun},function(response){
                 $("#tableArea").html(response);
                 $('.display').DataTable( {
                     "paging":   true,
@@ -157,8 +192,9 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         });
 
 
+
+
     });
 
 
 </script>
-
