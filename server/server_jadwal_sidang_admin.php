@@ -21,7 +21,7 @@ ORDER BY ".$order);
     $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $html = "<table class='table dataTable'><thead><tr>";
 
-    $columnName = array('Mahasiswa','Jenis Sidang','Judul','Waktu dan Lokasi','Penguji','Pembimbing','Action');
+    $columnName = array('Mahasiswa','Judul','Jenis Sidang','Waktu dan Lokasi','Penguji','Pembimbing','Action');
     foreach ($columnName as $th){
         $html = $html."<th>".$th." </th>";
     }
