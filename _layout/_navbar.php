@@ -28,6 +28,7 @@
                     <?php
                     if ($_SESSION['userdata']['role'] != 'mahasiswa') {
                         echo "<a class=\"dropdown-item\" href=\"jadwal_non_sidang_dosen.php\">Buat Jadwal Non-Sidang</a>";
+                        echo "<a class=\"dropdown-item\" href=\"izin_jadwal_sidang.php\">Mengizinkan Jadwal Sidang</a>";
                     }
                     ?>
 
