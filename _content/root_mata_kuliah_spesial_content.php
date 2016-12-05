@@ -200,7 +200,7 @@ $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             $.post("server/server_mata_kuliah_spesial.php",{order: order, semester: semester, tahun: tahun},function(response){
                 $("#tableArea").html(response);
-                $('.display').DataTable( {
+                $('.table').DataTable( {
                     "paging":   true,
                     "ordering": false,
                     "info":false,

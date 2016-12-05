@@ -63,7 +63,7 @@ function getDropDown($arr, $val, $name, $default,$label, $postname){
         <div class="row">
             <?php
                 if(isset($_SESSION['errorMsg'])){
-                    echo '<div class="alert alert-danger" role="alert">Error : '.$_SESSION['errorMsg'].' tidak boleh duplikat</div>';
+                    echo '<div class="alert alert-danger" role="alert">Error : '.$_SESSION['errorMsg'].'</div>';
                     unset($_SESSION['errorMsg']);
                 }
             ?>

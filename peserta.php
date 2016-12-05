@@ -26,16 +26,27 @@ class peserta
         $semester = $termarr[1];
 
         if(count(array_unique($_POST['pembimbing']))<count($_POST['pembimbing'])){
-            $_SESSION['errorMsg'] = "pembimbing";
+            $_SESSION['errorMsg'] = "Dosen Pembimbing tidak boleh duplikat";
             header("Location: tambah_peserta.php");
             return;
         }
         if(count(array_unique($_POST['penguji']))<count($_POST['penguji'])){
-            $_SESSION['errorMsg'] = "penguji";
+            $_SESSION['errorMsg'] = "Dosen Penguji tidak boleh duplikat";
             header("Location: tambah_peserta.php");
             return;
         }
-        
+
+        $query = "SELECT * FROM Mata_Kuliah_Spesial where npm = ? AND tahun = ? AND semester = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute(array($npm,$tahun,$semester));
+
+        $arrTemp = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if(count($arrTemp) > 0){
+            $_SESSION['errorMsg'] = "Mahasiswa dengan NPM ".$npm." sudah memiliki MKS pada term tersebut";
+            header("Location: tambah_peserta.php");
+            return;
+        }
+
         $query = "INSERT INTO Mata_Kuliah_Spesial(npm,tahun,semester,judul,idjenismks) VALUES(?,?,?,?,?)";
 
         $stmt = $this->conn->prepare($query);
