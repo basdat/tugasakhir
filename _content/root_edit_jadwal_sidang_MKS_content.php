@@ -11,7 +11,12 @@ try {
     $stmt = $conn->prepare($query);
     $stmt->execute(array(':id' => $_SESSION["edit_idjs"]));
     $mks = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $mks = $mks[0];
+
+    if(count($mks)==0){
+        header("Location: jadwal_sidang.php");
+    }else{
+        $mks = $mks['0'];
+    }
 }catch (Exception $e){
     echo $e;
 }
@@ -120,6 +125,14 @@ function getDropDownDVc($arr, $val, $name, $default,$defaultVal,$label, $postnam
                     <?php
                     echo getDropDownDV($ruanganRows,"idruangan","namaruangan",$mks["namaruangan"],$mks["idruangan"],"Ruangan","idruangan")."<br/>";
                     ?>
+                    <label class="radio-inline">
+                        <input type="checkbox" name="hc" value="hardcopy"  <?php if(isset($_SESSION["edit_prev_data"]["hc"])){
+                        if($_SESSION["tambah_prev_data"]["hc"]=="TRUE"){
+                            echo "checked";}
+                        } else if($mks["pengumpulanhardcopy"] == 1 ){
+                            echo "checked";
+                        }?>>Sudah Mengumpulkan Hardcopy
+                    </label><br>
                     <div id="penguji">
                         <br>
                         <h3>Penguji</h3>
@@ -150,9 +163,7 @@ function getDropDownDVc($arr, $val, $name, $default,$defaultVal,$label, $postnam
                         }
                         ?>
                     </div>
-                    <label class="radio-inline">
-                        <input type="checkbox" name="hc" value="hardcopy"  <?php if(isset($_SESSION["edit_prev_data"]["hc"])){echo "checked='".$_SESSION["edit_prev_data"]["hc"]."'";} else echo $mks["pengumpulanhardcopy"]?>>Sudah Mengumpulkan Hardcopy
-                    </label><br>
+
 
                     <input class="btn btn-primary" type="submit" name="submit" value="Ubah Jadwal Sidang"/>
                     <a href="jadwal_sidang.php"  class="btn btn-danger">Batal</a>

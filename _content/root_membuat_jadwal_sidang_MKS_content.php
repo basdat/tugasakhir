@@ -111,9 +111,14 @@ function getDropDownDVc($arr, $val, $name, $default,$defaultVal,$label, $postnam
                         echo getDropDownDV($ruanganRows,"idruangan","namaruangan",$namaruangan,$_SESSION["tambah_prev_data"]["idruangan"],"Ruangan","idruangan")."<br/>";
                     }else echo getDropDown($ruanganRows,"idruangan","namaruangan","Ruangan","Ruangan","idruangan")."<br/>";
                     ?>
+
+
                     <br>
                     <label class="radio-inline">
-                        <input type="checkbox" name="hc" value="hardcopy" <?php if(isset($_SESSION["tambah_prev_data"]["hc"])) echo "checked='".$_SESSION["tambah_prev_data"]["hc"]."'"?>> &nbsp Sudah Mengumpulkan Hardcopy
+                        <input type="checkbox" name="hc" value="hardcopy" <?php if(isset($_SESSION["tambah_prev_data"]["hc"])){
+                            if($_SESSION["tambah_prev_data"]["hc"]=="TRUE"){
+                                echo "checked";
+                            }}?>> &nbsp Sudah Mengumpulkan Hardcopy
                     </label><br>
 
                     <div id="penguji">

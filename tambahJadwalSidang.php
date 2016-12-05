@@ -3,7 +3,7 @@ require_once "database.php";
 session_start();
 if (! $_POST) {echo "400 Bad Request"; die();}
 
-$hc = "";
+$hc = "WHAT";
 $validated = true;
 unset($_SESSION["tambah_js_error"]);
 $_SESSION["tambah_js_error"] = array();
@@ -119,9 +119,9 @@ try {
     }
 
     if ($hc == "hardcopy") {
-        $hc = 'true';
+        $hc = 'TRUE';
     } else {
-        $hc = 'false';
+        $hc = 'FALSE';
     }
 
 
@@ -150,6 +150,16 @@ try {
 }catch (Exception $e){
     $_SESSION["tambah_js_error"][] = $e->getMessage();
     try{
+        if(isset($_POST["hc"])){
+            $hc = $_POST["hc"];
+        }
+
+        if ($hc == "hardcopy") {
+            $hc = 'TRUE';
+        } else {
+            $hc = 'FALSE';
+        }
+
         $db = new database();
         $conn = $db->connectDB();
         $query = "SELECT nama FROM mahasiswa m WHERE m.npm=:npm ;";
@@ -196,6 +206,16 @@ try {
     $stmt->execute(array(':id'=>$_POST["mks"]));
     $jmks= $stmt->fetchAll(PDO::FETCH_ASSOC);
     $jmks=$jmks['0']["judul"];
+
+    if(isset($_POST["hc"])){
+        $hc = $_POST["hc"];
+    }
+
+    if ($hc == "hardcopy") {
+        $hc = 'TRUE';
+    } else {
+        $hc = 'FALSE';
+    }
 
     $_SESSION["tambah_prev_data"]= array("namamks"=>$jmks ,"hc"=> $hc,'nama'=>$name,'npm'=>$_POST["Mahasiswa"],'tanggal' => $_POST["tanggal"], 'jammulai' => $_POST["jam_mulai"], 'jamselesai' => $_POST["jam_selesai"], 'idruangan' => $_POST["idruangan"], 'idmks' => $_POST["mks"]);
 
