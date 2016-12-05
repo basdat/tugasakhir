@@ -14,7 +14,17 @@ ORDER BY ".$order);
     $stmt->execute(array(':nip' =>$_SESSION['userdata']['nip']));
     $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $html = "<table class='table dataTable'><thead><tr>";
+    $html = "<table class='table dataTable'>";
+     $html .= "<colgroup>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:10%'>
+                <col style='width:1%'>
+            </colgroup>";
+    $html .= "<thead><tr>";
 
     $columnName = array('Mahasiswa','Jenis Sidang','Judul','Waktu dan Lokasi','Penguji','Pembimbing','Status');
     foreach ($columnName as $th){
@@ -105,11 +115,14 @@ ORDER BY ".$order);
 <section>
     <div class="container">
         <div class="row">
-            <select style="float: right;" id="sort">
-                <option value="waktu">Waktu</option>
-                <option value="mahasiswa">Mahasiswa</option>
-                <option value="jenis_sidang">Jenis Sidang</option>
-            </select>
+           <div class="row" style="padding: 20px;">
+            <!-- <label for="sort">Urut Berdasarkan:</label>
+            <select id="sort">
+                    <option value="waktu">Waktu Sidang</option>
+                    <option value="mahasiswa">Nama Mahasiswa</option>
+                    <option value="jenis_sidang">Jenis Sidang</option>
+            </select> -->
+            </div>
             <div id="table_dosen">
                 <?php
                    echo generateTable('js.tanggal ASC, js.jammulai ASC');
@@ -124,6 +137,13 @@ ORDER BY ".$order);
                     "ordering": false,
                     "info":false,
                 } );
+
+                var html = '&nbsp&nbsp&nbsp<label for="sort">Sort by: &nbsp</label><select id="sort"><option value="waktu" clas="input-large" ">Waktu Sidang</option><option value="mahasiswa">Nama Mahasiswa</option><option value="jenis_sidang">Jenis Sidang</option></select></div>';
+
+                $('.dataTables_length').append(html);
+                $('div.dataTables_wrapper div.dataTables_length select').css('width', '150px');
+                $('select').addClass("form-control");
+                $('input').addClass("form-control");
 
                 $("#sort").change(function () {
                     var val = $("#sort").val();
@@ -146,6 +166,13 @@ ORDER BY ".$order);
                             "ordering": false,
                             "info":false,
                         } );
+                         var html = '&nbsp&nbsp&nbsp<label for="sort">Sort by: &nbsp</label><select id="sort"><option value="waktu" clas="input-large" ">Waktu Sidang</option><option value="mahasiswa">Nama Mahasiswa</option><option value="jenis_sidang">Jenis Sidang</option></select></div>';
+
+                        $('.dataTables_length').append(html);
+                        $('div.dataTables_wrapper div.dataTables_length select').css('width', '150px');
+                        $('select').addClass("form-control");
+                        $('input').addClass("form-control");
+
                     });
                 });
 
