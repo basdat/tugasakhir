@@ -36,6 +36,7 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <label for="inputTerm" class="col-sm-2 form-control-label">Term</label>
                             <div class="col-sm-10">
                                 <select class="custom-select" id="inputTerm">
+                                    <option selected value="-1,-1">Semua Waktu</option>
                                     <?php
                                     foreach ($terms as $term) {
                                         $semesterId = (int)($term['semester']);
@@ -57,6 +58,7 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <label for="inputJenis" class="col-sm-2 form-control-label">Jenis Sidang</label>
                             <div class="col-sm-10">
                                 <select id="inputJenis" class="custom-select">
+                                    <option value="0" selected>Semua Jenis</option>
                                     <?php
                                     foreach ($jenisMKS as $mks) {
                                         printf("<option value=\"%s\">%s</option>", $mks['id'], $mks['namamks']);
@@ -66,7 +68,7 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                         </div>
                         <div class="row text-xs-right">
-                            <input type="submit" name="submit" class="btn btn-primary btn-login" value="Pilih">
+                            <input type="submit" id="btnSubmit" name="submit" class="btn btn-primary btn-login" value="Pilih">
                         </div>
                     </div>
                     <div class="row">
@@ -77,7 +79,7 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <option value="jenis_sidang">Jenis Sidang</option>
                         </select></div>
                     <div id="table_admin">
-                        qwertyuio
+                        <div class="alert alert-warning">Sedang mengunduh data...</div>
                     </div>
                 </div>
                 <div class="row">
@@ -108,6 +110,9 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>-->
                 <script>
                     $(document).ready(function () {
+                        var inputTerm = $('#inputTerm').val();
+                        var inputJenis = $('#inputJenis').val();
+
                         $(".edit").click(function () {
                             console.log("Edit");
                             $.post("jadwal_sidang.php", {edit: ($(this).attr("id"))}, function () {
@@ -120,13 +125,34 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             window.location.href = "membuat_jadwal_sidang_MKS.php"
                         });
 
+                        $('#inputTerm').change(function () {
+                            inputTerm = $('#inputTerm').val();
+                            inputJenis = $('#inputJenis').val();
+                        });
+                        $('#inputJenis').change(function () {
+                            inputTerm = $('#inputTerm').val();
+                            inputJenis = $('#inputJenis').val();
+                        });
+
                         $('.table').DataTable({
                             "paging": true,
                             "ordering": false,
                             "info": false,
                         });
 
-                        $.post("server/server_jadwal_sidang_admin.php", {admin_order: 'js.tanggal ASC, js.jammulai ASC'}, function (response) {
+                        $('#btnSubmit').click(function () {
+                            $("#table_admin").html("<div class="alert alert-warning">Sedang mengunduh data...</div>");
+                            $.post("server/server_jadwal_sidang_admin.php", {admin_order: 'js.tanggal ASC, js.jammulai ASC', input_term: inputTerm, input_jenis: inputJenis}, function (response) {
+                                $("#table_admin").html(response);
+                                $('.table').DataTable({
+                                    "paging": true,
+                                    "ordering": false,
+                                    "info": false,
+                                });
+                            });
+                        });
+
+                        $.post("server/server_jadwal_sidang_admin.php", {admin_order: 'js.tanggal ASC, js.jammulai ASC', input_term: inputTerm, input_jenis: inputJenis}, function (response) {
                             $("#table_admin").html(response);
                             $('.table').DataTable({
                                 "paging": true,
@@ -148,8 +174,8 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             } else {
                                 order = 'js.tanggal ASC, js.jammulai ASC';
                             }
-
-                            $.post("server/server_jadwal_sidang_admin.php", {admin_order: order}, function (response) {
+                            $("#table_admin").html("<div class="alert alert-warning">Sedang mengunduh data...</div>");
+                            $.post("server/server_jadwal_sidang_admin.php", {admin_order: order, input_term: inputTerm, input_jenis: inputJenis}, function (response) {
                                 $("#table_admin").html(response);
                                 $('.table').DataTable({
                                     "paging": true,
