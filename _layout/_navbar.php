@@ -1,22 +1,23 @@
-<nav id="navbar" class="navbar navbar-light navbar-fixed-top bg-faded">
-    <a href="index.php" class="navbar-brand"><span class="text-highlight">Sistem Informasi Sidang</span></a>
+<nav id="navbar" class="navbar navbar-light navbar-fixed-top bg-faded" style="background-color: #2C3E50;">
+    <a href="index.php" class="navbar-brand"><span class="text-highlight" style="color: #ffffff;">Sistem Informasi Sidang</span></a>
     <button class="navbar-toggler hidden-md-up float-xs-right" type="button" data-toggle="collapse"
             data-target="#navbar-collapse">
     </button>
     <div class="collapse navbar-toggleable-sm" id="navbar-collapse">
         <ul class="nav navbar-nav float-md-right">
             <li class="nav-item nav-link">
-                Hello,
+                <div style="color: #ffffff;">Hello,
                 <strong>
                     <?php
                     echo $_SESSION['userdata']['nama'];
                     ?>
                 </strong>
+                </div>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
-                   aria-expanded="false">
-                    Jadwal Sidang
+                   aria-expanded="false" style="color: #ffffff;">
+                    <span style="color: #ffffff;">Jadwal Sidang</span>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="Preview">
                     <a class="dropdown-item" href="jadwal_sidang.php">Lihat Jadwal Sidang</a>
@@ -38,7 +39,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                        aria-haspopup="true"
-                       aria-expanded="false">
+                       aria-expanded="false" style="color: #ffffff;">
                         Mata Kuliah Spesial
                     </a>
                     <div class="dropdown-menu" aria-labelledby="Preview">
