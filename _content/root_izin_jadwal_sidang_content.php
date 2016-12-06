@@ -2,18 +2,39 @@
 require_once "database.php";
 $db = new database();
 $conn = $db->connectDB();
-$stmt = $conn->prepare("Select jsidang.idjadwal as IDSidang, Mhs.Nama as Mahasiswa, jenis_MKS.NamaMKS as Jenis, MKS.Judul as Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, MKS.ijinmajusidang, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, string_agg(dosen.nama, '|')
+$role = $_SESSION['userdata']['role'];
+$sql;
+if ($role == 'admin'){
+	$sql = "Select jsidang.idjadwal as IDSidang, Mhs.Nama as Mahasiswa, jenis_MKS.NamaMKS as Jenis, MKS.Judul as Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, MKS.ijinmajusidang, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, string_agg(dosen.nama, '|')
 From jadwal_sidang jsidang, mata_kuliah_spesial MKS, Mahasiswa Mhs, dosen_pembimbing dospem, jenis_mks, dosen, ruangan
 where jsidang.idMKS = MKS.idMKS AND
 MKS.NPM = Mhs.NPM AND
 MKS.idjenisMKS = jenis_MKS.id AND
 jsidang.idMKS = dospem.IDMKS AND
 dospem.NIPdosenpembimbing = dosen.NIP AND
-jsidang.Idruangan = ruangan.idruangan
+jsidang.Idruangan = ruangan.idruangan AND MKS.ijinmajusidang = false
 Group By jsidang.idjadwal, IDSidang, Mahasiswa, Jenis, Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, MKS.ijinmajusidang
-order by idjadwal asc;");
+order by idjadwal asc;";
+}
+
+if($role == 'dosen'){
+	$nip = $_SESSION['userdata']['nip'];
+	$sql = "Select jsidang.idjadwal as IDSidang, Mhs.Nama as Mahasiswa, jenis_MKS.NamaMKS as Jenis, MKS.Judul as Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, MKS.ijinmajusidang, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, string_agg(dosen.nama, '|')
+From jadwal_sidang jsidang, mata_kuliah_spesial MKS, Mahasiswa Mhs, dosen_pembimbing dospem, jenis_mks, dosen, ruangan
+where jsidang.idMKS = MKS.idMKS AND
+MKS.NPM = Mhs.NPM AND
+MKS.idjenisMKS = jenis_MKS.id AND
+jsidang.idMKS = dospem.IDMKS AND
+dospem.NIPdosenpembimbing = dosen.NIP AND
+dosen.NIP = '$nip' AND
+jsidang.Idruangan = ruangan.idruangan AND MKS.ijinmajusidang = false
+Group By jsidang.idjadwal, IDSidang, Mahasiswa, Jenis, Judul, jsidang.tanggal, jsidang.jammulai, jsidang.jamselesai, ruangan.NamaRuangan, mhs.npm, jsidang.idMKS, MKS.ijinmajusidang
+order by idjadwal asc;";
+}
+$stmt = $conn->prepare($sql);
 $stmt->execute(array());
 $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$totalRow = count($jadwalSidangRows);
 ?>
 <section id="hero" class="header">
 	<div class="container">
@@ -30,7 +51,11 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <section>
     <div class="container">
         <div class="row">
-    <div id="tableArea">
+    <?php
+    	if($totalRow == '0'){
+    		echo "<h3 style='text-align: center; text-decoration: underline;'>Tidak ada jadwal sidang yang perlu diizinkan </h3>";
+    	} else {
+    		echo '<div id="tableArea">
 			<table class="table table-striped" id="izinSidang">
 			<colgroup>
 			    <col style="width:2%">
@@ -51,8 +76,7 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					<th style="text-align:center">Dosen pembimbing</th>
 					<th style="text-align:center">Izin sidang</th>
 				</tr>
-			</thead>
-				<?php 
+			</thead>';      
 					$counter = 1;
 					foreach ($jadwalSidangRows as $key => $value) {
 					echo "<tr>";
@@ -86,19 +110,38 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 							echo "<button type='button' class='btn btn-warning disabled'>Diizinkan</button>";
 						} else {
 
-						echo "<form action=helper_izinkan.php method='post'>	<input type='hidden' name='npm' value='". $value['npm'] . "'><input type='hidden' name='idmks' value='".$value['idmks']."'><button type='submit' name='izin' class='btn btn-warning'>Izinkan</button></form>";
+						echo '<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalIzinkan" id="izinkanModal" npm="' . $value['npm'].'" idmks="' . $value['idmks'].'">Izinkan</button>';
 						}
-					echo "</td>";	
-				
+					echo "</td>";
 					echo "</tr>";
 					$counter++;
 				}
-
+			}
 				?>
 		</table>
 	</div>
-            <div class="row">
-    </div>
+	<div id="modalIzinkan" class="modal fade" role="dialog">
+	  <div class="modal-dialog modal-sm">
+
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Anda ingin mengizinkan?</h4>
+	      </div>
+	      <div class="modal-body">
+		      <form action=helper_izinkan.php method='post'>
+		      	<input type='hidden' id='post_npm'>
+		      	<input type='hidden' id='post_idmks'>
+		      	<button type='submit' name='izin' class='btn btn-warning'>Izinkan</button>
+		      	<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+		      </form> 
+	      </div>
+	    </div>
+
+	  </div>
+	</div>
+
     <script>
 		$(document).ready(function() {
 	    	$('#izinSidang').DataTable( {
@@ -148,5 +191,16 @@ $jadwalSidangRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     });
                 });
 		} );
+
+		$("#izinkanModal").click(function(){
+			var idmks = $(this).attr("idmks");
+			var npm = $(this).attr("npm");
+			$( "#post_npm" ).attr( "name", "npm" );
+			$( "#post_npm" ).attr( "value", npm );
+			$( "#post_idmks" ).attr( "name", "idmks" );
+			$( "#post_idmks" ).attr( "value", idmks );
+		});
+
+
 	</script>
 </section>

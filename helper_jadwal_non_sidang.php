@@ -27,6 +27,10 @@ class jadwal_non_sidang
 
         $stmt_insert_new_jadwal_non_sidang = $conn->prepare($sql);
         $stmt_insert_new_jadwal_non_sidang->execute();
+        if (!$stmt_insert_new_jadwal_non_sidang) {
+            echo "\PDO::errorInfo():\n";
+            print_r($dbh->errorInfo());
+        }
 
         header("Location: jadwal_non_sidang_dosen.php");
     } 
