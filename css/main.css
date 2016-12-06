@@ -57,10 +57,11 @@ footer .credit{
 }
 
 .header {
-	background: url("../img/header.jpg") center center;
-	background-size: cover;
-	min-height: 20em;
-	height: 50vh;
+	/*background: url("../img/header.jpg") center center;
+	background-size: cover;*/
+    background-color: #22313F;
+	min-height: 15em;
+	/*height: 50vh;*/
 	padding-top: 5em;
 	color: white;
 	margin-bottom: 0;
