@@ -32,7 +32,7 @@ class jadwal_non_sidang
             print_r($dbh->errorInfo());
         }
 
-        header("Location: jadwal_non_sidang_dosen.php");
+        //header("Location: jadwal_non_sidang_dosen.php");
     } 
     public function update_jadwal(){ 
         $db = new database(); 

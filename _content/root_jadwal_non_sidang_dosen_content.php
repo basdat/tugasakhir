@@ -47,7 +47,7 @@ if(isset($_SESSION['userdata']['nip'])){
 		</div>
 		<br>
 		<div class="row">
-			<table id="jadwaltable" class="table table-striped">
+			<table class="table table-striped">
 			<colgroup>
 			    <col style="width:1%">
 			    <col style="width:10%">
@@ -102,7 +102,7 @@ if(isset($_SESSION['userdata']['nip'])){
 						<h4 class="modal-title">Tambah Jadwal Non Sidang</h4>
 					</div>
 					<div class="modal-body">
-						<form>
+						<form action="helper_jadwal_non_sidang.php">
 							<div class="form-group">
 								<label for="namaDosen">Nama Dosen: </label> <br>
 								<select class="form-control" id="sel1" name="nipDosen">
@@ -204,7 +204,7 @@ if(isset($_SESSION['userdata']['nip'])){
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 	<script>
 		$(document).ready(function() {
-	    	$('#jadwaltable').DataTable( {
+	    	$('.table').DataTable( {
 	        "paging":   true,
 	        "ordering": false,
 	        "info":     false
@@ -217,6 +217,9 @@ if(isset($_SESSION['userdata']['nip'])){
     			var varRepetisi = $('input[name=repetisi]:checked').val();
     			var varKeterangan = $('#keterangan').val();
     			var varNIPDosen = $('#sel1').val();
+    			var stringTglMulai = $('#tanggalMulai').val();
+    			var stringTglSelesai = $('#tanggalSelesai').val();
+    			
     			if(varTanggalMulai < varTanggalSelesai){
     				isTanggalValid = true;
     			}
@@ -234,14 +237,20 @@ if(isset($_SESSION['userdata']['nip'])){
     			var isAllValid = isTanggalValid && isRepetisiValid && isKeteranganValid;
 
     			if(isAllValid){
-    				$.post( "helper_jadwal_non_sidang.php", { simpan: "Simpan", nipDosen: varNIPDosen, tanggalMulai: varTanggalMulai, tanggalSelesai: varTanggalSelesai, repetisi: varRepetisi, keterangan: varKeterangan})
+    				$.post( "helper_jadwal_non_sidang.php", { simpan: "Simpan", nipDosen: varNIPDosen, tanggalMulai: stringTglMulai, tanggalSelesai: stringTglSelesai, repetisi: varRepetisi, keterangan: varKeterangan})
   						.done(function( data ) {
-    					sweetAlert("Yes!", "Data berhasil ditambahkan", "success");
-    					$('#jadwaltable').DataTable( {
+	  						if(data == ""){
+	  							sweetAlert("Yes!", "Data berhasil ditambahkan", "success");
+	  						} else {
+	    						sweetAlert("No!", "Anda melewati batas pengisian", "warning");
+	  						}
+    						
+    						$('.table').DataTable( {
 					        "paging":   true,
 					        "ordering": false,
 					        "info":     false
 				    		} );
+				    		console.log(data);
   					});
     			} else {
     				var message = "";
@@ -286,7 +295,7 @@ if(isset($_SESSION['userdata']['nip'])){
     				$.post( "helper_jadwal_non_sidang.php", { simpan: "Update", nipDosen: varNIPDosen, tanggalMulai: varTanggalMulai, tanggalSelesai: varTanggalSelesai, repetisi: varRepetisi, keterangan: varKeterangan})
   						.done(function( data ) {
     					sweetAlert("Yes!", "Data berhasil diedit", "success");
-    					$('#jadwaltable').DataTable( {
+    					$('.table').DataTable( {
 					        "paging":   true,
 					        "ordering": false,
 					        "info":     false
