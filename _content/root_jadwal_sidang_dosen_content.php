@@ -138,8 +138,8 @@ ORDER BY ".$order);
                 <?php
                    echo generateTable('js.tanggal ASC, js.jammulai ASC');
                 ?>
-
             </div>
+            <div id="load_alert"></div>
         </div>
         <script>
             $(document).ready(function() {
@@ -170,6 +170,10 @@ ORDER BY ".$order);
                         order = 'js.tanggal ASC, js.jammulai ASC';
                     }
 
+                   /* $("tbody").remove();
+                    $("#load_alert").html("<div style='width: 100%;' class='alert alert-warning' role='alert'> Sedang mengunduh data</div>");*/
+
+
                     $.post("server/server_jadwal_sidang_dosen.php",{dosen_order: order},function(response){
                         $("#table_dosen").html(response);
                         $('.table').DataTable( {
@@ -183,6 +187,11 @@ ORDER BY ".$order);
                         $('div.dataTables_wrapper div.dataTables_length select').css('width', '150px');
                         $('select').addClass("form-control");
                         $('input').addClass("form-control");
+
+                        /*$("#sort").change(function(){
+                            $("tbody").remove();
+                            $("#load_alert").html("<div style='width: 100%;' class='alert alert-warning' role='alert'> Sedang mengunduh data</div>");
+                        });*/
 
                     });
                 });

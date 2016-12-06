@@ -127,7 +127,7 @@ function getDropDownDVc($arr, $val, $name, $default,$defaultVal,$label, $postnam
                     ?>
                     <label class="radio-inline">
                         <input type="checkbox" name="hc" value="hardcopy"  <?php if(isset($_SESSION["edit_prev_data"]["hc"])){
-                        if($_SESSION["tambah_prev_data"]["hc"]=="TRUE"){
+                        if($_SESSION["edit_prev_data"]["hc"]=="TRUE"){
                             echo "checked";}
                         } else if($mks["pengumpulanhardcopy"] == 1 ){
                             echo "checked";

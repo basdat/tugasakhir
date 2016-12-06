@@ -97,6 +97,7 @@ ORDER BY ".$order);
                 echo generateTable('js.tanggal ASC, js.jammulai ASC');
                 ?>
             </div>
+            <div id="load_alert"></div>
             <br>
             <br>
         </div>
@@ -147,6 +148,9 @@ ORDER BY ".$order);
                         order = 'js.tanggal ASC, js.jammulai ASC';
                     }
 
+                  /*  $("tbody").remove();
+                    $("#load_alert").html("<div style='width: 100%;' class='alert alert-warning' role='alert'> Sedang mengunduh data</div>");*/
+
                     $.post("server/server_jadwal_sidang_admin.php",{admin_order: order},function(response){
                         $("#table_admin").html(response);
                         $('.table').DataTable( {
@@ -161,6 +165,7 @@ ORDER BY ".$order);
                         $('div.dataTables_wrapper div.dataTables_length select').css('width', '150px');
                         $('select').addClass("form-control");
                         $('input').addClass("form-control");
+
                     });
                 });
             });

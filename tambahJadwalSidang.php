@@ -85,6 +85,11 @@ if ($validated == true){
     }
 }
 
+if(!isset($_POST["mks"]) || $_POST["mks"]==""){
+    $validated = false;
+    $_SESSION["tambah_js_error"][] = "MKS harus dipilih";
+}
+
 $existOnce = array();
 
 foreach ($_POST["Penguji"] as $key => $data){
